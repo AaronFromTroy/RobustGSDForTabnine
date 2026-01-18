@@ -16,20 +16,20 @@
 ## Current Position
 
 **Phase:** 2 of 4 (Core Infrastructure)
-**Plan:** 1 of 5 (completed)
+**Plan:** 2 of 5 (completed)
 **Status:** In progress
-**Last activity:** 2026-01-18 - Completed 02-01-PLAN.md (Node.js Foundation)
+**Last activity:** 2026-01-18 - Completed 02-02-PLAN.md (File Operations & Process Runner)
 
-**Progress:** `█▓░░` (30% - Phase 1 complete + 1/5 of Phase 2 complete)
+**Progress:** `█▓░░` (35% - Phase 1 complete + 2/5 of Phase 2 complete)
 
 ---
 
 ## Performance Metrics
 
 **Phases Completed:** 1/4
-**Plans Completed:** 4/13 total (3 Phase 1 + 1 Phase 2)
-**Requirements Validated:** 19/55 (Phase 1 complete; Phase 2: partial SCRIPT-05, partial CORE-03)
-**Success Rate:** 100% (4/4 plans completed successfully)
+**Plans Completed:** 5/13 total (3 Phase 1 + 2 Phase 2)
+**Requirements Validated:** 22/55 (Phase 1 complete; Phase 2: CORE-05, CORE-06, SCRIPT-04, partial SCRIPT-05, partial CORE-03)
+**Success Rate:** 100% (5/5 plans completed successfully)
 
 ---
 
@@ -51,6 +51,8 @@
 | write-file-atomic for STATE.md | 2026-01-18 | Prevents corruption on interruption; native fs.writeFile() is NOT atomic |
 | ajv for JSON Schema validation | 2026-01-18 | 50% faster than alternatives (joi, zod), 50M+ weekly downloads |
 | .gitignore for node_modules | 2026-01-18 | Standard Node.js practice, prevents repository bloat from dependencies |
+| spawn() instead of exec() | 2026-01-18 | Prevents shell injection, streams output vs buffering, safer with user input |
+| Async file operations only | 2026-01-18 | No *Sync methods to avoid blocking Node.js event loop |
 
 ### Active TODOs
 
@@ -60,7 +62,7 @@
 - [x] Write installation guide (README.md) ✓
 - [x] Plan Phase 2: Core Infrastructure ✓
 - [x] 02-01: Establish Node.js foundation with ESM and dependencies ✓
-- [ ] 02-02: Implement file operations and process runner utilities
+- [x] 02-02: Implement file operations and process runner utilities ✓
 - [ ] 02-03: Implement state-manager.js for atomic STATE.md operations
 - [ ] 02-04: Implement template-renderer.js and guideline-loader.js
 - [ ] 02-05: Implement validation and testing framework
@@ -88,28 +90,37 @@ None
   - Issue encountered: npm output in Git Bash required full path to npm.cmd
   - Requirements: Partial SCRIPT-05 (ESM enabled), partial CORE-03 (template dependencies)
 
+- **Phase 2 Plan 2 completed (02-02):** File operations and process runner utilities (2 min)
+  - Created file-ops.js with readFile, writeFileAtomic, fileExists, ensureDir
+  - Created process-runner.js with runCommand using spawn() for safe command execution
+  - Fixed write-file-atomic import (CommonJS module requires default import in ESM)
+  - All verification checks passed (atomic writes, async functions, spawn usage, ESM syntax)
+  - Git commits: 0f7da8b (file-ops.js), 3c5d55c (process-runner.js)
+  - Requirements: CORE-05 (file operations), CORE-06 (command execution), SCRIPT-04 (cross-platform)
+
 ---
 
 ## Session Continuity
 
-**Last session:** 2026-01-18 22:31 UTC
-**Stopped at:** Completed 02-01-PLAN.md (Node.js Foundation)
+**Last session:** 2026-01-18 22:36 UTC
+**Stopped at:** Completed 02-02-PLAN.md (File Operations & Process Runner)
 **Resume file:** None
 
-**Next Action:** Execute 02-02-PLAN.md (File Operations & Process Runner)
+**Next Action:** Execute 02-03-PLAN.md (State Manager)
 **Context Needed:**
-- 02-RESEARCH.md (Node.js patterns for file ops and child processes)
+- 02-RESEARCH.md (Node.js patterns for state management)
 - 02-01-SUMMARY.md (ESM import patterns, dependencies available)
+- 02-02-SUMMARY.md (file-ops.js and process-runner.js utilities)
 - ROADMAP.md Phase 2 requirements
 
 **Resume Instructions:**
 If starting fresh session:
-1. Read this STATE.md to understand current position (Phase 2, plan 1 of 5 complete)
-2. Read .planning/phases/02-core-infrastructure/02-01-SUMMARY.md for what was built
+1. Read this STATE.md to understand current position (Phase 2, plan 2 of 5 complete)
+2. Read .planning/phases/02-core-infrastructure/02-02-SUMMARY.md for file-ops.js and process-runner.js
 3. Read .planning/phases/02-core-infrastructure/02-RESEARCH.md for implementation patterns
-4. Proceed with 02-02-PLAN.md execution
+4. Proceed with 02-03-PLAN.md execution
 
 ---
 
 *State tracking initialized: 2026-01-18*
-*Last updated: 2026-01-18 after 02-01-PLAN.md completion*
+*Last updated: 2026-01-18 after 02-02-PLAN.md completion*

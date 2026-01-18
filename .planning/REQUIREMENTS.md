@@ -157,13 +157,73 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| _Pending roadmap creation_ | | |
+| CORE-01 | Phase 2 | Pending |
+| CORE-02 | Phase 2 | Pending |
+| CORE-03 | Phase 2 | Pending |
+| CORE-04 | Phase 2 | Pending |
+| CORE-05 | Phase 2 | Pending |
+| CORE-06 | Phase 2 | Pending |
+| RESUME-01 | Phase 3 | Pending |
+| RESUME-02 | Phase 3 | Pending |
+| RESUME-03 | Phase 3 | Pending |
+| RESUME-04 | Phase 3 | Pending |
+| TRIG-01 | Phase 3 | Pending |
+| TRIG-02 | Phase 3 | Pending |
+| TRIG-03 | Phase 3 | Pending |
+| TRIG-04 | Phase 3 | Pending |
+| PROG-01 | Phase 2 | Pending |
+| PROG-02 | Phase 2 | Pending |
+| PROG-03 | Phase 2 | Pending |
+| PROG-04 | Phase 2 | Pending |
+| PROG-05 | Phase 2 | Pending |
+| VALID-01 | Phase 3 | Pending |
+| VALID-02 | Phase 3 | Pending |
+| VALID-03 | Phase 3 | Pending |
+| VALID-04 | Phase 3 | Pending |
+| VALID-05 | Phase 3 | Pending |
+| HITL-01 | Phase 4 | Pending |
+| HITL-02 | Phase 4 | Pending |
+| HITL-03 | Phase 4 | Pending |
+| HITL-04 | Phase 4 | Pending |
+| HITL-05 | Phase 4 | Pending |
+| RES-01 | Phase 4 | Pending |
+| RES-02 | Phase 4 | Pending |
+| RES-03 | Phase 4 | Pending |
+| RES-04 | Phase 4 | Pending |
+| RES-05 | Phase 4 | Pending |
+| GUIDE-01 | Phase 1 | Pending |
+| GUIDE-02 | Phase 1 | Pending |
+| GUIDE-03 | Phase 1 | Pending |
+| GUIDE-04 | Phase 1 | Pending |
+| GUIDE-05 | Phase 1 | Pending |
+| TMPL-01 | Phase 1 | Pending |
+| TMPL-02 | Phase 1 | Pending |
+| TMPL-03 | Phase 1 | Pending |
+| TMPL-04 | Phase 1 | Pending |
+| TMPL-05 | Phase 1 | Pending |
+| TMPL-06 | Phase 1 | Pending |
+| SCRIPT-01 | Phase 2 | Pending |
+| SCRIPT-02 | Phase 2 | Pending |
+| SCRIPT-03 | Phase 2 | Pending |
+| SCRIPT-04 | Phase 2 | Pending |
+| SCRIPT-05 | Phase 2 | Pending |
+| SCRIPT-06 | Phase 2 | Pending |
+| SETUP-01 | Phase 1 | Pending |
+| SETUP-02 | Phase 1 | Pending |
+| SETUP-03 | Phase 1 | Pending |
+| SETUP-04 | Phase 1 | Pending |
 
 **Coverage:**
-- v1 requirements: 46 total
-- Mapped to phases: 0 (awaiting roadmap)
-- Unmapped: 46 ⚠️
+- v1 requirements: 55 total
+- Mapped to phases: 55 ✓
+- Unmapped: 0 ✓
+
+**Phase Distribution:**
+- Phase 1 (Foundation & Templates): 19 requirements
+- Phase 2 (Core Infrastructure): 17 requirements
+- Phase 3 (Workflow Orchestration): 14 requirements
+- Phase 4 (Advanced Features): 10 requirements
 
 ---
 *Requirements defined: 2026-01-18*
-*Last updated: 2026-01-18 after initial definition*
+*Last updated: 2026-01-18 after roadmap creation*

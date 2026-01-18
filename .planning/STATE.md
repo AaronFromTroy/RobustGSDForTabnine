@@ -16,20 +16,20 @@
 ## Current Position
 
 **Phase:** 2 of 4 (Core Infrastructure)
-**Plan:** 2 of 5 (completed)
+**Plan:** 4 of 5 (completed)
 **Status:** In progress
-**Last activity:** 2026-01-18 - Completed 02-02-PLAN.md (File Operations & Process Runner)
+**Last activity:** 2026-01-18 - Completed 02-04-PLAN.md (Template Rendering & Guideline Loading)
 
-**Progress:** `█▓░░` (35% - Phase 1 complete + 2/5 of Phase 2 complete)
+**Progress:** `█▓░░` (45% - Phase 1 complete + 4/5 of Phase 2 complete)
 
 ---
 
 ## Performance Metrics
 
 **Phases Completed:** 1/4
-**Plans Completed:** 5/13 total (3 Phase 1 + 2 Phase 2)
-**Requirements Validated:** 22/55 (Phase 1 complete; Phase 2: CORE-05, CORE-06, SCRIPT-04, partial SCRIPT-05, partial CORE-03)
-**Success Rate:** 100% (5/5 plans completed successfully)
+**Plans Completed:** 7/13 total (3 Phase 1 + 4 Phase 2)
+**Requirements Validated:** 26/55 (Phase 1 complete; Phase 2: CORE-03, CORE-04, CORE-05, CORE-06, SCRIPT-02, SCRIPT-03, SCRIPT-04, partial SCRIPT-05)
+**Success Rate:** 100% (7/7 plans completed successfully)
 
 ---
 
@@ -53,6 +53,9 @@
 | .gitignore for node_modules | 2026-01-18 | Standard Node.js practice, prevents repository bloat from dependencies |
 | spawn() instead of exec() | 2026-01-18 | Prevents shell injection, streams output vs buffering, safer with user input |
 | Async file operations only | 2026-01-18 | No *Sync methods to avoid blocking Node.js event loop |
+| Function constructor for templates | 2026-01-18 | Safe with controlled templates, supports expressions, no external library needed |
+| Single guideline per call | 2026-01-18 | Reduces context window usage 70-80%, critical for Tabnine constraints |
+| Validate variables before rendering | 2026-01-18 | Fail fast with clear error messages, prevents partial renders with undefined values |
 
 ### Active TODOs
 
@@ -63,8 +66,8 @@
 - [x] Plan Phase 2: Core Infrastructure ✓
 - [x] 02-01: Establish Node.js foundation with ESM and dependencies ✓
 - [x] 02-02: Implement file operations and process runner utilities ✓
-- [ ] 02-03: Implement state-manager.js for atomic STATE.md operations
-- [ ] 02-04: Implement template-renderer.js and guideline-loader.js
+- [x] 02-03: Implement state-manager.js for atomic STATE.md operations ✓
+- [x] 02-04: Implement template-renderer.js and guideline-loader.js ✓
 - [ ] 02-05: Implement validation and testing framework
 
 ### Known Blockers
@@ -98,29 +101,41 @@ None
   - Git commits: 0f7da8b (file-ops.js), 3c5d55c (process-runner.js)
   - Requirements: CORE-05 (file operations), CORE-06 (command execution), SCRIPT-04 (cross-platform)
 
+- **Phase 2 Plan 3 completed (02-03):** State manager for atomic STATE.md operations (details in prior session)
+  - Created state-manager.js with read/write/update functions
+  - Git commit: d5beb64 (included in Task 1 commit with template-renderer.js)
+
+- **Phase 2 Plan 4 completed (02-04):** Template rendering and guideline loading (2 min)
+  - Created template-renderer.js with YAML frontmatter parsing and variable validation
+  - Created guideline-loader.js for modular guideline loading (70-80% context reduction)
+  - Uses Function constructor for template literal evaluation
+  - Validates all required variables before rendering
+  - Git commits: d5beb64 (template-renderer.js), 78b7628 (guideline-loader.js)
+  - Requirements: CORE-03 (template system), CORE-04 (modular loading), SCRIPT-02 (guideline loader), SCRIPT-03 (template renderer)
+
 ---
 
 ## Session Continuity
 
-**Last session:** 2026-01-18 22:36 UTC
-**Stopped at:** Completed 02-02-PLAN.md (File Operations & Process Runner)
+**Last session:** 2026-01-18 22:41 UTC
+**Stopped at:** Completed 02-04-PLAN.md (Template Rendering & Guideline Loading)
 **Resume file:** None
 
-**Next Action:** Execute 02-03-PLAN.md (State Manager)
+**Next Action:** Execute 02-05-PLAN.md (Validation & Testing Framework)
 **Context Needed:**
-- 02-RESEARCH.md (Node.js patterns for state management)
-- 02-01-SUMMARY.md (ESM import patterns, dependencies available)
-- 02-02-SUMMARY.md (file-ops.js and process-runner.js utilities)
+- 02-RESEARCH.md (Node.js patterns)
+- 02-04-SUMMARY.md (template-renderer.js and guideline-loader.js)
+- .gsd-config.json (config schema)
 - ROADMAP.md Phase 2 requirements
 
 **Resume Instructions:**
 If starting fresh session:
-1. Read this STATE.md to understand current position (Phase 2, plan 2 of 5 complete)
-2. Read .planning/phases/02-core-infrastructure/02-02-SUMMARY.md for file-ops.js and process-runner.js
+1. Read this STATE.md to understand current position (Phase 2, plan 4 of 5 complete)
+2. Read .planning/phases/02-core-infrastructure/02-04-SUMMARY.md for template and guideline modules
 3. Read .planning/phases/02-core-infrastructure/02-RESEARCH.md for implementation patterns
-4. Proceed with 02-03-PLAN.md execution
+4. Proceed with 02-05-PLAN.md execution
 
 ---
 
 *State tracking initialized: 2026-01-18*
-*Last updated: 2026-01-18 after 02-02-PLAN.md completion*
+*Last updated: 2026-01-18 after 02-04-PLAN.md completion*

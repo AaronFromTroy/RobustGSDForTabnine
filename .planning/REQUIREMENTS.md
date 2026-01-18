@@ -157,12 +157,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| CORE-01 | Phase 2 | Pending |
-| CORE-02 | Phase 2 | Pending |
-| CORE-03 | Phase 2 | Pending |
-| CORE-04 | Phase 2 | Pending |
-| CORE-05 | Phase 2 | Pending |
-| CORE-06 | Phase 2 | Pending |
+| CORE-01 | Phase 2 | Complete |
+| CORE-02 | Phase 2 | Complete |
+| CORE-03 | Phase 2 | Complete |
+| CORE-04 | Phase 2 | Complete |
+| CORE-05 | Phase 2 | Complete |
+| CORE-06 | Phase 2 | Complete |
 | RESUME-01 | Phase 3 | Pending |
 | RESUME-02 | Phase 3 | Pending |
 | RESUME-03 | Phase 3 | Pending |
@@ -171,11 +171,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TRIG-02 | Phase 3 | Pending |
 | TRIG-03 | Phase 3 | Pending |
 | TRIG-04 | Phase 3 | Pending |
-| PROG-01 | Phase 2 | Pending |
-| PROG-02 | Phase 2 | Pending |
-| PROG-03 | Phase 2 | Pending |
-| PROG-04 | Phase 2 | Pending |
-| PROG-05 | Phase 2 | Pending |
+| PROG-01 | Phase 2 | Complete |
+| PROG-02 | Phase 2 | Complete |
+| PROG-03 | Phase 2 | Complete |
+| PROG-04 | Phase 2 | Complete |
+| PROG-05 | Phase 2 | Complete |
 | VALID-01 | Phase 3 | Pending |
 | VALID-02 | Phase 3 | Pending |
 | VALID-03 | Phase 3 | Pending |
@@ -191,27 +191,27 @@ Which phases cover which requirements. Updated during roadmap creation.
 | RES-03 | Phase 4 | Pending |
 | RES-04 | Phase 4 | Pending |
 | RES-05 | Phase 4 | Pending |
-| GUIDE-01 | Phase 1 | Pending |
-| GUIDE-02 | Phase 1 | Pending |
-| GUIDE-03 | Phase 1 | Pending |
-| GUIDE-04 | Phase 1 | Pending |
-| GUIDE-05 | Phase 1 | Pending |
-| TMPL-01 | Phase 1 | Pending |
-| TMPL-02 | Phase 1 | Pending |
-| TMPL-03 | Phase 1 | Pending |
-| TMPL-04 | Phase 1 | Pending |
-| TMPL-05 | Phase 1 | Pending |
-| TMPL-06 | Phase 1 | Pending |
-| SCRIPT-01 | Phase 2 | Pending |
-| SCRIPT-02 | Phase 2 | Pending |
-| SCRIPT-03 | Phase 2 | Pending |
-| SCRIPT-04 | Phase 2 | Pending |
-| SCRIPT-05 | Phase 2 | Pending |
-| SCRIPT-06 | Phase 2 | Pending |
-| SETUP-01 | Phase 1 | Pending |
-| SETUP-02 | Phase 1 | Pending |
-| SETUP-03 | Phase 1 | Pending |
-| SETUP-04 | Phase 1 | Pending |
+| GUIDE-01 | Phase 1 | Complete |
+| GUIDE-02 | Phase 1 | Complete |
+| GUIDE-03 | Phase 1 | Complete |
+| GUIDE-04 | Phase 1 | Complete |
+| GUIDE-05 | Phase 1 | Complete |
+| TMPL-01 | Phase 1 | Complete |
+| TMPL-02 | Phase 1 | Complete |
+| TMPL-03 | Phase 1 | Complete |
+| TMPL-04 | Phase 1 | Complete |
+| TMPL-05 | Phase 1 | Complete |
+| TMPL-06 | Phase 1 | Complete |
+| SCRIPT-01 | Phase 2 | Complete |
+| SCRIPT-02 | Phase 2 | Complete |
+| SCRIPT-03 | Phase 2 | Complete |
+| SCRIPT-04 | Phase 2 | Complete |
+| SCRIPT-05 | Phase 2 | Complete |
+| SCRIPT-06 | Phase 2 | Complete |
+| SETUP-01 | Phase 1 | Complete |
+| SETUP-02 | Phase 1 | Complete |
+| SETUP-03 | Phase 1 | Complete |
+| SETUP-04 | Phase 1 | Complete |
 
 **Coverage:**
 - v1 requirements: 55 total

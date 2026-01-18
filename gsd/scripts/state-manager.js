@@ -13,6 +13,16 @@ import { readFile, writeFileAtomic } from './file-ops.js';
 import path from 'node:path';
 
 /**
+ * Valid status values for STATE.md
+ */
+export const STATUS_VALUES = {
+  PENDING: 'pending',
+  IN_PROGRESS: 'in_progress',
+  COMPLETED: 'completed',
+  BLOCKED: 'blocked'
+};
+
+/**
  * Read and parse STATE.md content
  * @param {string} projectRoot - Root directory of the project
  * @returns {Promise<Object>} Parsed state object
@@ -54,6 +64,41 @@ export async function readState(projectRoot) {
 }
 
 /**
+ * Validate state data before writing
+ * @param {Object} stateData - State data to validate
+ * @throws {Error} If validation fails
+ */
+export function validateStateData(stateData) {
+  // Check required fields exist
+  const requiredFields = ['phase', 'plan', 'status', 'step'];
+  const missingFields = requiredFields.filter(field => !(field in stateData));
+
+  if (missingFields.length > 0) {
+    throw new Error(`Missing required field: ${missingFields.join(', ')}`);
+  }
+
+  // Check status is valid
+  const validStatuses = Object.values(STATUS_VALUES);
+  if (!validStatuses.includes(stateData.status)) {
+    throw new Error(`Invalid status: ${stateData.status}. Must be one of: ${validStatuses.join(', ')}`);
+  }
+
+  // Check phase and plan are positive integers
+  if (!Number.isInteger(stateData.phase) || stateData.phase < 1) {
+    throw new Error('Phase must be a positive integer');
+  }
+
+  if (!Number.isInteger(stateData.plan) || stateData.plan < 0) {
+    throw new Error('Plan must be a non-negative integer');
+  }
+
+  // Check step is non-empty string
+  if (typeof stateData.step !== 'string' || stateData.step.trim() === '') {
+    throw new Error('Step must be a non-empty string');
+  }
+}
+
+/**
  * Write updated state data to STATE.md atomically
  * @param {string} projectRoot - Root directory of the project
  * @param {Object} stateData - State data to write
@@ -67,6 +112,9 @@ export async function readState(projectRoot) {
  */
 export async function writeState(projectRoot, stateData) {
   try {
+    // Validate state data before writing
+    validateStateData(stateData);
+
     const statePath = path.join(projectRoot, '.planning', 'STATE.md');
 
     // Read current content
@@ -164,5 +212,36 @@ export async function updateProgress(projectRoot, updates) {
     return updatedState;
   } catch (error) {
     throw new Error(`Failed to update progress: ${error.message}`);
+  }
+}
+
+/**
+ * Transition to a new phase
+ * Specialized function for phase transitions used by orchestration
+ * @param {string} projectRoot - Root directory of the project
+ * @param {number} newPhase - New phase number
+ * @param {number} totalPhases - Total number of phases
+ * @returns {Promise<Object>} Updated state object
+ */
+export async function transitionPhase(projectRoot, newPhase, totalPhases) {
+  try {
+    // Read current state
+    const currentState = await readState(projectRoot);
+
+    // Create updated state for phase transition
+    const updatedState = {
+      phase: newPhase,
+      plan: 0, // Reset plan counter
+      status: STATUS_VALUES.IN_PROGRESS,
+      step: `Ready for Phase ${newPhase}`,
+      progressIndicator: generateProgressIndicator(newPhase, totalPhases)
+    };
+
+    // Validate and write state
+    await writeState(projectRoot, updatedState);
+
+    return { ...currentState, ...updatedState };
+  } catch (error) {
+    throw new Error(`Failed to transition to phase ${newPhase}: ${error.message}`);
   }
 }

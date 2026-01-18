@@ -1,0 +1,30 @@
+{
+  "$schema": "./config-schema.json",
+  "version": "1.0.0",
+  "triggerPhrases": {
+    "start": [
+      "start GSD",
+      "begin GSD",
+      "initialize GSD",
+      "start getting shit done"
+    ],
+    "continue": [
+      "continue GSD workflow",
+      "resume GSD",
+      "continue workflow",
+      "resume getting shit done"
+    ]
+  },
+  "paths": {
+    "planning": ".planning",
+    "guidelines": "gsd/guidelines",
+    "templates": "gsd/templates",
+    "scripts": "gsd/scripts"
+  },
+  "workflows": {
+    "newProject": "new-project.md",
+    "planPhase": "plan-phase.md",
+    "executePhase": "execute-phase.md",
+    "verifyWork": "verify-work.md"
+  }
+}

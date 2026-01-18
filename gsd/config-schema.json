@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gsd.local/config-schema.json",
+  "title": "GSD Configuration",
+  "description": "Configuration for GSD workflow system adapted for Tabnine",
+  "type": "object",
+  "required": ["version", "triggerPhrases", "paths", "workflows"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+      "description": "Semantic version of config format"
+    },
+    "triggerPhrases": {
+      "type": "object",
+      "required": ["start", "continue"],
+      "properties": {
+        "start": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1,
+          "description": "Phrases that initiate new-project workflow"
+        },
+        "continue": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1,
+          "description": "Phrases that resume workflow from STATE.md"
+        }
+      }
+    },
+    "paths": {
+      "type": "object",
+      "required": ["planning", "guidelines", "templates", "scripts"],
+      "properties": {
+        "planning": {
+          "type": "string",
+          "default": ".planning",
+          "description": "Directory for planning artifacts"
+        },
+        "guidelines": {
+          "type": "string",
+          "default": "gsd/guidelines",
+          "description": "Directory for workflow guideline files"
+        },
+        "templates": {
+          "type": "string",
+          "default": "gsd/templates",
+          "description": "Directory for artifact templates"
+        },
+        "scripts": {
+          "type": "string",
+          "default": "gsd/scripts",
+          "description": "Directory for Node.js helper scripts"
+        }
+      }
+    },
+    "workflows": {
+      "type": "object",
+      "properties": {
+        "newProject": {
+          "type": "string",
+          "default": "new-project.md",
+          "description": "Guideline file for new project initialization"
+        },
+        "planPhase": {
+          "type": "string",
+          "default": "plan-phase.md",
+          "description": "Guideline file for phase planning"
+        },
+        "executePhase": {
+          "type": "string",
+          "default": "execute-phase.md",
+          "description": "Guideline file for phase execution"
+        },
+        "verifyWork": {
+          "type": "string",
+          "default": "verify-work.md",
+          "description": "Guideline file for work verification"
+        }
+      }
+    }
+  }
+}

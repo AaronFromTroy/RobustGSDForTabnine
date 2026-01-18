@@ -26,6 +26,13 @@ Build a GSD workflow system for Tabnine agent mode by creating modular guideline
 4. Guideline files use unambiguous language that prevents agent misinterpretation
 5. Templates are human-readable and can be manually edited if needed
 
+**Plans:** 3 plans
+
+Plans:
+- [ ] 01-01-PLAN.md — Workflow guidelines (new-project, plan-phase, execute-phase, verify-work)
+- [ ] 01-02-PLAN.md — Artifact templates (PROJECT, ROADMAP, PLAN, REQUIREMENTS, STATE)
+- [ ] 01-03-PLAN.md — Configuration and documentation (.gsd-config.json, README.md)
+
 **Deliverables:**
 - gsd/guidelines/new-project.md
 - gsd/guidelines/plan-phase.md

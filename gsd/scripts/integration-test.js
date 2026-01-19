@@ -18,6 +18,7 @@ import { renderTemplate, listTemplates } from './template-renderer.js';
 import { loadGuideline, listWorkflows } from './guideline-loader.js';
 import path from 'node:path';
 import { unlink, rmdir } from 'node:fs/promises';
+import fs from 'node:fs';
 
 // Test results tracking
 let totalTests = 0;
@@ -612,11 +613,248 @@ async function testResumeOrchestration() {
 }
 
 /**
+ * Test Suite 10: Approval Gates and Research Synthesis
+ */
+async function testApprovalGatesAndResearch() {
+  console.log('\n=== Test Suite 10: Approval Gates and Research Synthesis ===');
+
+  try {
+    const { prepareApprovalGate, logApprovalDecision } = await import('./approval-gate.js');
+    const { assignConfidenceLevel, synthesizeResearch } = await import('./research-synthesizer.js');
+
+    // === APPROVAL GATE TESTS (4 tests) ===
+
+    // Test 1: prepareApprovalGate formats options correctly
+    try {
+      const result = prepareApprovalGate('Test Gate', [
+        {
+          name: 'Option A',
+          description: 'Test option',
+          pros: ['Pro 1'],
+          cons: ['Con 1']
+        }
+      ]);
+      const passed = result.gate === 'Test Gate' &&
+                     result.options.length === 1 &&
+                     result.status === 'presented' &&
+                     result.timestamp;
+      logTest('prepareApprovalGate formats options correctly', passed);
+    } catch (error) {
+      logTest('prepareApprovalGate formats options correctly', false, error.message);
+    }
+
+    // Test 2: logApprovalDecision appends to STATE.md
+    try {
+      const testDir = path.join('gsd', 'scripts', 'test-approval-tmp');
+      const planningDir = path.join(testDir, '.planning');
+      const statePath = path.join(planningDir, 'STATE.md');
+
+      // Create temp directory and STATE.md with Key Decisions table
+      fs.mkdirSync(planningDir, { recursive: true });
+      const testStateContent = `# State: Test Project
+
+**Last Updated:** 2026-01-18
+
+---
+
+## Current Position
+
+**Phase:** 1 of 4 (Test Phase)
+**Plan:** 1 of 1 (in progress)
+**Status:** In progress
+
+---
+
+## Accumulated Context
+
+### Key Decisions
+
+| Decision | Date | Rationale |
+|----------|------|-----------|
+| Test Decision 1 | 2026-01-18 | Test rationale 1 |
+`;
+      fs.writeFileSync(statePath, testStateContent);
+
+      // Log approval decision
+      await logApprovalDecision(testDir, 'Stack Choice', 'React', 'User preference');
+
+      // Read updated STATE.md
+      const updatedContent = fs.readFileSync(statePath, 'utf8');
+      const passed = updatedContent.includes('[APPROVAL GATE] Stack Choice: React') &&
+                     updatedContent.includes('User preference');
+
+      // Cleanup
+      fs.rmSync(testDir, { recursive: true, force: true });
+
+      logTest('logApprovalDecision appends to STATE.md', passed);
+    } catch (error) {
+      logTest('logApprovalDecision appends to STATE.md', false, error.message);
+    }
+
+    // Test 3: logApprovalDecision handles missing STATE.md
+    try {
+      const testDir = path.join('gsd', 'scripts', 'test-approval-missing');
+      fs.mkdirSync(testDir, { recursive: true });
+
+      // Try to log decision without STATE.md
+      await logApprovalDecision(testDir, 'Test', 'Option', 'Reason');
+
+      // Should have thrown error
+      fs.rmSync(testDir, { recursive: true, force: true });
+      logTest('logApprovalDecision handles missing STATE.md', false, 'Should have thrown error');
+    } catch (error) {
+      // Cleanup
+      const testDir = path.join('gsd', 'scripts', 'test-approval-missing');
+      if (fs.existsSync(testDir)) {
+        fs.rmSync(testDir, { recursive: true, force: true });
+      }
+      const passed = error.message.includes('STATE.md') || error.message.includes('not found');
+      logTest('logApprovalDecision handles missing STATE.md', passed);
+    }
+
+    // Test 4: logApprovalDecision preserves existing decisions
+    try {
+      const testDir = path.join('gsd', 'scripts', 'test-approval-preserve');
+      const planningDir = path.join(testDir, '.planning');
+      const statePath = path.join(planningDir, 'STATE.md');
+
+      // Create temp STATE.md with 2 existing decisions
+      fs.mkdirSync(planningDir, { recursive: true });
+      const testStateContent = `# State: Test Project
+
+**Last Updated:** 2026-01-18
+
+---
+
+## Current Position
+
+**Phase:** 1 of 4 (Test Phase)
+**Plan:** 1 of 1 (in progress)
+**Status:** In progress
+
+---
+
+## Accumulated Context
+
+### Key Decisions
+
+| Decision | Date | Rationale |
+|----------|------|-----------|
+| Decision 1 | 2026-01-18 | Rationale 1 |
+| Decision 2 | 2026-01-18 | Rationale 2 |
+`;
+      fs.writeFileSync(statePath, testStateContent);
+
+      // Add 3rd decision
+      await logApprovalDecision(testDir, 'Decision 3', 'Option 3', 'Rationale 3');
+
+      // Read updated STATE.md
+      const updatedContent = fs.readFileSync(statePath, 'utf8');
+      const passed = updatedContent.includes('Decision 1') &&
+                     updatedContent.includes('Decision 2') &&
+                     updatedContent.includes('[APPROVAL GATE] Decision 3: Option 3');
+
+      // Cleanup
+      fs.rmSync(testDir, { recursive: true, force: true });
+
+      logTest('logApprovalDecision preserves existing decisions', passed);
+    } catch (error) {
+      logTest('logApprovalDecision preserves existing decisions', false, error.message);
+    }
+
+    // === RESEARCH SYNTHESIS TESTS (4 tests) ===
+
+    // Test 5: assignConfidenceLevel detects HIGH confidence sources
+    try {
+      const test1 = assignConfidenceLevel({ source: 'https://docs.example.com/guide' });
+      const test2 = assignConfidenceLevel({ source: 'https://example.dev/docs' });
+      const test3 = assignConfidenceLevel({ source: 'https://github.com/owner/repo/blob/main/docs/guide.md' });
+      const passed = test1 === 'HIGH' && test2 === 'HIGH' && test3 === 'HIGH';
+      logTest('assignConfidenceLevel detects HIGH confidence sources', passed);
+    } catch (error) {
+      logTest('assignConfidenceLevel detects HIGH confidence sources', false, error.message);
+    }
+
+    // Test 6: assignConfidenceLevel detects MEDIUM confidence sources
+    try {
+      const test1 = assignConfidenceLevel({ source: 'https://developer.mozilla.org/en-US/docs/Web' });
+      const test2 = assignConfidenceLevel({ source: 'https://stackoverflow.com/questions/123' });
+      const test3 = assignConfidenceLevel({ source: 'https://blog.example.com', verifiedWithOfficial: true });
+      const passed = test1 === 'MEDIUM' && test2 === 'MEDIUM' && test3 === 'MEDIUM';
+      logTest('assignConfidenceLevel detects MEDIUM confidence sources', passed);
+    } catch (error) {
+      logTest('assignConfidenceLevel detects MEDIUM confidence sources', false, error.message);
+    }
+
+    // Test 7: assignConfidenceLevel detects LOW confidence sources
+    try {
+      const test1 = assignConfidenceLevel({ source: 'https://blog.example.com/post' });
+      const test2 = assignConfidenceLevel({ source: 'https://random-site.com' });
+      const passed = test1 === 'LOW' && test2 === 'LOW';
+      logTest('assignConfidenceLevel detects LOW confidence sources', passed);
+    } catch (error) {
+      logTest('assignConfidenceLevel detects LOW confidence sources', false, error.message);
+    }
+
+    // Test 8: synthesizeResearch generates document with confidence sections
+    try {
+      const testDir = path.join('gsd', 'scripts', 'test-synth-tmp');
+      const templatesDir = path.join(testDir, 'gsd', 'templates');
+
+      // Create temp directory and STACK.md template
+      fs.mkdirSync(templatesDir, { recursive: true });
+
+      // Copy STACK.md template to temp location
+      const actualTemplatePath = path.join('gsd', 'templates', 'STACK.md');
+      const testTemplatePath = path.join(templatesDir, 'STACK.md');
+      const templateContent = fs.readFileSync(actualTemplatePath, 'utf8');
+      fs.writeFileSync(testTemplatePath, templateContent);
+
+      // Create test findings
+      const findings = [
+        {
+          title: 'Test Finding',
+          content: 'Test content',
+          source: 'https://docs.example.com/test'
+        }
+      ];
+
+      // Synthesize research
+      const result = await synthesizeResearch(testDir, 'Test Stack', findings, 'STACK');
+
+      // Verify result contains confidence sections and source
+      const passed = result.includes('High Confidence Findings') &&
+                     result.includes('https://docs.example.com/test');
+
+      // Cleanup
+      fs.rmSync(testDir, { recursive: true, force: true });
+
+      logTest('synthesizeResearch generates document with confidence sections', passed);
+    } catch (error) {
+      // Cleanup on error
+      const testDir = path.join('gsd', 'scripts', 'test-synth-tmp');
+      if (fs.existsSync(testDir)) {
+        fs.rmSync(testDir, { recursive: true, force: true });
+      }
+      logTest('synthesizeResearch generates document with confidence sections', false, error.message);
+    }
+
+  } catch (error) {
+    logTest('Approval gates and research synthesis tests - ERROR', false, error.message);
+    // If import failed, mark remaining tests as failed
+    for (let i = 0; i < 8; i++) {
+      failedTests++;
+      totalTests++;
+    }
+  }
+}
+
+/**
  * Main test runner
  */
 async function runAllTests() {
   console.log('===========================================');
-  console.log('Phase 2 & 3 Integration Test Suite');
+  console.log('Phase 2, 3, & 4 Integration Test Suite');
   console.log('===========================================');
 
   try {
@@ -629,6 +867,7 @@ async function runAllTests() {
     await testTriggerDetection();
     await testArtifactValidation();
     await testResumeOrchestration();
+    await testApprovalGatesAndResearch();
 
     // Final report
     console.log('\n===========================================');

@@ -27,7 +27,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [ ] **TRIG-01**: System detects phrase "start GSD" and initiates new-project workflow
 - [ ] **TRIG-02**: System detects phrase "continue GSD workflow" and resumes from STATE.md
-- [ ] **TRIG-03**: System detects phrase variations with fuzzy matching (e.g., "begin GSD", "resume workflow")
+- [ ] **TRIG-03**: System detects phrase variations via configuration (e.g., additional exact phrases in .gsd-config.json)
 - [ ] **TRIG-04**: System confirms trigger detection before activating workflow to prevent false positives
 
 ### Progress Tracking

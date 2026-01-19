@@ -460,11 +460,83 @@ async function testTriggerDetection() {
 }
 
 /**
+ * Test Suite 8: Artifact Validation
+ */
+async function testArtifactValidation() {
+  console.log('\n=== Test Suite 8: Artifact Validation ===');
+
+  try {
+    const { validateArtifact, validateRequirementCoverage, validateStateStructure } = await import('./validator.js');
+
+    // Test 1: Valid PROJECT.md passes validation
+    try {
+      await validateArtifact('.', '.planning/PROJECT.md', 'PROJECT.md');
+      logTest('Valid PROJECT.md passes validation', true);
+    } catch (error) {
+      logTest('Valid PROJECT.md passes validation', false, error.message);
+    }
+
+    // Test 2: Valid ROADMAP.md passes validation
+    try {
+      await validateArtifact('.', '.planning/ROADMAP.md', 'ROADMAP.md');
+      logTest('Valid ROADMAP.md passes validation', true);
+    } catch (error) {
+      logTest('Valid ROADMAP.md passes validation', false, error.message);
+    }
+
+    // Test 3: State structure validation (valid state)
+    const validState = {
+      phase: 2,
+      plan: 5,
+      status: 'completed',
+      step: 'Integration testing'
+    };
+    const result3 = validateStateStructure(validState);
+    if (result3.valid === true) {
+      logTest('State structure validation (valid state)', true);
+    } else {
+      logTest('State structure validation (valid state)', false, `Errors: ${result3.errors.join(', ')}`);
+    }
+
+    // Test 4: State structure validation (invalid status)
+    const invalidState = {
+      phase: 1,
+      plan: 1,
+      status: 'invalid_status',
+      step: 'Test'
+    };
+    const result4 = validateStateStructure(invalidState);
+    if (result4.valid === false && result4.errors.length > 0) {
+      logTest('State structure validation (invalid status rejected)', true);
+    } else {
+      logTest('State structure validation (invalid status rejected)', false, 'Invalid status not rejected');
+    }
+
+    // Test 5: validateStateStructure exports work
+    const testResult = validateStateStructure({
+      phase: 3,
+      plan: 2,
+      status: 'in_progress',
+      step: 'Executing Task 2'
+    });
+    logTest('Validator exports functional', testResult.valid === true);
+
+  } catch (error) {
+    logTest('Artifact validation tests - ERROR', false, error.message);
+    // If import failed, mark remaining tests as failed
+    for (let i = 0; i < 5; i++) {
+      failedTests++;
+      totalTests++;
+    }
+  }
+}
+
+/**
  * Main test runner
  */
 async function runAllTests() {
   console.log('===========================================');
-  console.log('Phase 2 Integration Test Suite');
+  console.log('Phase 2 & 3 Integration Test Suite');
   console.log('===========================================');
 
   try {
@@ -475,6 +547,7 @@ async function runAllTests() {
     await testGuidelineLoader();
     await testCrossPlatform();
     await testTriggerDetection();
+    await testArtifactValidation();
 
     // Final report
     console.log('\n===========================================');

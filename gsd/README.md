@@ -4,6 +4,8 @@
 
 Get Shit Done workflow system adapted for Tabnine's agent mode. Provides modular guidelines, templates, and scripts for sequential multi-phase project execution with automatic state persistence and resume capabilities.
 
+**🚀 New to GSD?** → See [QUICKSTART.md](QUICKSTART.md) for 5-minute setup guide
+
 ## What This Is
 
 A lightweight workflow orchestration system for Tabnine agent that:

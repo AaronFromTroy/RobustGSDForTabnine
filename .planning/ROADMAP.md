@@ -134,12 +134,17 @@ Plans:
 5. Research findings are synthesized into structured documents (STACK.md, FEATURES.md, ARCHITECTURE.md, PITFALLS.md, SUMMARY.md)
 6. All research includes source URLs for verification
 
+**Plans:** 2 plans
+
+Plans:
+- [ ] 04-01-PLAN.md — Research templates and approval gates (templates + approval-gate.js)
+- [ ] 04-02-PLAN.md — Research synthesizer and integration testing (research-synthesizer.js + Test Suite 10)
+
 **Deliverables:**
 - gsd/scripts/approval-gate.js (pause and collect user input)
 - gsd/scripts/research-synthesizer.js (multi-source research)
-- Enhanced workflow guidelines with approval gates
-- Research templates (STACK.md, FEATURES.md, etc.)
-- End-to-end test validation on real project
+- Research templates (STACK.md, FEATURES.md, ARCHITECTURE.md, PITFALLS.md, SUMMARY.md)
+- Test Suite 10 (approval gates and research synthesis validation)
 
 ---
 
@@ -193,4 +198,4 @@ Phase 4 (Advanced Features)
 ---
 
 *Roadmap created: 2026-01-18*
-*Last updated: 2026-01-18 - Phase 3 complete (3 plans executed, goal verified)*
+*Last updated: 2026-01-19 - Phase 4 planned (2 plans in 2 waves)*

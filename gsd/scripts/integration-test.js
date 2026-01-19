@@ -532,6 +532,86 @@ async function testArtifactValidation() {
 }
 
 /**
+ * Test Suite 9: Resume & Orchestration
+ */
+async function testResumeOrchestration() {
+  console.log('\n=== Test Suite 9: Resume & Orchestration ===');
+
+  try {
+    const { resumeWorkflow, generateStatusSummary, determineNextAction } = await import('./resume-manager.js');
+    const { validatePhaseTransition, validatePhaseCompletion } = await import('./workflow-orchestrator.js');
+
+    // Test 1: Resume workflow from STATE.md
+    try {
+      const result = await resumeWorkflow(process.cwd());
+      if (result.state && result.guideline && result.summary && result.nextAction) {
+        logTest('Resume workflow from STATE.md', true);
+      } else {
+        logTest('Resume workflow from STATE.md', false, 'missing fields in result');
+      }
+    } catch (error) {
+      logTest('Resume workflow from STATE.md', false, error.message);
+    }
+
+    // Test 2: Status summary format
+    const testState = { phase: 2, plan: 5, status: 'completed', step: 'Integration testing' };
+    const testGuideline = { metadata: { workflow: 'executePhase' } };
+    const summary = generateStatusSummary(testState, testGuideline);
+    if (summary.includes('📍') && summary.includes('Phase: 2')) {
+      logTest('Status summary format includes icon and phase', true);
+    } else {
+      logTest('Status summary format includes icon and phase', false, 'format incorrect');
+    }
+
+    // Test 3: Next action determination
+    const nextAction = determineNextAction(testState);
+    if (nextAction.includes('Phase 2 complete') && nextAction.includes('Phase 3')) {
+      logTest('Next action determination (completed state)', true);
+    } else {
+      logTest('Next action determination (completed state)', false, 'next action incorrect');
+    }
+
+    // Test 4: Valid phase transition (2 -> 3)
+    try {
+      validatePhaseTransition({ phase: 2, status: 'completed' }, 3);
+      logTest('Valid phase transition (2 -> 3)', true);
+    } catch (error) {
+      logTest('Valid phase transition (2 -> 3)', false, error.message);
+    }
+
+    // Test 5: Invalid phase transition (2 -> 5)
+    try {
+      validatePhaseTransition({ phase: 2, status: 'completed' }, 5);
+      logTest('Invalid phase transition blocked (2 -> 5)', false, 'should have thrown');
+    } catch (error) {
+      logTest('Invalid phase transition blocked (2 -> 5)', true);
+    }
+
+    // Test 6: Phase completion validation
+    try {
+      const result = await validatePhaseCompletion(process.cwd(), 1, [
+        { filePath: '.planning/PROJECT.md', type: 'PROJECT.md' }
+      ]);
+      if (result.valid === true) {
+        logTest('Phase completion validation', true);
+      } else {
+        logTest('Phase completion validation', false, 'validation failed');
+      }
+    } catch (error) {
+      logTest('Phase completion validation', false, error.message);
+    }
+
+  } catch (error) {
+    logTest('Resume & orchestration tests - ERROR', false, error.message);
+    // If import failed, mark remaining tests as failed
+    for (let i = 0; i < 5; i++) {
+      failedTests++;
+      totalTests++;
+    }
+  }
+}
+
+/**
  * Main test runner
  */
 async function runAllTests() {
@@ -548,6 +628,7 @@ async function runAllTests() {
     await testCrossPlatform();
     await testTriggerDetection();
     await testArtifactValidation();
+    await testResumeOrchestration();
 
     // Final report
     console.log('\n===========================================');

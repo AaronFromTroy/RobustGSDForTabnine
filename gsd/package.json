@@ -10,9 +10,10 @@
     "test": "echo \"Tests in Phase 3\" && exit 0"
   },
   "dependencies": {
-    "write-file-atomic": "^5.0.1",
     "ajv": "^8.12.0",
-    "front-matter": "^4.0.2"
+    "front-matter": "^4.0.2",
+    "markdownlint": "^0.36.1",
+    "write-file-atomic": "^5.0.1"
   },
   "private": true,
   "author": "GSD Project",

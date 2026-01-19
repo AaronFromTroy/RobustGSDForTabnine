@@ -62,10 +62,16 @@ ls .tabnine/guidelines/
 
 # Check scripts work
 node gsd/scripts/integration-test.js
-# Should show: 57 tests passing (100%)
+# Before "start GSD": 42-45 tests pass (some need .planning/ to exist)
+# After "start GSD": 52-57 tests pass (all workflows initialized)
 ```
 
-**Success checkpoint:** All 57 tests pass ✓
+**Expected before initialization:**
+- ✓ Core modules pass: file ops, process runner, templates, guidelines
+- ✗ Some tests fail: STATE.md, artifact validation (no .planning/ yet)
+- **This is normal!** Run "start GSD" to create .planning/ directory
+
+**Success checkpoint:** 40+ tests pass ✓
 
 ---
 
@@ -218,6 +224,25 @@ cd gsd
 rm -rf node_modules package-lock.json
 npm install
 ```
+
+### "Integration tests show different pass count"
+
+Tests may show 42-57 passing depending on whether .planning/ exists:
+
+```bash
+# Run from project root
+cd /your/project
+node gsd/scripts/integration-test.js
+
+# Check output shows correct paths:
+# GSD Root: /your/project/gsd
+# Project Root: /your/project
+```
+
+**If tests fail with "gsd\\gsd\\templates" error:**
+- You're running from wrong directory
+- Should run from project root (where gsd/ and .tabnine/ exist)
+- NOT from inside gsd/ directory itself
 
 ### "Scripts run but artifacts not created"
 

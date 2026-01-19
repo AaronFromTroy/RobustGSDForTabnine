@@ -63,18 +63,43 @@ Unlike Claude Code's parallel execution, Tabnine runs everything sequentially:
    ```
 
 2. **Create .tabnine/guidelines/ symlink:**
+
+   **Option A: Use helper script (recommended)**
+
+   Git Bash / Linux / macOS:
+   ```bash
+   bash INSTALL-SYMLINK.sh
+   ```
+
+   Windows Command Prompt (run as Administrator):
+   ```cmd
+   INSTALL-SYMLINK.cmd
+   ```
+
+   **Option B: Manual symlink**
+
+   Git Bash / Linux / macOS:
    ```bash
    mkdir -p .tabnine
-   ln -s ../gsd/guidelines .tabnine/guidelines
+   ln -s "$(pwd)/gsd/guidelines" .tabnine/guidelines
    ```
 
-   On Windows (Command Prompt as Administrator):
+   Windows Command Prompt (run as Administrator):
    ```cmd
    mkdir .tabnine
-   mklink /D .tabnine\guidelines gsd\guidelines
+   mklink /D .tabnine\guidelines "%CD%\gsd\guidelines"
    ```
 
+   **Option C: Copy files (if symlinks don't work)**
+   ```bash
+   mkdir -p .tabnine/guidelines
+   cp gsd/guidelines/*.md .tabnine/guidelines/
+   ```
+   ⚠️ **Note:** If you copy instead of symlink, you'll need to manually sync updates.
+
    **Why symlink?** Tabnine looks in `.tabnine/guidelines/` by default. Symlinking avoids duplicating files and keeps the source of truth in `gsd/guidelines/`.
+
+   **Common issue:** Using relative paths like `../gsd/guidelines` fails on some Windows systems. Use absolute paths with `$(pwd)` or `%CD%` instead.
 
 3. **Install Node.js dependencies:**
    ```bash

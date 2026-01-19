@@ -850,6 +850,154 @@ async function testApprovalGatesAndResearch() {
 }
 
 /**
+ * Test Suite 11: Automated Research
+ */
+async function testAutomatedResearch() {
+  console.log('\n=== Test Suite 11: Automated Research ===');
+
+  try {
+    const { performResearch, extractFindings, mergeManualFindings } = await import('./researcher.js');
+
+    // Test 1: performResearch generates findings for STACK type
+    try {
+      const findings = await performResearch('React', 'STACK');
+      const passed = Array.isArray(findings) &&
+                     findings.length > 0 &&
+                     findings[0].title &&
+                     findings[0].content &&
+                     findings[0].source &&
+                     findings[0].source.startsWith('https://');
+      logTest('performResearch generates findings for STACK type', passed);
+    } catch (error) {
+      logTest('performResearch generates findings for STACK type', false, error.message);
+    }
+
+    // Test 2: performResearch generates findings for FEATURES type
+    try {
+      const findings = await performResearch('React', 'FEATURES');
+      const passed = Array.isArray(findings) &&
+                     findings.length > 0;
+      // Verify different queries generate different findings (at least one difference)
+      const stackFindings = await performResearch('React', 'STACK');
+      const hasDifference = JSON.stringify(findings) !== JSON.stringify(stackFindings);
+      logTest('performResearch generates findings for FEATURES type', passed && hasDifference);
+    } catch (error) {
+      logTest('performResearch generates findings for FEATURES type', false, error.message);
+    }
+
+    // Test 3: performResearch generates findings for ARCHITECTURE type
+    try {
+      const findings = await performResearch('Node.js', 'ARCHITECTURE');
+      const passed = Array.isArray(findings) &&
+                     findings.length > 0;
+      // Check if at least one finding mentions architecture or patterns
+      const mentionsArchitecture = findings.some(f =>
+        f.title.toLowerCase().includes('architecture') ||
+        f.title.toLowerCase().includes('pattern') ||
+        f.content.toLowerCase().includes('architecture') ||
+        f.content.toLowerCase().includes('pattern')
+      );
+      logTest('performResearch generates findings for ARCHITECTURE type', passed && mentionsArchitecture);
+    } catch (error) {
+      logTest('performResearch generates findings for ARCHITECTURE type', false, error.message);
+    }
+
+    // Test 4: extractFindings parses search results correctly
+    try {
+      const mockResults = [
+        {
+          title: 'Test Official Docs',
+          snippet: 'Official documentation content',
+          url: 'https://docs.example.com/test'
+        },
+        {
+          title: 'Insecure HTTP Source',
+          snippet: 'Should be filtered out',
+          url: 'http://example.com/test' // HTTP, should be excluded
+        },
+        {
+          title: 'Forum Post',
+          snippet: 'Should be filtered out',
+          url: 'https://forum.example.com/thread/123' // Forum, should be excluded
+        }
+      ];
+
+      const findings = extractFindings(mockResults);
+      const passed = findings.length === 1 && // Only HTTPS non-forum result
+                     findings[0].title === 'Test Official Docs' &&
+                     findings[0].content === 'Official documentation content' &&
+                     findings[0].source === 'https://docs.example.com/test';
+      logTest('extractFindings parses search results correctly', passed);
+    } catch (error) {
+      logTest('extractFindings parses search results correctly', false, error.message);
+    }
+
+    // Test 5: mergeManualFindings combines automated + manual
+    try {
+      const automatedFindings = [
+        {
+          title: 'Auto Finding',
+          content: 'Automated content',
+          source: 'https://auto.com/doc'
+        }
+      ];
+
+      const manualFindings = [
+        {
+          title: 'Manual Finding',
+          content: 'Manual content',
+          source: 'https://manual.com/doc',
+          verifiedWithOfficial: true
+        }
+      ];
+
+      const combined = mergeManualFindings(automatedFindings, manualFindings);
+      const passed = combined.length === 2 &&
+                     combined.some(f => f.source === 'https://auto.com/doc') &&
+                     combined.some(f => f.source === 'https://manual.com/doc' && f.verifiedWithOfficial === true);
+      logTest('mergeManualFindings combines automated + manual', passed);
+    } catch (error) {
+      logTest('mergeManualFindings combines automated + manual', false, error.message);
+    }
+
+    // Test 6: mergeManualFindings deduplicates by source URL
+    try {
+      const automatedFindings = [
+        {
+          title: 'Auto Finding',
+          content: 'Old content from automated search',
+          source: 'https://example.com/doc'
+        }
+      ];
+
+      const manualFindings = [
+        {
+          title: 'Manual Override',
+          content: 'New content manually verified',
+          source: 'https://example.com/doc' // Same URL
+        }
+      ];
+
+      const combined = mergeManualFindings(automatedFindings, manualFindings);
+      const passed = combined.length === 1 &&
+                     combined[0].title === 'Manual Override' &&
+                     combined[0].content === 'New content manually verified';
+      logTest('mergeManualFindings deduplicates by source URL', passed);
+    } catch (error) {
+      logTest('mergeManualFindings deduplicates by source URL', false, error.message);
+    }
+
+  } catch (error) {
+    logTest('Automated research tests - ERROR', false, error.message);
+    // If import failed, mark remaining tests as failed
+    for (let i = 0; i < 6; i++) {
+      failedTests++;
+      totalTests++;
+    }
+  }
+}
+
+/**
  * Main test runner
  */
 async function runAllTests() {
@@ -868,6 +1016,7 @@ async function runAllTests() {
     await testArtifactValidation();
     await testResumeOrchestration();
     await testApprovalGatesAndResearch();
+    await testAutomatedResearch();
 
     // Final report
     console.log('\n===========================================');

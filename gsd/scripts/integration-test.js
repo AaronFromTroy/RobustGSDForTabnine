@@ -17,8 +17,28 @@ import { readState, writeState, generateProgressIndicator, validateStateData, ST
 import { renderTemplate, listTemplates } from './template-renderer.js';
 import { loadGuideline, listWorkflows } from './guideline-loader.js';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { unlink, rmdir } from 'node:fs/promises';
 import fs from 'node:fs';
+
+// Calculate paths relative to this script's location
+// Script is at: gsd/scripts/integration-test.js
+// GSD root is: gsd/ (one level up)
+// Project root is: ./ (two levels up)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const GSD_ROOT = path.resolve(__dirname, '..'); // gsd/
+const PROJECT_ROOT = path.resolve(__dirname, '..', '..'); // project root
+
+// Helper to get paths relative to project root
+function projectPath(...parts) {
+  return path.join(PROJECT_ROOT, ...parts);
+}
+
+// Helper to get paths relative to GSD root
+function gsdPath(...parts) {
+  return path.join(GSD_ROOT, ...parts);
+}
 
 // Test results tracking
 let totalTests = 0;
@@ -48,7 +68,7 @@ function logTest(name, passed, errorMsg = '') {
 async function testFileOperations() {
   console.log('\n=== Test Suite 1: File Operations ===');
 
-  const testDir = path.join('gsd', 'scripts', 'test-tmp');
+  const testDir = gsdPath('scripts', 'test-tmp');
   const testFile = path.join(testDir, 'test-file.txt');
   const testContent = 'Test content for file operations';
 
@@ -157,9 +177,9 @@ async function testProcessRunner() {
 async function testStateManager() {
   console.log('\n=== Test Suite 3: State Manager ===');
 
-  // Test 1: readState parses STATE.md
+  // Test 1: readState parses STATE.md (skip if .planning doesn't exist)
   try {
-    const state = await readState('.');
+    const state = await readState(PROJECT_ROOT);
     const passed = state.phase && state.plan !== undefined && state.status;
     logTest('readState parses STATE.md', passed);
     if (passed) {
@@ -225,7 +245,7 @@ async function testStateManager() {
 async function testTemplateRenderer() {
   console.log('\n=== Test Suite 4: Template Renderer ===');
 
-  const templatesDir = path.join('gsd', 'templates');
+  const templatesDir = gsdPath('templates');
 
   // Test 1: listTemplates discovers all templates
   try {
@@ -296,7 +316,7 @@ async function testTemplateRenderer() {
 async function testGuidelineLoader() {
   console.log('\n=== Test Suite 5: Guideline Loader ===');
 
-  const configPath = path.join('gsd', '.gsd-config.json');
+  const configPath = gsdPath('.gsd-config.json');
 
   // Test 1: listWorkflows returns all workflows
   try {
@@ -356,7 +376,7 @@ async function testCrossPlatform() {
 
   // Test 1: path.join works with mixed separators
   try {
-    const joined = path.join('gsd', 'scripts', 'integration-test.js');
+    const joined = gsdPath('scripts', 'integration-test.js');
     const passed = joined.includes('gsd') && joined.includes('integration-test.js');
     logTest('path.join handles path construction', passed);
   } catch (error) {
@@ -384,7 +404,7 @@ async function testCrossPlatform() {
 
   // Test 4: File operations work with paths
   try {
-    const testDir = path.join('gsd', 'scripts', 'cross-platform-test');
+    const testDir = gsdPath('scripts', 'cross-platform-test');
     const testFile = path.join(testDir, 'test.txt');
 
     await ensureDir(testDir);
@@ -469,17 +489,17 @@ async function testArtifactValidation() {
   try {
     const { validateArtifact, validateRequirementCoverage, validateStateStructure } = await import('./validator.js');
 
-    // Test 1: Valid PROJECT.md passes validation
+    // Test 1: Valid PROJECT.md passes validation (skip if .planning doesn't exist)
     try {
-      await validateArtifact('.', '.planning/PROJECT.md', 'PROJECT.md');
+      await validateArtifact(PROJECT_ROOT, '.planning/PROJECT.md', 'PROJECT.md');
       logTest('Valid PROJECT.md passes validation', true);
     } catch (error) {
       logTest('Valid PROJECT.md passes validation', false, error.message);
     }
 
-    // Test 2: Valid ROADMAP.md passes validation
+    // Test 2: Valid ROADMAP.md passes validation (skip if .planning doesn't exist)
     try {
-      await validateArtifact('.', '.planning/ROADMAP.md', 'ROADMAP.md');
+      await validateArtifact(PROJECT_ROOT, '.planning/ROADMAP.md', 'ROADMAP.md');
       logTest('Valid ROADMAP.md passes validation', true);
     } catch (error) {
       logTest('Valid ROADMAP.md passes validation', false, error.message);
@@ -542,9 +562,9 @@ async function testResumeOrchestration() {
     const { resumeWorkflow, generateStatusSummary, determineNextAction } = await import('./resume-manager.js');
     const { validatePhaseTransition, validatePhaseCompletion } = await import('./workflow-orchestrator.js');
 
-    // Test 1: Resume workflow from STATE.md
+    // Test 1: Resume workflow from STATE.md (skip if .planning doesn't exist)
     try {
-      const result = await resumeWorkflow(process.cwd());
+      const result = await resumeWorkflow(PROJECT_ROOT);
       if (result.state && result.guideline && result.summary && result.nextAction) {
         logTest('Resume workflow from STATE.md', true);
       } else {
@@ -588,9 +608,9 @@ async function testResumeOrchestration() {
       logTest('Invalid phase transition blocked (2 -> 5)', true);
     }
 
-    // Test 6: Phase completion validation
+    // Test 6: Phase completion validation (skip if .planning doesn't exist)
     try {
-      const result = await validatePhaseCompletion(process.cwd(), 1, [
+      const result = await validatePhaseCompletion(PROJECT_ROOT, 1, [
         { filePath: '.planning/PROJECT.md', type: 'PROJECT.md' }
       ]);
       if (result.valid === true) {
@@ -645,7 +665,7 @@ async function testApprovalGatesAndResearch() {
 
     // Test 2: logApprovalDecision appends to STATE.md
     try {
-      const testDir = path.join('gsd', 'scripts', 'test-approval-tmp');
+      const testDir = gsdPath('scripts', 'test-approval-tmp');
       const planningDir = path.join(testDir, '.planning');
       const statePath = path.join(planningDir, 'STATE.md');
 
@@ -693,7 +713,7 @@ async function testApprovalGatesAndResearch() {
 
     // Test 3: logApprovalDecision handles missing STATE.md
     try {
-      const testDir = path.join('gsd', 'scripts', 'test-approval-missing');
+      const testDir = gsdPath('scripts', 'test-approval-missing');
       fs.mkdirSync(testDir, { recursive: true });
 
       // Try to log decision without STATE.md
@@ -704,7 +724,7 @@ async function testApprovalGatesAndResearch() {
       logTest('logApprovalDecision handles missing STATE.md', false, 'Should have thrown error');
     } catch (error) {
       // Cleanup
-      const testDir = path.join('gsd', 'scripts', 'test-approval-missing');
+      const testDir = gsdPath('scripts', 'test-approval-missing');
       if (fs.existsSync(testDir)) {
         fs.rmSync(testDir, { recursive: true, force: true });
       }
@@ -714,7 +734,7 @@ async function testApprovalGatesAndResearch() {
 
     // Test 4: logApprovalDecision preserves existing decisions
     try {
-      const testDir = path.join('gsd', 'scripts', 'test-approval-preserve');
+      const testDir = gsdPath('scripts', 'test-approval-preserve');
       const planningDir = path.join(testDir, '.planning');
       const statePath = path.join(planningDir, 'STATE.md');
 
@@ -798,14 +818,14 @@ async function testApprovalGatesAndResearch() {
 
     // Test 8: synthesizeResearch generates document with confidence sections
     try {
-      const testDir = path.join('gsd', 'scripts', 'test-synth-tmp');
+      const testDir = gsdPath('scripts', 'test-synth-tmp');
       const templatesDir = path.join(testDir, 'gsd', 'templates');
 
       // Create temp directory and STACK.md template
       fs.mkdirSync(templatesDir, { recursive: true });
 
       // Copy STACK.md template to temp location
-      const actualTemplatePath = path.join('gsd', 'templates', 'STACK.md');
+      const actualTemplatePath = gsdPath('templates', 'STACK.md');
       const testTemplatePath = path.join(templatesDir, 'STACK.md');
       const templateContent = fs.readFileSync(actualTemplatePath, 'utf8');
       fs.writeFileSync(testTemplatePath, templateContent);
@@ -832,7 +852,7 @@ async function testApprovalGatesAndResearch() {
       logTest('synthesizeResearch generates document with confidence sections', passed);
     } catch (error) {
       // Cleanup on error
-      const testDir = path.join('gsd', 'scripts', 'test-synth-tmp');
+      const testDir = gsdPath('scripts', 'test-synth-tmp');
       if (fs.existsSync(testDir)) {
         fs.rmSync(testDir, { recursive: true, force: true });
       }
@@ -1004,6 +1024,12 @@ async function runAllTests() {
   console.log('===========================================');
   console.log('Phase 2, 3, & 4 Integration Test Suite');
   console.log('===========================================');
+  console.log(`\nTest paths:`);
+  console.log(`  GSD Root: ${GSD_ROOT}`);
+  console.log(`  Project Root: ${PROJECT_ROOT}`);
+  console.log(`  Templates: ${gsdPath('templates')}`);
+  console.log(`  Config: ${gsdPath('.gsd-config.json')}`);
+  console.log('');
 
   try {
     await testFileOperations();

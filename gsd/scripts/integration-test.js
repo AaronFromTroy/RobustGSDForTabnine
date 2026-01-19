@@ -401,6 +401,65 @@ async function testCrossPlatform() {
 }
 
 /**
+ * Test Suite 7: Trigger Detection
+ */
+async function testTriggerDetection() {
+  console.log('\n=== Test Suite 7: Trigger Detection ===');
+
+  const config = { triggerPhrases: { start: ['start GSD'], continue: ['continue GSD workflow'] } };
+
+  // Test 1: Exact phrase matching (START)
+  try {
+    const { detectTrigger } = await import('./trigger-detector.js');
+    const result = detectTrigger('start GSD', config);
+    const passed = result?.type === 'START' && result?.phrase === 'start GSD';
+    logTest('Exact phrase matching (START)', passed);
+  } catch (error) {
+    logTest('Exact phrase matching (START)', false, error.message);
+  }
+
+  // Test 2: Case insensitive matching
+  try {
+    const { detectTrigger } = await import('./trigger-detector.js');
+    const result = detectTrigger('START GSD', config);
+    const passed = result?.type === 'START';
+    logTest('Case insensitive matching', passed);
+  } catch (error) {
+    logTest('Case insensitive matching', false, error.message);
+  }
+
+  // Test 3: Fuzzy matching rejected
+  try {
+    const { detectTrigger } = await import('./trigger-detector.js');
+    const result = detectTrigger('I want to start GSD soon', config);
+    const passed = result === null;
+    logTest('Fuzzy matching rejected', passed);
+  } catch (error) {
+    logTest('Fuzzy matching rejected', false, error.message);
+  }
+
+  // Test 4: CONTINUE trigger detection
+  try {
+    const { detectTrigger } = await import('./trigger-detector.js');
+    const result = detectTrigger('continue GSD workflow', config);
+    const passed = result?.type === 'CONTINUE';
+    logTest('CONTINUE trigger detection', passed);
+  } catch (error) {
+    logTest('CONTINUE trigger detection', false, error.message);
+  }
+
+  // Test 5: Confirmation format includes icon
+  try {
+    const { confirmTrigger } = await import('./trigger-detector.js');
+    const confirmation = confirmTrigger({ type: 'START', phrase: 'start GSD' });
+    const passed = confirmation.includes('🔵') && confirmation.includes('GSD Trigger Detected');
+    logTest('Confirmation format includes icon', passed);
+  } catch (error) {
+    logTest('Confirmation format includes icon', false, error.message);
+  }
+}
+
+/**
  * Main test runner
  */
 async function runAllTests() {
@@ -415,6 +474,7 @@ async function runAllTests() {
     await testTemplateRenderer();
     await testGuidelineLoader();
     await testCrossPlatform();
+    await testTriggerDetection();
 
     // Final report
     console.log('\n===========================================');

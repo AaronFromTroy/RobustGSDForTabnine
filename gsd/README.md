@@ -280,11 +280,10 @@ When you trigger a workflow, here's what happens:
 
 **Phase 1: Discussion**
 1. Reads phase goal from `ROADMAP.md`
-2. Asks clarifying questions:
-   - Technology/library preferences
-   - Code organization patterns
-   - Testing strategy
-   - Constraints and risk tolerance
+2. Asks clarifying questions tailored to phase type:
+   - **Technical:** Technology/library preferences, code organization, testing strategy
+   - **Design & UX:** Design system, component library, responsive approach, accessibility, interaction patterns
+   - **Workflow:** Constraints, risk tolerance, commit preferences
 3. Waits for user responses
 
 **Phase 2: Planning**
@@ -294,10 +293,12 @@ When you trigger a workflow, here's what happens:
 
 **Phase 3: Approval**
 7. Presents plan summary to user
-8. Shows key decisions made
+8. Shows key decisions made (technical + design/UX if applicable)
 9. Offers options: Approve / Request changes / Reject
 10. Waits for user approval
 11. Logs approval decision to STATE.md
+
+**Note:** Design questions are automatically asked for UI/frontend phases or when phase goal mentions user-facing features, visual components, or interface design.
 
 **Output:** `.planning/phases/XX-name/XX-NN-PLAN.md` file(s) + approval record
 

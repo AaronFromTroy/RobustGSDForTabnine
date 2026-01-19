@@ -164,11 +164,25 @@ plan phase 1
    ```
    Before I create execution plans for Phase 1: Foundation, I'd like to clarify:
 
+   ## Technical Approach
    1. What technology stack do you prefer for templates?
    2. Any existing libraries you want to use?
    3. Testing strategy (unit, integration, e2e)?
 
+   ## Workflow Preferences
+   4. Risk tolerance for this phase? (move fast, be cautious)
+
    Please answer what's relevant - I'll use defaults for anything skipped.
+   ```
+
+   For UI/frontend phases, you'll also get design questions:
+   ```
+   ## Design & UX
+   3. Do you have design mockups or a style guide?
+   4. Component library preference? (MUI, Tailwind, custom)
+   5. Responsive design priority? (mobile-first, desktop-first)
+   6. Accessibility requirements? (WCAG level, screen readers)
+   7. Animation style? (minimal, smooth transitions, rich)
    ```
 
    You answer (or say "use defaults")
@@ -199,8 +213,16 @@ plan phase 1
    - PROJECT.md, ROADMAP.md, PLAN.md, REQUIREMENTS.md, STATE.md
 
    ## Key Decisions Based on Discussion:
+   **Technical:**
    - Templates: Markdown with YAML frontmatter
    - Testing: Integration test suite with 57 tests
+
+   **Design & UX:** (for UI phases)
+   - Design system: Material Design principles
+   - Component library: MUI (Material-UI)
+   - Responsive: Mobile-first, breakpoints at 768px/1024px
+   - Accessibility: WCAG 2.1 AA compliance
+   - Interactions: Smooth transitions, 200ms duration
 
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 

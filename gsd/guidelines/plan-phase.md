@@ -214,11 +214,36 @@ Co-Authored-By: Tabnine Agent <noreply@tabnine.com>
    - "Code organization preference (flat, modular, domain-driven)?"
    - "Testing strategy (unit, integration, e2e)?"
 
+   **For UI/frontend phases (NEW - Design Focus):**
+   - "Do you have a design system or style guide to follow?"
+   - "Preferred UI framework/library (React, Vue, vanilla, etc.)?"
+   - "Responsive design requirements (mobile-first, desktop-first, specific breakpoints)?"
+   - "Accessibility requirements (WCAG level, screen reader support)?"
+   - "Design patterns preference (Material, iOS, custom)?"
+   - "Color palette or brand guidelines?"
+   - "Typography preferences (font families, scale)?"
+   - "Component library to use (MUI, Ant Design, Tailwind, custom)?"
+   - "Animation/interaction preferences (minimal, smooth transitions, rich interactions)?"
+   - "Layout system (grid, flexbox, CSS Grid, specific framework)?"
+
    **For feature implementation phases:**
-   - "Any UI/UX constraints or design system to follow?"
+   - "Any UI/UX constraints or design mockups to follow?"
+   - "User flow preferences (multi-step wizard, single page, modal-based)?"
+   - "Form design approach (inline validation, submit-only, progressive disclosure)?"
+   - "Error/success feedback patterns (toasts, inline messages, modal alerts)?"
    - "Performance requirements (response time, load capacity)?"
    - "Error handling approach (fail fast, graceful degradation)?"
    - "Third-party services or APIs to integrate?"
+
+   **For user-facing feature phases (NEW - UX Focus):**
+   - "Target user personas or use cases?"
+   - "Critical user journeys to support?"
+   - "Onboarding/empty state handling?"
+   - "Loading states and skeleton screens needed?"
+   - "Confirmation patterns for destructive actions?"
+   - "Help/documentation approach (tooltips, guided tours, help center)?"
+   - "Search/filter/sort requirements?"
+   - "Pagination or infinite scroll preference?"
 
    **For all phases:**
    - "Are there any constraints I should know about?"
@@ -229,9 +254,37 @@ Co-Authored-By: Tabnine Agent <noreply@tabnine.com>
    ```
    Before I create execution plans for Phase X: [Name], I'd like to clarify a few things:
 
+   ## Technical Approach
    1. [Question 1]
    2. [Question 2]
-   3. [Question 3]
+
+   ## Design & UX (if applicable)
+   3. [Design question 1]
+   4. [Design question 2]
+
+   ## Workflow Preferences
+   5. [Question about risk/commits]
+
+   Please answer what's relevant - I'll use defaults for anything skipped.
+   ```
+
+   **Example for UI phase:**
+   ```
+   Before I create execution plans for Phase 2: Dashboard UI, I'd like to clarify:
+
+   ## Technical Approach
+   1. Preferred UI framework? (React, Vue, vanilla JS, or existing choice)
+   2. State management approach? (Context API, Redux, Zustand, MobX)
+
+   ## Design & UX
+   3. Do you have design mockups or a style guide to follow?
+   4. Responsive design priority? (mobile-first, desktop-first, or equal)
+   5. Accessibility requirements? (WCAG 2.1 AA, screen reader support)
+   6. Component library preference? (MUI, Ant Design, Tailwind, custom)
+   7. Animation/interaction style? (minimal, smooth transitions, rich)
+
+   ## Workflow Preferences
+   8. Risk tolerance for this phase? (move fast, be cautious, balanced)
 
    Please answer what's relevant - I'll use defaults for anything skipped.
    ```
@@ -289,9 +342,19 @@ Co-Authored-By: Tabnine Agent <noreply@tabnine.com>
    - [Deliverable 2]
 
    ## Key Decisions Based on Discussion:
+
+   **Technical:**
    - [Technology choice]: [What you chose and why]
    - [Architecture pattern]: [What you chose and why]
    - [Testing approach]: [What you chose and why]
+
+   **Design & UX:** (if applicable)
+   - [Design system]: [What you'll follow]
+   - [Component library]: [What you chose and why]
+   - [Responsive approach]: [Mobile-first/desktop-first and breakpoints]
+   - [Accessibility]: [Standards and requirements]
+   - [Interaction patterns]: [Animation style, feedback patterns]
+   - [Layout system]: [Grid/flexbox approach]
 
    ## Execution Order:
    1. Plan X-01 (wave 1) - no dependencies

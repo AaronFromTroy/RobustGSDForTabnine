@@ -102,6 +102,13 @@ Plans:
 6. System prevents invalid phase transitions with clear error messages
 7. System displays status summary on resume showing current position and next action
 
+**Plans:** 3 plans
+
+Plans:
+- [ ] 03-01-PLAN.md — Trigger detection and conflict handling
+- [ ] 03-02-PLAN.md — Artifact validation (schema + structure)
+- [ ] 03-03-PLAN.md — Resume manager and workflow orchestrator
+
 **Deliverables:**
 - gsd/scripts/trigger-detector.js (detect "start GSD", "continue GSD workflow")
 - gsd/scripts/workflow-orchestrator.js (sequential execution engine)
@@ -186,4 +193,4 @@ Phase 4 (Advanced Features)
 ---
 
 *Roadmap created: 2026-01-18*
-*Last updated: 2026-01-18 - Phase 2 complete (5 plans executed, goal verified)*
+*Last updated: 2026-01-18 - Phase 3 planned (3 plans created)*

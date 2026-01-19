@@ -62,16 +62,40 @@ ls .tabnine/guidelines/
 
 # Check scripts work
 node gsd/scripts/integration-test.js
-# Before "start GSD": 42-45 tests pass (some need .planning/ to exist)
-# After "start GSD": 52-57 tests pass (all workflows initialized)
+# Before "start GSD": 52/57 tests pass (91%)
+# After "start GSD": 57/57 tests pass (100%)
 ```
 
-**Expected before initialization:**
-- ✓ Core modules pass: file ops, process runner, templates, guidelines
-- ✗ Some tests fail: STATE.md, artifact validation (no .planning/ yet)
+**Expected before initialization (52/57 passing):**
+- ✓ File operations, process runner, templates, guidelines (all pass)
+- ✓ Approval gates, automated research (all pass)
+- ✗ 5 tests fail: STATE.md, PROJECT.md, ROADMAP.md validation (no .planning/ yet)
 - **This is normal!** Run "start GSD" to create .planning/ directory
 
-**Success checkpoint:** 40+ tests pass ✓
+**Success checkpoint:** 52/57 tests pass (91%) ✓
+
+**What you'll see:**
+```
+Test paths:
+  GSD Root: /your/project/gsd
+  Project Root: /your/project
+  Templates: /your/project/gsd/templates
+  Config: /your/project/gsd/.gsd-config.json
+
+=== Test Suite 4: Template Renderer ===
+  ✓ listTemplates discovers templates
+    Found templates: ARCHITECTURE, FEATURES, PITFALLS, PLAN, PROJECT,
+                     REQUIREMENTS, ROADMAP, STACK, STATE, SUMMARY
+
+=== Test Suite 5: Guideline Loader ===
+  ✓ listWorkflows returns 4 workflows
+    Workflows: newProject, planPhase, executePhase, verifyWork
+
+Test Results Summary
+Total tests: 57
+Passed: 52 (91%)
+Failed: 5
+```
 
 ---
 

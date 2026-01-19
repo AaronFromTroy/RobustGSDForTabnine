@@ -276,16 +276,32 @@ When you trigger a workflow, here's what happens:
 
 **Trigger:** "plan phase X" or automatic after roadmap creation
 
-**What it does:**
+**What it does (3-phase process):**
+
+**Phase 1: Discussion**
 1. Reads phase goal from `ROADMAP.md`
-2. Analyzes requirements for this phase
-3. Breaks work into sequential plans (01, 02, 03...)
-4. Writes each plan as `XX-NN-PLAN.md` with tasks
-5. Updates `STATE.md` with planning completion
+2. Asks clarifying questions:
+   - Technology/library preferences
+   - Code organization patterns
+   - Testing strategy
+   - Constraints and risk tolerance
+3. Waits for user responses
 
-**Output:** `.planning/phases/XX-name/XX-NN-PLAN.md` file(s)
+**Phase 2: Planning**
+4. Creates plans based on discussion responses
+5. Breaks work into sequential plans (01, 02, 03...)
+6. Writes each plan as `XX-NN-PLAN.md` with tasks
 
-**Next step:** User says "execute phase X" to run the plans
+**Phase 3: Approval**
+7. Presents plan summary to user
+8. Shows key decisions made
+9. Offers options: Approve / Request changes / Reject
+10. Waits for user approval
+11. Logs approval decision to STATE.md
+
+**Output:** `.planning/phases/XX-name/XX-NN-PLAN.md` file(s) + approval record
+
+**Next step:** User says "execute phase X" to run the **approved** plans
 
 ### 3. Execute Phase (execute-phase.md)
 

@@ -158,13 +158,61 @@ Say to Tabnine:
 plan phase 1
 ```
 
-**What happens:**
-- Tabnine reads phase 1 goal from ROADMAP.md
-- Creates `.planning/phases/01-{name}/` directory
-- Writes execution plans (01-01-PLAN.md, 01-02-PLAN.md, etc.)
-- Each plan has tasks with verify criteria
+**What happens (NEW - 3-phase process):**
 
-**Success checkpoint:** Phase directory exists with PLAN.md files ✓
+1. **Discussion Phase** - Tabnine asks clarifying questions:
+   ```
+   Before I create execution plans for Phase 1: Foundation, I'd like to clarify:
+
+   1. What technology stack do you prefer for templates?
+   2. Any existing libraries you want to use?
+   3. Testing strategy (unit, integration, e2e)?
+
+   Please answer what's relevant - I'll use defaults for anything skipped.
+   ```
+
+   You answer (or say "use defaults")
+
+2. **Planning Phase** - Tabnine creates plans based on your answers:
+   - Creates `.planning/phases/01-{name}/` directory
+   - Writes execution plans (01-01-PLAN.md, 01-02-PLAN.md, etc.)
+   - Each plan has tasks with verify criteria
+
+3. **Approval Phase** - Tabnine presents plans for review:
+   ```
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   Phase 1: Foundation - Planning Complete
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+   ## Plans Created: 2
+
+   ### Plan 01-01: Workflow Guidelines
+   **What:** Create 4 workflow guideline files
+   **Tasks:** 3 tasks
+   **Key deliverables:**
+   - new-project.md, plan-phase.md, execute-phase.md, verify-work.md
+
+   ### Plan 01-02: Artifact Templates
+   **What:** Create 5 template files
+   **Tasks:** 2 tasks
+   **Key deliverables:**
+   - PROJECT.md, ROADMAP.md, PLAN.md, REQUIREMENTS.md, STATE.md
+
+   ## Key Decisions Based on Discussion:
+   - Templates: Markdown with YAML frontmatter
+   - Testing: Integration test suite with 57 tests
+
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+   Options:
+   1. Approve - Proceed to execution
+   2. Request changes
+   3. Reject - Start over
+   ```
+
+   You say: **"approve"** (or request changes)
+
+**Success checkpoint:** Plans approved, ready for execution ✓
 
 ### Step 5: Execute First Phase
 
@@ -374,8 +422,13 @@ Tabnine: Reads requirements, creates ROADMAP.md with 3 phases
 Tabnine: "Roadmap created. Say 'plan phase 1' to begin"
 
 You: "plan phase 1"
+Tabnine: "Before I create plans, I'd like to clarify: [asks 3-4 questions]"
+You: [Answer questions or say "use defaults"]
 Tabnine: Creates 2 execution plans in .planning/phases/01-foundation/
-Tabnine: "Phase 1 planning complete. Say 'execute phase 1'"
+Tabnine: [Presents plan summary with key decisions]
+Tabnine: "Options: 1. Approve - Proceed to execution, 2. Request changes, 3. Reject"
+You: "approve"
+Tabnine: "Phase 1 planning approved ✓. Say 'execute phase 1'"
 
 You: "execute phase 1"
 Tabnine: Runs 01-01-PLAN.md (creates files, runs tests)

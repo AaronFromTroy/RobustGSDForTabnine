@@ -1,5 +1,5 @@
 ---
-version: "1.0.0"
+version: "1.1.0"
 type: "guideline"
 workflow: "plan-phase"
 last_updated: "2026-01-18"
@@ -8,34 +8,65 @@ schema: "gsd-guideline-v1"
 
 # Plan Phase Workflow
 
-This guideline enables Tabnine to create execution plans for a specific roadmap phase.
+This guideline enables Tabnine to create execution plans for a specific roadmap phase through discussion, planning, and approval.
 
 ## Commands
 
-Execute these exact commands in sequence:
+Execute in this order (see Workflow Steps for full details):
 
+### Context Loading
 ```bash
 # Load ROADMAP.md to identify next phase
 node gsd/scripts/guideline-loader.js --workflow=plan-phase
+```
 
+### Pre-Planning Discussion
+*Ask user clarifying questions (see Workflow Steps Phase 2)*
+*Wait for user responses before proceeding*
+
+### Plan Creation
+```bash
 # Create phase directory
 mkdir .planning/phases/${PHASE_DIR}
 
-# Generate PLAN.md file(s)
+# Generate PLAN.md file(s) - informed by discussion responses
 node gsd/scripts/template-renderer.js --template=PLAN --output=.planning/phases/${PHASE_DIR}/${PHASE}-${PLAN}-PLAN.md --phaseName="${PHASE_NAME}" --planNumber="${PLAN_NUM}"
+```
 
-# Update STATE.md
-node gsd/scripts/state-manager.js --update currentPhase="${PHASE_NUM}" currentPlan="${PLAN_NUM}" status="planned"
+### Plan Presentation & Approval
+*Present plan summary to user (see Workflow Steps Phase 4)*
 
-# Create git commit
+```bash
+# Request approval with options
+node gsd/scripts/approval-gate.js \
+  --gate="Phase ${PHASE_NUM} Planning Approval" \
+  --options='[...]'
+
+# Log approval decision
+node gsd/scripts/approval-gate.js \
+  --log \
+  --decision="User approved Phase ${PHASE_NUM} planning"
+```
+
+*If user requests changes: modify plans and re-present*
+*If user rejects: return to discussion phase*
+
+### Finalization
+```bash
+# Update STATE.md with approval
+node gsd/scripts/state-manager.js --update currentPhase="${PHASE_NUM}" currentPlan="${PLAN_NUM}" status="planned-approved"
+
+# Create git commit with approval note
 git add .planning/phases/${PHASE_DIR}/
 git add .planning/STATE.md
-git commit -m "docs(phase-${PHASE_NUM}): create execution plan ${PLAN_NUM}
+git commit -m "docs(phase-${PHASE_NUM}): create and approve execution plans
 
-- Defined ${TASK_COUNT} tasks for ${PHASE_NAME}
+- ${PLAN_COUNT} plan(s) approved by user
+- ${TASK_COUNT} total tasks defined
 - Mapped requirements: ${REQ_IDS}
-- Success criteria established
+- Key decisions: ${DECISION_SUMMARY}
 
+Approved: $(date --iso-8601=seconds)
 Co-Authored-By: Tabnine Agent <noreply@tabnine.com>"
 ```
 
@@ -131,26 +162,35 @@ Co-Authored-By: Tabnine Agent <noreply@tabnine.com>
 
 ### Always Do
 
+- **Discuss before planning**: Ask clarifying questions before creating plans
+- **Present plans**: Show structured summary of what will be built
+- **Wait for approval**: Do not proceed to execution without explicit user approval
 - Read ROADMAP.md before creating plans
 - Load CONTEXT.md or RESEARCH.md if exists for phase
 - Break phase into 2-3 tasks per plan (not monolithic)
 - Include verification criteria for each task
-- Update STATE.md after creating plans
+- Log approval decision to STATE.md
+- Update STATE.md status to "planned-approved" after approval
 
 ### Ask First
 
 - Adding more than 3 plans per phase
 - Changing task structure (XML format)
 - Modifying phase directory naming convention
+- Skipping discussion questions (if user says "just plan it")
 
 ### Never Do
 
+- **Skip discussion phase** (must ask clarifying questions)
+- **Skip approval gate** (must wait for explicit approval)
+- **Proceed to execution without approval** (critical - causes rework)
 - Skip reading ROADMAP.md (plans must align with phase goals)
 - Create plans without success criteria
-- Proceed to execution without completing all plans
 - Modify existing PLAN.md files without user approval
 
 ## Workflow Steps
+
+### Phase 1: Context Loading
 
 1. **Read ROADMAP.md:**
    - Identify next phase based on STATE.md current position
@@ -162,47 +202,205 @@ Co-Authored-By: Tabnine Agent <noreply@tabnine.com>
    - Look for `.planning/phases/XX-name/XX-RESEARCH.md`
    - Load if exists to understand implementation decisions
 
-3. **Determine plan structure:**
+### Phase 2: Pre-Planning Discussion (NEW)
+
+3. **Ask clarifying questions:**
+
+   Present questions to gather context before creating plans. Tailor questions to the phase type:
+
+   **For foundation/infrastructure phases:**
+   - "What technology stack do you prefer for [specific component]?"
+   - "Any existing libraries or frameworks you want to use?"
+   - "Code organization preference (flat, modular, domain-driven)?"
+   - "Testing strategy (unit, integration, e2e)?"
+
+   **For feature implementation phases:**
+   - "Any UI/UX constraints or design system to follow?"
+   - "Performance requirements (response time, load capacity)?"
+   - "Error handling approach (fail fast, graceful degradation)?"
+   - "Third-party services or APIs to integrate?"
+
+   **For all phases:**
+   - "Are there any constraints I should know about?"
+   - "What's your risk tolerance? (move fast vs be cautious)"
+   - "Preferred commit granularity? (atomic vs feature branches)"
+
+   **Format:**
+   ```
+   Before I create execution plans for Phase X: [Name], I'd like to clarify a few things:
+
+   1. [Question 1]
+   2. [Question 2]
+   3. [Question 3]
+
+   Please answer what's relevant - I'll use defaults for anything skipped.
+   ```
+
+   **Wait for user responses.** Store responses in memory for plan creation.
+
+### Phase 3: Plan Creation
+
+4. **Determine plan structure:**
    - Count deliverables from ROADMAP.md
+   - Incorporate user responses from discussion
    - Group related deliverables into logical plans
    - Target 2-3 tasks per plan for manageability
    - Identify any checkpoint tasks (human verification needed)
 
-4. **Create phase directory:**
+5. **Create phase directory:**
    - Execute: `mkdir .planning/phases/${PHASE_DIR}`
    - Use naming pattern: `01-foundation-templates`
 
-5. **Generate PLAN.md file(s):**
+6. **Generate PLAN.md file(s):**
    - For each plan:
      - Execute template-renderer.js with PLAN template
      - Populate frontmatter: phase, plan, type, wave, depends_on
      - Write `<objective>` with purpose and output
-     - Write `<tasks>` section with task XML elements
+     - Write `<tasks>` section with task XML elements (informed by discussion)
      - Write `<verification>` criteria
      - Write `<success_criteria>` measurable completion
      - Save to `.planning/phases/XX-name/XX-NN-PLAN.md`
 
-6. **Update STATE.md:**
-   - Execute state-manager.js with update flags
-   - Set currentPhase, currentPlan, status="planned"
+### Phase 4: Plan Presentation (NEW)
 
-7. **Create git commit:**
-   - Stage phase directory and STATE.md
-   - Commit with phase identifier in message
+7. **Present plans to user:**
+
+   After creating all plans, show a structured summary:
+
+   ```
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   Phase X: [Name] - Planning Complete
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+   ## Plans Created: [N]
+
+   ### Plan X-01: [Plan Name]
+   **What:** [1-2 sentence objective]
+   **Tasks:** [N] tasks
+   **Key deliverables:**
+   - [Deliverable 1]
+   - [Deliverable 2]
+
+   ### Plan X-02: [Plan Name]
+   **What:** [1-2 sentence objective]
+   **Tasks:** [N] tasks
+   **Key deliverables:**
+   - [Deliverable 1]
+   - [Deliverable 2]
+
+   ## Key Decisions Based on Discussion:
+   - [Technology choice]: [What you chose and why]
+   - [Architecture pattern]: [What you chose and why]
+   - [Testing approach]: [What you chose and why]
+
+   ## Execution Order:
+   1. Plan X-01 (wave 1) - no dependencies
+   2. Plan X-02 (wave 2) - depends on X-01 completion
+
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   ```
+
+### Phase 5: Approval Gate (NEW)
+
+8. **Request approval:**
+
+   Use approval-gate.js to present options:
+
+   ```bash
+   node gsd/scripts/approval-gate.js \
+     --gate="Phase X Planning Approval" \
+     --context="Review plans above" \
+     --options='[
+       {
+         "label": "Approve - Proceed to execution",
+         "value": "approve",
+         "pros": ["Plans align with phase goal", "Task breakdown is clear"],
+         "cons": []
+       },
+       {
+         "label": "Request changes",
+         "value": "changes",
+         "pros": ["Refine approach before execution"],
+         "cons": ["Takes more time"]
+       },
+       {
+         "label": "Reject - Start over",
+         "value": "reject",
+         "pros": ["Completely different approach"],
+         "cons": ["Loses current work"]
+       }
+     ]'
+   ```
+
+   **Wait for user decision:**
+   - **If "approve"**: Continue to step 9
+   - **If "changes"**: Ask "What would you like changed?" → Modify plans → Re-present → Request approval again
+   - **If "reject"**: Ask "What approach should we take instead?" → Return to step 3 (discussion)
+
+9. **Log approval decision:**
+   ```bash
+   node gsd/scripts/approval-gate.js \
+     --log \
+     --decision="User approved Phase X planning" \
+     --rationale="[User's reasoning if provided]"
+   ```
+
+### Phase 6: Finalization
+
+10. **Update STATE.md:**
+    - Execute state-manager.js with update flags
+    - Set currentPhase, currentPlan, status="planned-approved"
+    - Record approval timestamp
+
+11. **Create git commit:**
+    - Stage phase directory and STATE.md
+    - Commit with phase identifier and approval note in message:
+    ```
+    docs(phase-X): create and approve execution plans
+
+    - [Number of plans] approved by user
+    - [Number of tasks defined]
+    - [Requirements mapped]
+    - Key decisions: [Brief list]
+
+    Approved: [Timestamp]
+    Co-Authored-By: Tabnine Agent <noreply@tabnine.com>
+    ```
 
 ## Success Criteria
 
 Workflow is complete when:
 
-1. At least one PLAN.md exists for phase
-2. Each PLAN.md has all required sections (objective, tasks, verification, success_criteria)
-3. Tasks include `<name>`, `<files>`, `<action>`, `<verify>`, `<done>` elements
-4. STATE.md shows currentPhase and currentPlan updated
-5. Git commit created successfully
-6. Total tasks across all plans cover all phase deliverables from ROADMAP.md
+1. **Discussion phase completed**: User answered clarifying questions (or explicitly skipped)
+2. At least one PLAN.md exists for phase
+3. Each PLAN.md has all required sections (objective, tasks, verification, success_criteria)
+4. Tasks include `<name>`, `<files>`, `<action>`, `<verify>`, `<done>` elements
+5. **Plans presented to user**: Structured summary shown with key decisions
+6. **User approval obtained**: User explicitly approved plans (logged in STATE.md)
+7. STATE.md shows currentPhase, currentPlan, and status="planned-approved"
+8. Git commit created successfully with approval timestamp
+9. Total tasks across all plans cover all phase deliverables from ROADMAP.md
+
+**Critical:** Steps 1, 5, and 6 are new and mandatory. Skipping them defeats the purpose of this enhancement.
 
 ## Next Action
 
-After successful completion:
-- Inform user: "Phase ${PHASE_NUM} planning complete. ${PLAN_COUNT} plan(s) created with ${TASK_COUNT} total tasks."
-- Recommended workflow: Trigger "execute phase" workflow to begin task execution
+After successful completion (with user approval):
+
+**Output to user:**
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Phase ${PHASE_NUM}: ${PHASE_NAME} - Ready for Execution ✓
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Plans approved: ${PLAN_COUNT}
+Total tasks: ${TASK_COUNT}
+Status: Approved and ready
+
+To begin execution, say: "execute phase ${PHASE_NUM}"
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+**Recommended workflow:** User triggers "execute phase ${PHASE_NUM}" to begin task execution
+
+**If plans need revision:** User can say "revise phase ${PHASE_NUM} plans" to restart discussion and planning

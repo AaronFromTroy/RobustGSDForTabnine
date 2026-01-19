@@ -131,12 +131,24 @@ Co-Authored-By: Tabnine Agent <noreply@tabnine.com>
 
 ## Workflow Steps
 
-1. **Load PLAN.md:**
+1. **Verify plans were approved:**
+   - Read `.planning/STATE.md`
+   - Check status field contains "approved" (e.g., "planned-approved")
+   - If status is "planned" (not approved):
+     ```
+     ⚠ Warning: Phase plans not yet approved
+
+     Plans must be reviewed and approved before execution.
+     Please run: "plan phase ${PHASE_NUM}" to review and approve plans.
+     ```
+     **Stop execution.** Do not proceed without approval.
+
+2. **Load PLAN.md:**
    - Read `.planning/phases/XX-name/XX-NN-PLAN.md`
    - Parse frontmatter for phase, plan, type, dependencies
    - Extract all `<task>` elements
 
-2. **Execute tasks sequentially:**
+3. **Execute tasks sequentially:**
    - For each task in order:
      a. Read `<action>` instructions
      b. Execute action (file operations, command execution)
@@ -145,7 +157,7 @@ Co-Authored-By: Tabnine Agent <noreply@tabnine.com>
      e. If type="checkpoint:*", PAUSE and follow checkpoint protocol
      f. Continue to next task
 
-3. **Handle checkpoint tasks:**
+4. **Handle checkpoint tasks:**
    - If task has `type="checkpoint:human-verify"`:
      a. Document what was built in `<what-built>`
      b. Provide verification steps from `<how-to-verify>`
@@ -154,12 +166,12 @@ Co-Authored-By: Tabnine Agent <noreply@tabnine.com>
      e. Wait for user approval
      f. Resume on user signal
 
-4. **Validate plan completion:**
+5. **Validate plan completion:**
    - Confirm all tasks executed
    - Check all `<verify>` criteria met
    - Verify all `<done>` conditions satisfied
 
-5. **Generate SUMMARY.md:**
+6. **Generate SUMMARY.md:**
    - Execute template-renderer.js with SUMMARY template
    - Populate sections:
      - What Was Built (deliverables)
@@ -168,12 +180,12 @@ Co-Authored-By: Tabnine Agent <noreply@tabnine.com>
      - Next Steps (continuation guidance)
    - Write to `.planning/phases/XX-name/XX-NN-SUMMARY.md`
 
-6. **Update STATE.md:**
+7. **Update STATE.md:**
    - Execute state-manager.js with completion status
    - Increment completedPlans counter
    - Update currentPlan if more plans exist
 
-7. **Create git commit:**
+8. **Create git commit:**
    - Stage SUMMARY.md and STATE.md
    - Commit with deliverables list
 

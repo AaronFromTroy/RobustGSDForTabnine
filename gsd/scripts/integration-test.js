@@ -1,14 +1,12 @@
 /**
- * Integration Test Suite for Phase 2 Core Infrastructure
- * Validates all Phase 2 modules work together correctly
+ * Integration Test Suite for GSD Infrastructure
+ * Validates all modules work together correctly
  *
  * Test coverage:
- * - File operations (read, write atomic, exists, ensureDir)
- * - Process runner (command execution, error handling)
- * - State manager (read, write, progress indicators, validation)
- * - Template renderer (render, list, variable validation)
- * - Guideline loader (load, list workflows)
- * - Cross-platform compatibility (path handling)
+ * - Phase 2: File operations, process runner, state manager, template renderer, guideline loader, cross-platform
+ * - Phase 3: Trigger detection, artifact validation, resume & orchestration
+ * - Phase 4: Approval gates, research synthesis, automated research
+ * - Phase 6: Discussion & context system (CONTEXT template, question taxonomy, context parsing)
  */
 
 import { readFile, writeFileAtomic, fileExists, ensureDir } from './file-ops.js';
@@ -16,6 +14,8 @@ import { runCommand } from './process-runner.js';
 import { readState, writeState, generateProgressIndicator, validateStateData, STATUS_VALUES } from './state-manager.js';
 import { renderTemplate, listTemplates } from './template-renderer.js';
 import { loadGuideline, listWorkflows } from './guideline-loader.js';
+import { detectPhaseType, getQuestionsForPhase } from './question-bank.js';
+import { parseDecisions, categorizeAnswers, loadPhaseContext } from './context-loader.js';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { unlink, rmdir } from 'node:fs/promises';
@@ -1018,11 +1018,152 @@ async function testAutomatedResearch() {
 }
 
 /**
+ * Test Suite 12: Discussion & Context System
+ */
+async function testDiscussionContextSystem() {
+  console.log('\n=== Test Suite 12: Discussion & Context System ===');
+
+  try {
+    // Test 1: CONTEXT.md template rendering
+    try {
+      const result = await renderTemplate('CONTEXT', {
+        phase: 6,
+        phase_name: 'discussion-and-context-system',
+        gathered: '2026-01-20',
+        status: 'ready-for-planning',
+        discussion_type: 'technical',
+        phase_boundary: 'Gather user context before planning',
+        locked_decisions: '- **Library:** React\n- **Testing:** Jest',
+        discretion_items: '- Component structure\n- File naming',
+        specifics_content: 'Additional technical notes here',
+        deferred_items: '- Advanced features\n- Performance optimization'
+      }, gsdPath('templates'));
+
+      const passed = result.includes('phase: 6') &&
+                     result.includes('<decisions>') &&
+                     result.includes('<deferred>') &&
+                     result.includes('React') &&
+                     result.includes('Jest');
+      logTest('CONTEXT template renders frontmatter', passed);
+    } catch (error) {
+      logTest('CONTEXT template renders frontmatter', false, error.message);
+    }
+
+    // Test 2: Phase type detection - UI phase
+    try {
+      const phaseType = detectPhaseType('Build dashboard UI with responsive design');
+      const passed = phaseType.technical === true &&
+                     phaseType.design === true &&
+                     phaseType.workflow === true;
+      logTest('UI phase detected as technical+design+workflow', passed);
+    } catch (error) {
+      logTest('UI phase detected as technical+design+workflow', false, error.message);
+    }
+
+    // Test 3: Phase type detection - API phase
+    try {
+      const phaseType = detectPhaseType('Create REST API infrastructure');
+      const passed = phaseType.technical === true &&
+                     phaseType.design === false &&
+                     phaseType.workflow === true;
+      logTest('API phase detected as technical+workflow (no design)', passed);
+    } catch (error) {
+      logTest('API phase detected as technical+workflow (no design)', false, error.message);
+    }
+
+    // Test 4: Get questions for phase
+    try {
+      const questions = getQuestionsForPhase('Dashboard UI');
+      const passed = Array.isArray(questions) &&
+                     questions.length > 0 &&
+                     questions.some(q => q.category === 'Design & UX');
+      logTest('Design questions included for UI phase', passed);
+    } catch (error) {
+      logTest('Design questions included for UI phase', false, error.message);
+    }
+
+    // Test 5: Parse decisions from markdown
+    try {
+      const markdown = '- **Library:** React\n- **Testing Strategy:** Jest with React Testing Library';
+      const decisions = parseDecisions(markdown);
+      const passed = decisions.library === 'React' &&
+                     decisions.testing_strategy === 'Jest with React Testing Library';
+      logTest('Parse decisions from markdown', passed);
+    } catch (error) {
+      logTest('Parse decisions from markdown', false, error.message);
+    }
+
+    // Test 6: Categorize answers - locked
+    try {
+      const answers = {
+        library: 'React',
+        testing: 'Jest',
+        styling: 'skip',
+        performance: 'not now'
+      };
+      const { locked, discretion, deferred } = categorizeAnswers(answers);
+      const passed = locked.library === 'React' &&
+                     locked.testing === 'Jest';
+      logTest('Categorize locked decisions', passed);
+    } catch (error) {
+      logTest('Categorize locked decisions', false, error.message);
+    }
+
+    // Test 7: Categorize answers - discretion
+    try {
+      const answers = {
+        naming: 'up to you',
+        structure: '',
+        pattern: 'skip'
+      };
+      const { locked, discretion, deferred } = categorizeAnswers(answers);
+      const passed = discretion.includes('naming') &&
+                     discretion.includes('structure') &&
+                     discretion.includes('pattern');
+      logTest('Categorize discretion items', passed);
+    } catch (error) {
+      logTest('Categorize discretion items', false, error.message);
+    }
+
+    // Test 8: Categorize answers - deferred
+    try {
+      const answers = {
+        advanced: 'not now',
+        optimization: 'later'
+      };
+      const { locked, discretion, deferred } = categorizeAnswers(answers);
+      const passed = deferred.includes('advanced') &&
+                     deferred.includes('optimization');
+      logTest('Categorize deferred items', passed);
+    } catch (error) {
+      logTest('Categorize deferred items', false, error.message);
+    }
+
+    // Test 9: Load missing CONTEXT.md (graceful handling)
+    try {
+      const context = await loadPhaseContext(99, 'nonexistent-phase');
+      const passed = context === null;
+      logTest('Returns null for missing CONTEXT.md', passed);
+    } catch (error) {
+      logTest('Returns null for missing CONTEXT.md', false, error.message);
+    }
+
+  } catch (error) {
+    logTest('Discussion & context system tests - ERROR', false, error.message);
+    // If import failed, mark remaining tests as failed
+    for (let i = 0; i < 9; i++) {
+      failedTests++;
+      totalTests++;
+    }
+  }
+}
+
+/**
  * Main test runner
  */
 async function runAllTests() {
   console.log('===========================================');
-  console.log('Phase 2, 3, & 4 Integration Test Suite');
+  console.log('Phase 2, 3, 4, & 6 Integration Test Suite');
   console.log('===========================================');
   console.log(`\nTest paths:`);
   console.log(`  GSD Root: ${GSD_ROOT}`);
@@ -1043,6 +1184,7 @@ async function runAllTests() {
     await testResumeOrchestration();
     await testApprovalGatesAndResearch();
     await testAutomatedResearch();
+    await testDiscussionContextSystem();
 
     // Final report
     console.log('\n===========================================');

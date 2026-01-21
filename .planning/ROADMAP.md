@@ -188,6 +188,69 @@ Plans:
 
 ---
 
+### Phase 6: Discussion & Context System
+
+**Goal:** Gather user context and preferences before research and planning to ensure alignment.
+
+**Dependencies:** Phase 5 (builds on complete infrastructure)
+
+**Requirements:** TBD
+
+**Success Criteria:**
+1. TBD (to be defined during planning)
+
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd:plan-phase 6 to break down)
+
+**Deliverables:**
+- TBD (to be defined during planning)
+
+---
+
+### Phase 7: Enhanced Research Infrastructure
+
+**Goal:** Improve research depth and breadth with multi-domain analysis and source validation.
+
+**Dependencies:** Phase 6 (needs discussion system to inform research)
+
+**Requirements:** TBD
+
+**Success Criteria:**
+1. TBD (to be defined during planning)
+
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd:plan-phase 7 to break down)
+
+**Deliverables:**
+- TBD (to be defined during planning)
+
+---
+
+### Phase 8: Verification & Quality System
+
+**Goal:** Validate that built features achieve intended goals through goal-backward verification.
+
+**Dependencies:** Phase 7 (needs enhanced research for quality baselines)
+
+**Requirements:** TBD
+
+**Success Criteria:**
+1. TBD (to be defined during planning)
+
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd:plan-phase 8 to break down)
+
+**Deliverables:**
+- TBD (to be defined during planning)
+
+---
+
 ## Progress
 
 | Phase | Status | Requirements | Success Criteria |
@@ -196,9 +259,12 @@ Plans:
 | 2 - Core Infrastructure | Complete | 17 | 6 |
 | 3 - Workflow Orchestration | Complete | 14 | 7 |
 | 4 - Advanced Features | Complete | 10 | 6 |
-| 5 - Polish and Distribution Readiness | Pending | (not tracked) | 8 |
+| 5 - Polish and Distribution Readiness | Incomplete (1/4 plans) | (not tracked) | 8 |
+| 6 - Discussion & Context System | Pending | TBD | TBD |
+| 7 - Enhanced Research Infrastructure | Pending | TBD | TBD |
+| 8 - Verification & Quality System | Pending | TBD | TBD |
 
-**Total:** 5 phases, 55 v1 requirements, 32 success criteria
+**Total:** 8 phases, 55 v1 requirements, 32+ success criteria (Phases 6-8 TBD)
 
 ---
 
@@ -214,6 +280,12 @@ Phase 3 (Workflow Orchestration)
 Phase 4 (Advanced Features)
     ↓
 Phase 5 (Polish and Distribution Readiness)
+    ↓
+Phase 6 (Discussion & Context System)
+    ↓
+Phase 7 (Enhanced Research Infrastructure)
+    ↓
+Phase 8 (Verification & Quality System)
 ```
 
 **Linear dependency chain:** Each phase builds on the previous. No parallel execution needed.
@@ -241,4 +313,4 @@ Phase 5 (Polish and Distribution Readiness)
 ---
 
 *Roadmap created: 2026-01-18*
-*Last updated: 2026-01-20 - Phase 5 planned with 4 plans in 2 waves*
+*Last updated: 2026-01-20 - Added Phases 6-8 (Discussion, Enhanced Research, Verification)*

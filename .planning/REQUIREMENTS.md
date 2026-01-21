@@ -134,6 +134,24 @@ Deferred to future release. Tracked but not in current roadmap.
 - **COLLAB-03**: Shared guideline library (centralized)
 - **COLLAB-04**: Workspace isolation (separate .planning/ directories)
 
+### Milestone Audit & Cross-Phase Verification
+
+- **AUDIT-01**: System aggregates all phase VERIFICATION.md files into milestone audit report
+- **AUDIT-02**: System validates cross-phase module wiring (imports/exports match)
+- **AUDIT-03**: System validates end-to-end workflow completeness (new-project → plan → execute → verify)
+- **AUDIT-04**: System checks requirements traceability across all phases in milestone
+- **AUDIT-05**: System generates v{version}-MILESTONE-AUDIT.md with gaps, tech debt, and readiness assessment
+- **AUDIT-06**: milestone-auditor.js script automates cross-phase integration checking
+
+### Tabnine-Native Guidelines
+
+- **TABNINE-01**: Create sequential inline variants of all guidelines (no Task tool spawning)
+- **TABNINE-02**: execute-phase.md variant executes plans inline without gsd-executor agents
+- **TABNINE-03**: verify-work.md variant runs verification inline without gsd-verifier agent
+- **TABNINE-04**: plan-phase.md variant performs research/planning inline without gsd-planner
+- **TABNINE-05**: Guidelines stored in tabnine/ directory alongside claude-code/ variants
+- **TABNINE-06**: Auto-detect environment and load appropriate guideline variant
+
 ## Out of Scope
 
 Explicitly excluded. Documented to prevent scope creep.

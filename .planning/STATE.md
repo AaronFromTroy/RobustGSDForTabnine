@@ -16,22 +16,22 @@
 ## Current Position
 
 **Phase:** 6 of 8 (Discussion & Context System)
-**Plan:** 0 of 0 (not planned yet)
-**Status:** Ready to plan
-**Last activity:** 2026-01-21 - Phase 5 incomplete (1/4 plans completed: 05-03), moving to Phase 6
-**Next Action:** Plan Phase 6 (/gsd:plan-phase 6)
+**Plan:** 1 of 1 (06-01 completed)
+**Status:** In progress
+**Last activity:** 2026-01-21 - Completed 06-01-PLAN.md (Discussion Foundation)
+**Next Action:** Execute Plan 06-02 (if planned) or plan next phase
 
-**Progress:** `████▓░░░` (50% - 4/8 phases complete, Phase 5 partial)
+**Progress:** `████▓░░░` (52% - 4/8 phases complete, Phase 5 partial, Phase 6 in progress)
 
 ---
 
 ## Performance Metrics
 
 **Phases Completed:** 4/8
-**Plans Completed:** 17/18 total (3 Phase 1 + 5 Phase 2 + 3 Phase 3 + 3 Phase 4 + 3 Phase 5 partial)
+**Plans Completed:** 18/19 total (3 Phase 1 + 5 Phase 2 + 3 Phase 3 + 3 Phase 4 + 3 Phase 5 partial + 1 Phase 6 partial)
 **Plans Planned:** 1 (Phase 5: 1 plan remaining - 05-04)
 **Requirements Validated:** 55/55 (Phase 1-4 requirements fulfilled - 100%)
-**Success Rate:** 100% (17/17 plans completed successfully)
+**Success Rate:** 100% (18/18 plans completed successfully)
 
 ---
 
@@ -89,6 +89,9 @@
 | Whitelist distribution control | 2026-01-21 | package.json files field as primary control (safer than .npmignore blacklist alone) |
 | .npmignore as safety net | 2026-01-21 | Additional exclusions for dev files (.planning/, tests, CI) alongside files whitelist |
 | Phase 5 execution paused | 2026-01-21 | Completed 05-03 only (documentation/examples), skipped npm publishing plans (05-01, 05-02, 05-04) - automated releases marked as optional/future work per user preference |
+| MADR-style CONTEXT.md | 2026-01-21 | Structured discussion results storage with frontmatter + sections (domain/decisions/specifics/deferred) - proven decision record format |
+| Adaptive question taxonomy | 2026-01-21 | Phase type detection (technical/design/workflow) via keyword matching - questions adapt to phase goal |
+| Always-ask technical+workflow | 2026-01-21 | Technical and workflow questions always included; design is additive - reflects reality that most phases have technical aspects |
 
 ### Active TODOs
 
@@ -116,6 +119,19 @@
 None
 
 ### Recent Changes
+
+**2026-01-21:**
+- **Phase 6 Plan 1 completed (06-01):** Discussion Foundation (5 min)
+  - Created gsd/templates/CONTEXT.md with MADR-style structure (78 lines)
+  - Created gsd/scripts/question-bank.js with adaptive question taxonomy (217 lines)
+  - CONTEXT.md: 4 sections (domain, decisions, specifics, deferred), 10 template variables
+  - Question taxonomy: technical (7 questions), design (10 questions), workflow (3 questions)
+  - Phase type detection: keyword-based detection for technical/design/workflow
+  - getQuestionsForPhase: returns relevant question categories based on phase goal
+  - Deviation: Fixed phase type detection logic (Rule 1 - Bug) - always include technical+workflow
+  - Git commits: 6f0bf6b (CONTEXT.md), 5392383 (question-bank.js)
+  - Testing: Dashboard UI → 3 categories, API infrastructure → 2 categories (design excluded)
+  - Integration ready: Compatible with template-renderer.js, ESM patterns
 
 **2026-01-21:**
 - **Phase 5 Plan 1 completed (05-01):** Distribution Metadata and Licensing (5 min)
@@ -265,17 +281,17 @@ None
 ## Session Continuity
 
 **Last session:** 2026-01-21
-**Stopped at:** Completed 05-01-PLAN.md (Distribution Metadata and Licensing)
+**Stopped at:** Completed 06-01-PLAN.md (Discussion Foundation)
 **Resume file:** None
 
-**Next Action:** Execute Plan 05-04 (Quality and Publishing Preparation)
+**Next Action:** Plan or execute Phase 6 remaining plans (if any planned)
 **Context Summary:**
 - Phase 1: Foundation & Templates (3 plans - guidelines, templates, config) ✓
 - Phase 2: Core Infrastructure (5 plans - Node.js, file ops, state manager, templates, testing) ✓
 - Phase 3: Workflow Orchestration (3 plans - trigger detection, validation, resume/orchestration) ✓
 - Phase 4: Advanced Features (3 plans - research templates/approval gates, research synthesizer, automated research) ✓
 - Phase 5: Polish and Distribution Readiness (3/4 plans complete - metadata, CI/CD, docs) — In Progress ◆
-- Phase 6: Discussion & Context System (0 plans - not planned yet) ○
+- Phase 6: Discussion & Context System (1 plan complete - discussion foundation) — In Progress ◆
 - Phase 7: Enhanced Research Infrastructure (0 plans - not planned yet) ○
 - Phase 8: Verification & Quality System (0 plans - not planned yet) ○
 - 55/55 v1 requirements validated (Phase 1-4)

@@ -6,6 +6,15 @@
   "engines": {
     "node": ">=24.0.0"
   },
+  "exports": {
+    ".": "./scripts/index.js",
+    "./state-manager": "./scripts/state-manager.js",
+    "./template-renderer": "./scripts/template-renderer.js",
+    "./guideline-loader": "./scripts/guideline-loader.js",
+    "./validator": "./scripts/validator.js",
+    "./researcher": "./scripts/researcher.js",
+    "./research-synthesizer": "./scripts/research-synthesizer.js"
+  },
   "scripts": {
     "test": "node scripts/integration-test.js",
     "test:watch": "nodemon --watch scripts scripts/integration-test.js",

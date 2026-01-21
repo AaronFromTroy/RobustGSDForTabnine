@@ -190,22 +190,34 @@ Plans:
 
 ### Phase 6: Discussion & Context System
 
-**Goal:** Gather user context and preferences before research and planning to ensure alignment.
+**Goal:** Formalize discussion and context gathering system to prevent planning misalignment through structured CONTEXT.md storage and adaptive questioning.
 
 **Dependencies:** Phase 5 (builds on complete infrastructure)
 
-**Requirements:** TBD
+**Requirements:** Context gathering infrastructure (CONTEXT template, question taxonomy, context parsing)
 
 **Success Criteria:**
-1. TBD (to be defined during planning)
+1. CONTEXT.md template exists with MADR-style structure (frontmatter + categorized sections)
+2. Question taxonomy adapts to phase type (technical, design, workflow)
+3. Context loader can parse CONTEXT.md and extract locked decisions
+4. plan-phase.md workflow saves discussion to CONTEXT.md before creating plans
+5. Questions are progressive (essential → follow-up → clarification)
+6. User can distinguish between locked decisions and Claude's discretion areas
+7. All 66+ integration tests pass (57 existing + 9 new = 100% pass rate)
 
-**Plans:** 0 plans
+**Plans:** 3 plans
 
 Plans:
-- [ ] TBD (run /gsd:plan-phase 6 to break down)
+- [ ] 06-01-PLAN.md — Templates and question taxonomy (CONTEXT.md, question-bank.js)
+- [ ] 06-02-PLAN.md — Context loader and workflow integration (context-loader.js, plan-phase.md update)
+- [ ] 06-03-PLAN.md — Testing and validation (Test Suite 12 with 9 tests)
 
 **Deliverables:**
-- TBD (to be defined during planning)
+- gsd/templates/CONTEXT.md (MADR-inspired structure)
+- gsd/scripts/question-bank.js (adaptive question taxonomy)
+- gsd/scripts/context-loader.js (CONTEXT.md parsing)
+- Updated gsd/guidelines/plan-phase.md (CONTEXT.md persistence)
+- Test Suite 12 (9 tests for discussion system)
 
 ---
 
@@ -260,11 +272,11 @@ Plans:
 | 3 - Workflow Orchestration | Complete | 14 | 7 |
 | 4 - Advanced Features | Complete | 10 | 6 |
 | 5 - Polish and Distribution Readiness | Incomplete (1/4 plans) | (not tracked) | 8 |
-| 6 - Discussion & Context System | Pending | TBD | TBD |
+| 6 - Discussion & Context System | Pending | (context gathering) | 7 |
 | 7 - Enhanced Research Infrastructure | Pending | TBD | TBD |
 | 8 - Verification & Quality System | Pending | TBD | TBD |
 
-**Total:** 8 phases, 55 v1 requirements, 32+ success criteria (Phases 6-8 TBD)
+**Total:** 8 phases, 55 v1 requirements, 39+ success criteria (Phases 7-8 TBD)
 
 ---
 

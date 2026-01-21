@@ -6,7 +6,7 @@
  * controlled concurrency to prevent resource exhaustion.
  *
  * Critical patterns:
- * - p-limit for controlled parallelism (default: 2 concurrent domains)
+ * - p-limit for controlled parallelism (default: 1, sequential execution)
  * - Context-aware research respects locked decisions from CONTEXT.md
  * - Error handling preserves partial results (one domain failure doesn't stop others)
  * - Progress logging per domain for monitoring
@@ -96,7 +96,7 @@ export async function performDomainResearch(topic, domain, options = {}) {
  * in parallel with controlled concurrency to prevent resource exhaustion.
  *
  * Concurrency rationale (from 07-RESEARCH.md):
- * - Default: 2 concurrent domains (conservative, safe for all environments)
+ * - Default: 1 (sequential execution, safest for all environments)
  * - Scraping is I/O-bound (waiting for network), benefits from parallelism
  * - Over-parallelism (>5 browsers) causes EMFILE errors (Pitfall 4)
  * - Each domain may spawn multiple HTTP requests internally
@@ -108,7 +108,7 @@ export async function performDomainResearch(topic, domain, options = {}) {
  *
  * @param {string} topic - Research topic (e.g., "React", "Node.js authentication")
  * @param {Object} options - Optional configuration
- * @param {number} [options.concurrency=2] - Max concurrent domains (1-4 recommended)
+ * @param {number} [options.concurrency=1] - Max concurrent domains (1-10 valid, 1=sequential)
  * @param {number} [options.phase] - Phase number for context loading
  * @param {string} [options.phaseName] - Phase name slug for context loading
  * @param {number} [options.maxSearches] - Max searches per domain (default: 5)
@@ -133,7 +133,7 @@ export async function coordinateMultiDomainResearch(topic, options = {}) {
   }
 
   // Extract options with defaults
-  const concurrency = options.concurrency || 2;
+  const concurrency = options.concurrency || 1; // Default: sequential (1 domain at a time)
 
   // Validate concurrency range
   if (concurrency < 1 || concurrency > 10) {

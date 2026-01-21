@@ -267,18 +267,35 @@ Plans:
 
 **Dependencies:** Phase 7 (needs enhanced research for quality baselines)
 
-**Requirements:** TBD
+**Requirements:** Verification infrastructure (goal validation, quality gates, multi-layer verification)
 
 **Success Criteria:**
-1. TBD (to be defined during planning)
+1. VERIFICATION.md template exists and can be rendered with verification results
+2. Goal validator extracts success criteria from ROADMAP.md and validates programmatically
+3. Multi-layer verification orchestrates smoke → lint → unit → integration → acceptance checks
+4. Quality gates enforce coverage thresholds (80% default), linting rules, and test pass rates
+5. Verification fails fast on critical issues (smoke tests, linting errors)
+6. Verification report generation creates VERIFICATION.md with layer-by-layer results and remediation
+7. verify-work.md guideline integrated with verifier.js orchestrator (simplified commands)
+8. All 95+ integration tests pass (81 existing + 14 new = 90%+ pass rate)
 
-**Plans:** 0 plans
+**Plans:** 4 plans
 
 Plans:
-- [ ] TBD (run /gsd:plan-phase 8 to break down)
+- [ ] 08-01-PLAN.md — VERIFICATION template and goal-backward validation (VERIFICATION.md, goal-validator.js)
+- [ ] 08-02-PLAN.md — Quality gates and multi-layer orchestrator (quality-checker.js, verifier.js)
+- [ ] 08-03-PLAN.md — Report generation and guideline integration (verification-report.js, update verify-work.md)
+- [ ] 08-04-PLAN.md — Testing and validation (Test Suites 15-16 with 14 tests)
 
 **Deliverables:**
-- TBD (to be defined during planning)
+- gsd/templates/VERIFICATION.md (verification report template)
+- gsd/scripts/goal-validator.js (acceptance criteria validation)
+- gsd/scripts/quality-checker.js (coverage/linting quality gates)
+- gsd/scripts/verifier.js (multi-layer verification orchestrator)
+- gsd/scripts/verification-report.js (VERIFICATION.md report generation)
+- Updated gsd/guidelines/verify-work.md (verifier.js integration)
+- Test Suite 15 (8 tests for verification modules)
+- Test Suite 16 (6 tests for report generation and integration)
 
 ---
 
@@ -293,9 +310,9 @@ Plans:
 | 5 - Polish and Distribution Readiness | Incomplete (1/4 plans) | (not tracked) | 8 |
 | 6 - Discussion & Context System | Complete | (context gathering) | 7 |
 | 7 - Enhanced Research Infrastructure | Complete | (enhanced research) | 10 |
-| 8 - Verification & Quality System | Pending | TBD | TBD |
+| 8 - Verification & Quality System | Pending | (verification infra) | 8 |
 
-**Total:** 8 phases, 55 v1 requirements, 39+ success criteria (Phases 7-8 TBD)
+**Total:** 8 phases, 55 v1 requirements, 57 success criteria
 
 ---
 
@@ -344,4 +361,4 @@ Phase 8 (Verification & Quality System)
 ---
 
 *Roadmap created: 2026-01-18*
-*Last updated: 2026-01-20 - Added Phases 6-8 (Discussion, Enhanced Research, Verification)*
+*Last updated: 2026-01-21 - Phase 8 planned (Verification & Quality System)*

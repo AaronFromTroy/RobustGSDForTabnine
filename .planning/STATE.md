@@ -16,10 +16,10 @@
 ## Current Position
 
 **Phase:** 5 of 8 (Polish and Distribution Readiness)
-**Plan:** 3 of 4 (completed)
+**Plan:** 3 of 4 (completed: 05-01, 05-02, 05-03)
 **Status:** In progress
-**Last activity:** 2026-01-21 - Completed 05-03-PLAN.md (Documentation and Examples)
-**Next Action:** Execute Plan 05-04
+**Last activity:** 2026-01-21 - Completed 05-01-PLAN.md (Distribution Metadata and Licensing)
+**Next Action:** Execute Plan 05-04 (Quality and Publishing Preparation)
 
 **Progress:** `████░░░░` (50% - 4/8 phases complete, Phase 5 planned)
 
@@ -28,8 +28,8 @@
 ## Performance Metrics
 
 **Phases Completed:** 4/8
-**Plans Completed:** 17/17 total (3 Phase 1 + 5 Phase 2 + 3 Phase 3 + 3 Phase 4 + 3 Phase 5 partial)
-**Plans Planned:** 1 (Phase 5: 1 plan remaining)
+**Plans Completed:** 17/18 total (3 Phase 1 + 5 Phase 2 + 3 Phase 3 + 3 Phase 4 + 3 Phase 5 partial)
+**Plans Planned:** 1 (Phase 5: 1 plan remaining - 05-04)
 **Requirements Validated:** 55/55 (Phase 1-4 requirements fulfilled - 100%)
 **Success Rate:** 100% (17/17 plans completed successfully)
 
@@ -85,6 +85,9 @@
 | Conventional Commits for versioning | 2026-01-21 | Enables automated versioning in CONTRIBUTING.md - feat → minor, fix → patch, BREAKING CHANGE → major |
 | Package exports with subpaths | 2026-01-21 | Main entry (.) and subpath exports enable two import patterns for flexibility - common use vs specific modules |
 | prepublishOnly safety gate | 2026-01-21 | Runs tests automatically before npm publish - prevents publishing broken code |
+| MIT License for distribution | 2026-01-21 | Standard permissive open source license enables npm publishing and community contributions |
+| Whitelist distribution control | 2026-01-21 | package.json files field as primary control (safer than .npmignore blacklist alone) |
+| .npmignore as safety net | 2026-01-21 | Additional exclusions for dev files (.planning/, tests, CI) alongside files whitelist |
 
 ### Active TODOs
 
@@ -114,6 +117,17 @@ None
 ### Recent Changes
 
 **2026-01-21:**
+- **Phase 5 Plan 1 completed (05-01):** Distribution Metadata and Licensing (5 min)
+  - Created gsd/LICENSE with standard MIT License text (2026, GSD Project Contributors)
+  - Updated package.json for npm distribution (Plan 05-02 already made these changes in commit 4df1c36)
+  - Created gsd/.npmignore to exclude dev files (.planning/, tests, CI, editor configs)
+  - Distribution metadata: removed private flag, added files/keywords/repository/bugs/homepage
+  - Whitelist approach via files field + safety net via .npmignore
+  - Cross-plan dependency: Task 2 work done by Plan 05-02 (documented as deviation)
+  - Git commits: e2453cb (LICENSE), cef8d56 (.npmignore)
+  - No new dependencies - uses existing npm infrastructure
+  - Ready for npm publishing (after CI/CD setup and quality validation)
+
 - **Phase 5 Plan 3 completed (05-03):** Documentation and Examples (5 min)
   - Created CONTRIBUTING.md with development setup, conventional commits format, PR process (90 lines)
   - Created gsd/scripts/index.js as main package entry point re-exporting 16 functions from all modules
@@ -250,7 +264,7 @@ None
 ## Session Continuity
 
 **Last session:** 2026-01-21
-**Stopped at:** Completed 05-03-PLAN.md (Documentation and Examples)
+**Stopped at:** Completed 05-01-PLAN.md (Distribution Metadata and Licensing)
 **Resume file:** None
 
 **Next Action:** Execute Plan 05-04 (Quality and Publishing Preparation)

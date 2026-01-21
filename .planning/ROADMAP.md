@@ -223,22 +223,41 @@ Plans:
 
 ### Phase 7: Enhanced Research Infrastructure
 
-**Goal:** Improve research depth and breadth with multi-domain analysis and source validation.
+**Goal:** Replace mock data with real web scraping, add multi-domain parallel execution, enhanced source validation, and content-based deduplication.
 
 **Dependencies:** Phase 6 (needs discussion system to inform research)
 
-**Requirements:** TBD
+**Requirements:** Enhanced research capabilities (web scraping, source validation, deduplication, parallel execution)
 
 **Success Criteria:**
-1. TBD (to be defined during planning)
+1. System scrapes real documentation sites using progressive enhancement (Cheerio → Playwright fallback)
+2. System classifies sources into multi-tier authority levels (HIGH/MEDIUM/LOW/UNVERIFIED)
+3. System detects duplicate content across different URLs using content hashing
+4. System executes multi-domain research in parallel (STACK/FEATURES/ARCHITECTURE/PITFALLS)
+5. Concurrency controls prevent resource exhaustion (p-limit with configurable limits)
+6. Rate limiting handled gracefully with exponential backoff and jitter
+7. Browser cleanup prevents memory leaks (try-finally blocks)
+8. Context-aware research respects locked decisions from CONTEXT.md
+9. All 81+ integration tests pass (66 existing + 15 new = 100% pass rate)
+10. Real scraped content replaces mock data in research findings
 
-**Plans:** 0 plans
+**Plans:** 4 plans
 
 Plans:
-- [ ] TBD (run /gsd:plan-phase 7 to break down)
+- [ ] 07-01-PLAN.md — Web scraping foundation (dependencies, scraper.js with progressive enhancement)
+- [ ] 07-02-PLAN.md — Source validation and deduplication (source-validator.js, deduplicator.js)
+- [ ] 07-03-PLAN.md — Multi-domain coordination and integration (domain-coordinator.js, update researcher.js)
+- [ ] 07-04-PLAN.md — Testing and validation (Test Suites 13-14, end-to-end verification)
 
 **Deliverables:**
-- TBD (to be defined during planning)
+- Updated gsd/package.json (cheerio, playwright, axios, p-limit dependencies)
+- gsd/scripts/scraper.js (progressive enhancement web scraping)
+- gsd/scripts/source-validator.js (multi-tier authority classification)
+- gsd/scripts/deduplicator.js (content-based duplicate detection)
+- gsd/scripts/domain-coordinator.js (parallel multi-domain execution)
+- Updated gsd/scripts/researcher.js (real scraping integration)
+- Test Suite 13 (9 tests for web scraping modules)
+- Test Suite 14 (6 tests for multi-domain coordination)
 
 ---
 
@@ -273,7 +292,7 @@ Plans:
 | 4 - Advanced Features | Complete | 10 | 6 |
 | 5 - Polish and Distribution Readiness | Incomplete (1/4 plans) | (not tracked) | 8 |
 | 6 - Discussion & Context System | Complete | (context gathering) | 7 |
-| 7 - Enhanced Research Infrastructure | Pending | TBD | TBD |
+| 7 - Enhanced Research Infrastructure | Planned (4 plans) | (enhanced research) | 10 |
 | 8 - Verification & Quality System | Pending | TBD | TBD |
 
 **Total:** 8 phases, 55 v1 requirements, 39+ success criteria (Phases 7-8 TBD)

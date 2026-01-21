@@ -24,6 +24,17 @@ node gsd/scripts/guideline-loader.js --workflow=plan-phase
 *Ask user clarifying questions (see Workflow Steps Phase 2)*
 *Wait for user responses before proceeding*
 
+### Save Discussion Context
+```bash
+# Persist user responses to CONTEXT.md
+node gsd/scripts/context-loader.js \
+  --action=save \
+  --phase=${PHASE_NUM} \
+  --phaseName="${PHASE_NAME}" \
+  --answers='${ANSWERS_JSON}' \
+  --phaseGoal="${GOAL_FROM_ROADMAP}"
+```
+
 ### Plan Creation
 ```bash
 # Create phase directory
@@ -102,9 +113,10 @@ After workflow completion:
 ├── STATE.md
 └── phases/
     └── XX-name/                    # Phase directory
+        ├── XX-CONTEXT.md           # Discussion results (created before planning)
+        ├── XX-RESEARCH.md          # Optional research
         ├── XX-01-PLAN.md           # First plan
-        ├── XX-02-PLAN.md           # Second plan (if needed)
-        └── XX-CONTEXT.md           # Optional context/research
+        └── XX-02-PLAN.md           # Second plan (if needed)
 ```
 
 ## Code Style
@@ -163,6 +175,7 @@ Co-Authored-By: Tabnine Agent <noreply@tabnine.com>
 ### Always Do
 
 - **Discuss before planning**: Ask clarifying questions before creating plans
+- **Save discussion responses to CONTEXT.md before creating plans**
 - **Present plans**: Show structured summary of what will be built
 - **Wait for approval**: Do not proceed to execution without explicit user approval
 - Read ROADMAP.md before creating plans
@@ -291,20 +304,47 @@ Co-Authored-By: Tabnine Agent <noreply@tabnine.com>
 
    **Wait for user responses.** Store responses in memory for plan creation.
 
+4. **Save discussion context:**
+   After user provides responses, persist to CONTEXT.md:
+
+   ```javascript
+   import { saveDiscussionContext } from './gsd/scripts/context-loader.js';
+
+   // Example: Save responses to CONTEXT.md
+   const contextPath = await saveDiscussionContext(
+     phase,           // Phase number (e.g., 2)
+     phaseName,       // Phase name slug (e.g., 'core-infrastructure')
+     answers,         // User responses object
+     phaseGoal        // Phase objective from ROADMAP.md
+   );
+
+   console.log(`Context saved to: ${contextPath}`);
+   ```
+
+   This creates: `.planning/phases/XX-name/XX-CONTEXT.md`
+
+   **CONTEXT.md structure:**
+   - Frontmatter: phase, phase_name, gathered date, status
+   - `<domain>`: Phase boundary from ROADMAP.md
+   - `<decisions>`: Locked-in choices (constraints for planning)
+   - `<specifics>`: Implementation details and preferences
+   - `<deferred>`: Out-of-scope items for this phase
+
 ### Phase 3: Plan Creation
 
-4. **Determine plan structure:**
+5. **Determine plan structure:**
    - Count deliverables from ROADMAP.md
+   - Load locked decisions from CONTEXT.md (respect user constraints)
    - Incorporate user responses from discussion
    - Group related deliverables into logical plans
    - Target 2-3 tasks per plan for manageability
    - Identify any checkpoint tasks (human verification needed)
 
-5. **Create phase directory:**
+6. **Create phase directory:**
    - Execute: `mkdir .planning/phases/${PHASE_DIR}`
    - Use naming pattern: `01-foundation-templates`
 
-6. **Generate PLAN.md file(s):**
+7. **Generate PLAN.md file(s):**
    - For each plan:
      - Execute template-renderer.js with PLAN template
      - Populate frontmatter: phase, plan, type, wave, depends_on
@@ -316,7 +356,7 @@ Co-Authored-By: Tabnine Agent <noreply@tabnine.com>
 
 ### Phase 4: Plan Presentation (NEW)
 
-7. **Present plans to user:**
+8. **Present plans to user:**
 
    After creating all plans, show a structured summary:
 
@@ -365,7 +405,7 @@ Co-Authored-By: Tabnine Agent <noreply@tabnine.com>
 
 ### Phase 5: Approval Gate (NEW)
 
-8. **Request approval:**
+9. **Request approval:**
 
    Use approval-gate.js to present options:
 
@@ -396,11 +436,11 @@ Co-Authored-By: Tabnine Agent <noreply@tabnine.com>
    ```
 
    **Wait for user decision:**
-   - **If "approve"**: Continue to step 9
+   - **If "approve"**: Continue to step 10
    - **If "changes"**: Ask "What would you like changed?" → Modify plans → Re-present → Request approval again
    - **If "reject"**: Ask "What approach should we take instead?" → Return to step 3 (discussion)
 
-9. **Log approval decision:**
+10. **Log approval decision:**
    ```bash
    node gsd/scripts/approval-gate.js \
      --log \
@@ -410,12 +450,12 @@ Co-Authored-By: Tabnine Agent <noreply@tabnine.com>
 
 ### Phase 6: Finalization
 
-10. **Update STATE.md:**
+11. **Update STATE.md:**
     - Execute state-manager.js with update flags
     - Set currentPhase, currentPlan, status="planned-approved"
     - Record approval timestamp
 
-11. **Create git commit:**
+12. **Create git commit:**
     - Stage phase directory and STATE.md
     - Commit with phase identifier and approval note in message:
     ```
@@ -434,7 +474,7 @@ Co-Authored-By: Tabnine Agent <noreply@tabnine.com>
 
 Workflow is complete when:
 
-1. **Discussion phase completed**: User answered clarifying questions (or explicitly skipped)
+1. **Discussion phase completed and saved to CONTEXT.md**: User answered clarifying questions (or explicitly skipped)
 2. At least one PLAN.md exists for phase
 3. Each PLAN.md has all required sections (objective, tasks, verification, success_criteria)
 4. Tasks include `<name>`, `<files>`, `<action>`, `<verify>`, `<done>` elements

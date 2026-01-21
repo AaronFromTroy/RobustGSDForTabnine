@@ -1,0 +1,33 @@
+# Planning artifacts
+.planning/
+
+# Dependencies
+node_modules/
+
+# Git
+.git/
+.gitignore
+
+# Logs
+*.log
+npm-debug.log*
+
+# Config (user creates their own)
+.gsd-config.json
+config-schema.json
+
+# Tests
+integration-test.js
+
+# Installer scripts
+INSTALL-SYMLINK.*
+
+# CI/CD
+.github/
+
+# Editor configs
+.vscode/
+.idea/
+
+# TypeScript build artifacts
+*.tsbuildinfo

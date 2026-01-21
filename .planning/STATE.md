@@ -1,6 +1,6 @@
 # State: GSD for Tabnine
 
-**Last Updated:** 2026-01-19
+**Last Updated:** 2026-01-21
 **Version:** 1.0.0
 
 ---
@@ -9,27 +9,29 @@
 
 **Core Value:** Enable the complete GSD methodology within Tabnine's agent mode through context-aware modular guidelines that work within its constraints (no sub-agent spawning, smaller context window, no slash commands).
 
-**Current Focus:** Phase 4 complete - All 4 phases delivered
+**Current Focus:** Phases 6-8 added - Discussion, Enhanced Research, Verification systems
 
 ---
 
 ## Current Position
 
-**Phase:** 4 of 4 (Advanced Features)
-**Plan:** 3 of 3 (completed)
-**Status:** Completed
-**Last activity:** 2026-01-18 - Completed 04-03-PLAN.md (Automated Research Capability)
+**Phase:** 5 of 8 (Polish and Distribution Readiness)
+**Plan:** 3 of 4 (completed)
+**Status:** In progress
+**Last activity:** 2026-01-21 - Completed 05-03-PLAN.md (Documentation and Examples)
+**Next Action:** Execute Plan 05-04
 
-**Progress:** `████` (100% - All phases complete)
+**Progress:** `████░░░░` (50% - 4/8 phases complete, Phase 5 planned)
 
 ---
 
 ## Performance Metrics
 
-**Phases Completed:** 4/4
-**Plans Completed:** 14/14 total (3 Phase 1 + 5 Phase 2 + 3 Phase 3 + 3 Phase 4)
-**Requirements Validated:** 55/55 (All requirements fulfilled - 100%)
-**Success Rate:** 100% (14/14 plans completed successfully)
+**Phases Completed:** 4/8
+**Plans Completed:** 17/17 total (3 Phase 1 + 5 Phase 2 + 3 Phase 3 + 3 Phase 4 + 3 Phase 5 partial)
+**Plans Planned:** 1 (Phase 5: 1 plan remaining)
+**Requirements Validated:** 55/55 (Phase 1-4 requirements fulfilled - 100%)
+**Success Rate:** 100% (17/17 plans completed successfully)
 
 ---
 
@@ -78,6 +80,11 @@
 | HTTPS required for sources | 2026-01-18 | extractFindings() filters HTTP sources - security best practice |
 | Forums excluded from findings | 2026-01-18 | Filter forum., reddit.com, discord. URLs - low signal-to-noise ratio |
 | Type-specific query generation | 2026-01-18 | Different search queries for STACK/FEATURES/ARCHITECTURE/PITFALLS - better research quality |
+| Phase 5 added to roadmap | 2026-01-20 | Polish and Distribution Readiness - prepare library for production use and public distribution after core functionality complete |
+| Phases 6-8 added for robustness | 2026-01-20 | Discussion & Context System, Enhanced Research Infrastructure, Verification & Quality System - make Tabnine GSD more thorough without being as heavy as Claude Code GSD |
+| Conventional Commits for versioning | 2026-01-21 | Enables automated versioning in CONTRIBUTING.md - feat → minor, fix → patch, BREAKING CHANGE → major |
+| Package exports with subpaths | 2026-01-21 | Main entry (.) and subpath exports enable two import patterns for flexibility - common use vs specific modules |
+| prepublishOnly safety gate | 2026-01-21 | Runs tests automatically before npm publish - prevents publishing broken code |
 
 ### Active TODOs
 
@@ -105,6 +112,17 @@
 None
 
 ### Recent Changes
+
+**2026-01-21:**
+- **Phase 5 Plan 3 completed (05-03):** Documentation and Examples (5 min)
+  - Created CONTRIBUTING.md with development setup, conventional commits format, PR process (90 lines)
+  - Created gsd/scripts/index.js as main package entry point re-exporting 16 functions from all modules
+  - Created examples/basic-usage/ demo project with 3 examples (state management, template rendering, guideline loading)
+  - Updated package.json scripts: test runs integration-test.js, prepublishOnly safety gate, example command
+  - Added missing exports field to package.json (main entry + subpath exports for all modules)
+  - Deviation: Auto-fixed missing exports field (Rule 2 - Missing Critical) - required by key_links must-have
+  - Git commits: 55e74be (CONTRIBUTING.md), 52c26dc (index.js), ff92ce6 (example), c92c04a (scripts), f242b13 (exports fix)
+  - All 57 integration tests still pass (100% pass rate)
 
 **2026-01-18:**
 - **Phase 4 Plan 3 completed (04-03):** Automated research capability (8 min)
@@ -231,21 +249,25 @@ None
 
 ## Session Continuity
 
-**Last session:** 2026-01-18 19:21 UTC
-**Stopped at:** Completed 04-03-PLAN.md (Automated Research Capability) - All phases complete
+**Last session:** 2026-01-21
+**Stopped at:** Completed 05-03-PLAN.md (Documentation and Examples)
 **Resume file:** None
 
-**Next Action:** Project complete - all 4 phases delivered
+**Next Action:** Execute Plan 05-04 (Quality and Publishing Preparation)
 **Context Summary:**
-- Phase 1: Foundation & Templates (3 plans - guidelines, templates, config)
-- Phase 2: Core Infrastructure (5 plans - Node.js, file ops, state manager, templates, testing)
-- Phase 3: Workflow Orchestration (3 plans - trigger detection, validation, resume/orchestration)
-- Phase 4: Advanced Features (3 plans - research templates/approval gates, research synthesizer, automated research)
-- 55/55 requirements validated
+- Phase 1: Foundation & Templates (3 plans - guidelines, templates, config) ✓
+- Phase 2: Core Infrastructure (5 plans - Node.js, file ops, state manager, templates, testing) ✓
+- Phase 3: Workflow Orchestration (3 plans - trigger detection, validation, resume/orchestration) ✓
+- Phase 4: Advanced Features (3 plans - research templates/approval gates, research synthesizer, automated research) ✓
+- Phase 5: Polish and Distribution Readiness (3/4 plans complete - metadata, CI/CD, docs) — In Progress ◆
+- Phase 6: Discussion & Context System (0 plans - not planned yet) ○
+- Phase 7: Enhanced Research Infrastructure (0 plans - not planned yet) ○
+- Phase 8: Verification & Quality System (0 plans - not planned yet) ○
+- 55/55 v1 requirements validated (Phase 1-4)
 - 57/57 integration tests passing (100%)
 
 **Project Status:**
-All roadmap phases complete. GSD methodology fully implemented for Tabnine Agent with:
+Phases 1-4 complete. Phases 5-8 added for enhanced robustness. GSD methodology fully implemented for Tabnine Agent with:
 - Modular guideline system (5 workflows - new-project, plan-phase, execute-phase, verify-work, research)
 - Template-driven artifacts (10 templates)
 - State management and progress tracking
@@ -254,7 +276,13 @@ All roadmap phases complete. GSD methodology fully implemented for Tabnine Agent
 - Automated research with web search integration (mock data, ready for WebSearch)
 - Comprehensive testing infrastructure (57 tests, 100% pass rate)
 
+**Roadmap Extension:**
+- Phase 5: Polish and Distribution Readiness (planned - LICENSE, CI/CD, examples, npm packaging)
+- Phase 6: Discussion & Context System (gather user context before research/planning)
+- Phase 7: Enhanced Research Infrastructure (multi-domain research with source validation)
+- Phase 8: Verification & Quality System (goal-backward verification after execution)
+
 ---
 
 *State tracking initialized: 2026-01-18*
-*Last updated: 2026-01-18 after 04-03-PLAN.md completion - All phases complete (100%)*
+*Last updated: 2026-01-20 after adding Phases 6-8 for enhanced robustness (50% complete)*

@@ -244,10 +244,10 @@ Plans:
 **Plans:** 4 plans
 
 Plans:
-- [ ] 07-01-PLAN.md — Web scraping foundation (dependencies, scraper.js with progressive enhancement)
-- [ ] 07-02-PLAN.md — Source validation and deduplication (source-validator.js, deduplicator.js)
-- [ ] 07-03-PLAN.md — Multi-domain coordination and integration (domain-coordinator.js, update researcher.js)
-- [ ] 07-04-PLAN.md — Testing and validation (Test Suites 13-14, end-to-end verification)
+- [x] 07-01-PLAN.md — Web scraping foundation (dependencies, scraper.js with progressive enhancement)
+- [x] 07-02-PLAN.md — Source validation and deduplication (source-validator.js, deduplicator.js)
+- [x] 07-03-PLAN.md — Multi-domain coordination and integration (domain-coordinator.js, update researcher.js)
+- [x] 07-04-PLAN.md — Testing and validation (Test Suites 13-14, end-to-end verification)
 
 **Deliverables:**
 - Updated gsd/package.json (cheerio, playwright, axios, p-limit dependencies)
@@ -292,7 +292,7 @@ Plans:
 | 4 - Advanced Features | Complete | 10 | 6 |
 | 5 - Polish and Distribution Readiness | Incomplete (1/4 plans) | (not tracked) | 8 |
 | 6 - Discussion & Context System | Complete | (context gathering) | 7 |
-| 7 - Enhanced Research Infrastructure | Planned (4 plans) | (enhanced research) | 10 |
+| 7 - Enhanced Research Infrastructure | Complete | (enhanced research) | 10 |
 | 8 - Verification & Quality System | Pending | TBD | TBD |
 
 **Total:** 8 phases, 55 v1 requirements, 39+ success criteria (Phases 7-8 TBD)

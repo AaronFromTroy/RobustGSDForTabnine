@@ -26,6 +26,7 @@ import { performResearch } from './researcher.js';
 import { validateAcceptanceCriteria, extractSuccessCriteria, createValidator } from './goal-validator.js';
 import { checkCoverageThreshold, runLinting, checkQualityGates } from './quality-checker.js';
 import { verifyPhase, runSmokeTests, runUnitTests } from './verifier.js';
+import { generateVerificationReport, saveReport } from './verification-report.js';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { unlink, rmdir } from 'node:fs/promises';
@@ -1535,6 +1536,107 @@ async function testVerificationModules() {
 }
 
 /**
+ * Test Suite 16: Report Generation and Integration (Phase 8)
+ */
+async function testReportGeneration() {
+  console.log('\n=== Test Suite 16: Report Generation and Integration (Phase 8) ===');
+
+  // Test 1: verification-report exports expected functions
+  try {
+    const hasGenerate = typeof generateVerificationReport === 'function';
+    const hasSave = typeof saveReport === 'function';
+    logTest('verification-report exports 2 functions', hasGenerate && hasSave);
+  } catch (error) {
+    logTest('verification-report exports 2 functions', false, error.message);
+  }
+
+  // Test 2: generateVerificationReport transforms results
+  try {
+    const mockResults = {
+      phase: 8,
+      passed: false,
+      layers: {
+        smoke: { passed: true, duration: '10s' },
+        linting: { passed: true, errors: 0, warnings: 2 },
+        unitTests: { passed: true, count: 81, coverage: 91 }
+      },
+      failures: ['Test failure example'],
+      duration: 120
+    };
+    const vars = generateVerificationReport(mockResults);
+    const passed = vars.phase === 8 &&
+                  vars.passed === false &&
+                  vars.failures_count === 1 &&
+                  typeof vars.layers_smoke_passed === 'boolean';
+    logTest('generateVerificationReport transforms results to variables', passed);
+  } catch (error) {
+    logTest('generateVerificationReport transforms results to variables', false, error.message);
+  }
+
+  // Test 3: VERIFICATION.md template exists and is valid
+  try {
+    const templatePath = gsdPath('templates', 'VERIFICATION.md');
+    const exists = await fileExists(templatePath);
+    const content = exists ? await readFile(templatePath) : '';
+    const hasVariables = content.includes('${phase}') && content.includes('${passed}');
+    logTest('VERIFICATION.md template exists and has variables', exists && hasVariables);
+  } catch (error) {
+    logTest('VERIFICATION.md template exists and has variables', false, error.message);
+  }
+
+  // Test 4: Template can be rendered with verification data
+  try {
+    const mockVars = {
+      phase: 8,
+      verified: '2026-01-21',
+      timestamp: '2026-01-21T12:00:00Z',
+      passed: true,
+      failures_count: 0,
+      duration: 120,
+      layers_smoke_passed: true,
+      layers_linting_passed: true,
+      layers_unit_passed: true,
+      failures: '',
+      next_action: 'Phase verified.'
+    };
+    const rendered = await renderTemplate('VERIFICATION', mockVars);
+    const passed = rendered.includes('phase: 8') && rendered.includes('passed: true');
+    logTest('VERIFICATION template renders with verification variables', passed);
+  } catch (error) {
+    logTest('VERIFICATION template renders with verification variables', false, error.message);
+  }
+
+  // Test 5: verify-work.md updated with verifier.js integration
+  try {
+    const guidelinePath = gsdPath('guidelines', 'verify-work.md');
+    const content = await readFile(guidelinePath);
+    const hasVerifier = content.includes('verifier.js');
+    const hasLayers = content.includes('Layer 1:') || content.includes('Verification Layers');
+    logTest('verify-work.md integrated with new verification modules', hasVerifier && hasLayers);
+  } catch (error) {
+    logTest('verify-work.md integrated with new verification modules', false, error.message);
+  }
+
+  // Test 6: End-to-end verification workflow (integration)
+  try {
+    // Run verification on Phase 1 (should pass - already complete)
+    const verificationResult = await verifyPhase(1);
+    const hasLayers = verificationResult.layers &&
+                     verificationResult.layers.smoke &&
+                     verificationResult.layers.linting;
+    const hasResults = typeof verificationResult.passed === 'boolean';
+
+    // Generate report from results
+    const reportVars = generateVerificationReport(verificationResult);
+    const hasReportVars = reportVars.phase === 1 && typeof reportVars.passed === 'boolean';
+
+    logTest('End-to-end verification workflow completes', hasLayers && hasResults && hasReportVars);
+  } catch (error) {
+    logTest('End-to-end verification workflow completes', false, error.message);
+  }
+}
+
+/**
  * Main test runner
  */
 async function runAllTests() {
@@ -1564,6 +1666,7 @@ async function runAllTests() {
     await testWebScraping();
     await testMultiDomainCoordination();
     await testVerificationModules();
+    await testReportGeneration();
 
     // Final report
     console.log('\n===========================================');
@@ -1572,6 +1675,13 @@ async function runAllTests() {
     console.log(`Total tests: ${totalTests}`);
     console.log(`Passed: ${passedTests} (${Math.round(passedTests/totalTests*100)}%)`);
     console.log(`Failed: ${failedTests}`);
+    console.log('\nTest Suites:');
+    console.log('  Suite 1-7: Phase 2 (Core Infrastructure)');
+    console.log('  Suite 8-9: Phase 3 (Workflow Orchestration)');
+    console.log('  Suite 10-11: Phase 4 (Advanced Features)');
+    console.log('  Suite 12: Phase 6 (Discussion & Context System)');
+    console.log('  Suite 13-14: Phase 7 (Enhanced Research Infrastructure)');
+    console.log('  Suite 15-16: Phase 8 (Verification & Quality System)');
     console.log('===========================================');
 
     // Exit with appropriate code

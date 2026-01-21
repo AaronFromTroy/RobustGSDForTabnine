@@ -15,28 +15,24 @@ This guideline enables Tabnine to validate completed phases against success crit
 Execute these exact commands in sequence:
 
 ```bash
-# Validate artifact structure
-node gsd/scripts/validator.js --check=artifacts --phase=${PHASE_NUM}
+# Run comprehensive verification (all 5 layers)
+node gsd/scripts/verifier.js --phase=${PHASE_NUM}
 
-# Validate requirements coverage
-node gsd/scripts/validator.js --check=requirements --phase=${PHASE_NUM}
-
-# Validate success criteria
-node gsd/scripts/validator.js --check=success-criteria --phase=${PHASE_NUM}
-
-# If issues found, generate VERIFICATION.md
-node gsd/scripts/template-renderer.js --template=VERIFICATION --output=.planning/phases/${PHASE_DIR}/VERIFICATION.md --issues="${ISSUES_JSON}"
+# If verification failed, generate report
+node gsd/scripts/verification-report.js --phase=${PHASE_NUM} --results="${RESULTS_JSON}"
 
 # Update STATE.md
 node gsd/scripts/state-manager.js --update verification="${RESULT}" verifiedDate="${DATE}"
 
 # Create git commit (if verification passed)
-git add .planning/STATE.md
+git add .planning/STATE.md .planning/phases/${PHASE_DIR}/VERIFICATION.md
 git commit -m "docs(phase-${PHASE_NUM}): verification ${RESULT}
 
-- Artifacts validated: ${ARTIFACT_COUNT}
-- Requirements coverage: ${COVERAGE_PERCENT}%
-- Success criteria: ${CRITERIA_MET}/${CRITERIA_TOTAL}
+- Smoke tests: ${SMOKE_RESULT}
+- Linting: ${LINT_RESULT} (${ERROR_COUNT} errors, ${WARNING_COUNT} warnings)
+- Unit tests: ${UNIT_RESULT} (${TEST_COUNT} tests, ${COVERAGE}% coverage)
+- Integration tests: ${INTEGRATION_RESULT}
+- Acceptance criteria: ${ACCEPTANCE_RESULT} (${CRITERIA_MET}/${CRITERIA_TOTAL})
 
 Co-Authored-By: Tabnine Agent <noreply@tabnine.com>"
 ```
@@ -45,11 +41,13 @@ Co-Authored-By: Tabnine Agent <noreply@tabnine.com>"
 
 Validate workflow completion by checking:
 
-1. All required artifacts exist and have correct structure
-2. Requirements traceability confirmed (all requirements mapped to phases)
-3. Success criteria from ROADMAP.md validated
-4. STATE.md shows verification status (passed or issues documented)
-5. If issues found, VERIFICATION.md exists with remediation guidance
+1. Smoke tests pass (STATE.md valid, phase directory exists, required artifacts exist)
+2. Linting has no errors (warnings allowed)
+3. Unit tests pass with coverage ≥ 80%
+4. Integration tests pass (all test suites)
+5. Acceptance criteria validated (all success criteria from ROADMAP.md met)
+6. STATE.md shows verification status (passed or issues documented)
+7. If issues found, VERIFICATION.md exists with remediation guidance
 
 ## Project Structure
 
@@ -133,60 +131,73 @@ Co-Authored-By: Tabnine Agent <noreply@tabnine.com>
 
 ## Workflow Steps
 
-1. **Load SUMMARY.md:**
-   - Read `.planning/phases/XX-name/XX-NN-SUMMARY.md` for all plans
-   - Extract deliverables, tasks completed, files modified
+1. **Run multi-layer verification:**
+   - Execute verifier.js with phase number
+   - verifier.js orchestrates all 5 layers:
+     a. Smoke tests (critical file checks)
+     b. Static analysis (linting)
+     c. Unit tests with coverage (integration-test.js)
+     d. Integration tests (integration-test.js)
+     e. Acceptance criteria (goal-validator.js)
+   - Returns comprehensive results object
 
-2. **Validate artifact structure:**
-   - For each artifact mentioned in deliverables:
-     a. Verify file exists
-     b. Parse YAML frontmatter (if applicable)
-     c. Check all required sections present
-     d. Validate section content (not empty)
-   - Example: PROJECT.md must have "What This Is", "Core Value", "Requirements"
+2. **Generate report if failed:**
+   - If verification passed: skip report generation
+   - If verification failed:
+     a. Execute verification-report.js
+     b. Generates VERIFICATION.md using template
+     c. Saves to phase directory
 
-3. **Check requirements coverage:**
-   - Read REQUIREMENTS.md for all v1 requirements
-   - Read ROADMAP.md for phase-to-requirement mappings
-   - Identify unmapped requirements
-   - Verify 100% coverage (every v1 requirement mapped to a phase)
-
-4. **Verify success criteria:**
-   - Read ROADMAP.md for phase success criteria
-   - For each criterion:
-     a. Determine validation method
-     b. Execute validation
-     c. Record pass/fail
-   - Example: "Developer can copy gsd/ directory" → Check gsd/ exists with README.md
-
-5. **Update STATE.md:**
+3. **Update STATE.md:**
    - Execute state-manager.js with verification result
    - If passed: verification="passed", verifiedDate="${DATE}"
    - If failed: verification="failed", include issue summary
 
-6. **Create VERIFICATION.md if issues found:**
-   - Execute template-renderer.js with VERIFICATION template
-   - Document each issue:
-     - Issue description
-     - Affected artifact/requirement
-     - Remediation steps
-     - Priority (critical, high, medium, low)
-   - Write to `.planning/phases/XX-name/VERIFICATION.md`
-
-7. **Report results:**
-   - If passed: "Phase ${PHASE_NUM} verification passed. All criteria met."
+4. **Report results:**
+   - If passed: "Phase ${PHASE_NUM} verification passed. All ${LAYERS_COUNT} layers complete."
    - If failed: "Phase ${PHASE_NUM} verification failed. See VERIFICATION.md for ${ISSUE_COUNT} issue(s)."
+
+## Verification Layers
+
+The verification system uses 5 layers executed in sequence:
+
+**Layer 1: Smoke Tests (10 seconds)**
+- Critical file existence (STATE.md, phase directory, PROJECT.md, ROADMAP.md, REQUIREMENTS.md)
+- Fail-fast: if smoke tests fail, verification stops immediately
+
+**Layer 2: Static Analysis (20 seconds)**
+- ESLint code quality checks
+- Fail-fast: if linting errors found, verification stops (warnings allowed)
+
+**Layer 3: Unit Tests (1-2 minutes)**
+- Execute integration-test.js for all test suites
+- Check coverage threshold (80% default, configurable)
+- Continue even if coverage below threshold (accumulates failure)
+
+**Layer 4: Integration Tests (2-3 minutes)**
+- Execute integration-test.js end-to-end workflows
+- Validate component interactions
+- Continue even if tests fail (accumulates failure)
+
+**Layer 5: Acceptance Criteria (1 minute)**
+- Validate success criteria from ROADMAP.md
+- Check deliverables, requirements coverage, phase goals
+- Continue to complete all criteria checks (accumulates failures)
+
+**Total duration:** 4-6 minutes for complete verification
 
 ## Success Criteria
 
 Workflow is complete when:
 
-1. All required artifacts validated (structure checks passed)
-2. 100% requirement coverage confirmed (no unmapped requirements)
-3. All phase success criteria validated
-4. STATE.md shows verification result (passed or failed with issue count)
-5. If failed, VERIFICATION.md exists with detailed remediation guidance
-6. Git commit created (only if verification passed)
+1. Smoke tests passed (all critical files exist and are valid)
+2. Linting passed (no errors, warnings acceptable)
+3. Unit tests passed with coverage ≥ 80%
+4. Integration tests passed (all test suites)
+5. Acceptance criteria validated (all success criteria from ROADMAP.md met)
+6. STATE.md shows verification result (passed or failed with issue count)
+7. If failed, VERIFICATION.md exists with layer-by-layer results and remediation
+8. Git commit created (only if verification passed)
 
 ## Validation Examples
 

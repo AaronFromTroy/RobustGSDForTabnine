@@ -7,6 +7,7 @@
  * - Phase 3: Trigger detection, artifact validation, resume & orchestration
  * - Phase 4: Approval gates, research synthesis, automated research
  * - Phase 6: Discussion & context system (CONTEXT template, question taxonomy, context parsing)
+ * - Phase 7: Web scraping (scraper, source-validator, deduplicator), multi-domain coordination
  */
 
 import { readFile, writeFileAtomic, fileExists, ensureDir } from './file-ops.js';
@@ -16,6 +17,9 @@ import { renderTemplate, listTemplates } from './template-renderer.js';
 import { loadGuideline, listWorkflows } from './guideline-loader.js';
 import { detectPhaseType, getQuestionsForPhase } from './question-bank.js';
 import { parseDecisions, categorizeAnswers, loadPhaseContext } from './context-loader.js';
+import { scrapeContent, scrapeWithFallback, fetchWithRetry } from './scraper.js';
+import { classifySourceAuthority, assignConfidenceLevel } from './source-validator.js';
+import { deduplicateFindings, hashContent } from './deduplicator.js';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { unlink, rmdir } from 'node:fs/promises';
@@ -1159,11 +1163,172 @@ async function testDiscussionContextSystem() {
 }
 
 /**
+ * Test Suite 13: Web Scraping (Phase 7)
+ */
+async function testWebScraping() {
+  console.log('\n=== Test Suite 13: Web Scraping ===');
+
+  try {
+    // === SCRAPER.JS TESTS (3 tests) ===
+
+    // Test 1: scrapeContent returns content object with method/content/title
+    try {
+      console.log('    Attempting network request to nodejs.org...');
+      const result = await scrapeContent('https://nodejs.org/en/docs/');
+      const passed = result &&
+                     result.method &&
+                     (result.method === 'static' || result.method === 'dynamic') &&
+                     result.content &&
+                     result.content.length > 100 &&
+                     result.title &&
+                     result.url;
+      logTest('scrapeContent returns content object with method/content/title', passed);
+      if (passed) {
+        console.log(`      Method: ${result.method}, Title: "${result.title.substring(0, 40)}...", Content length: ${result.content.length}`);
+      }
+    } catch (error) {
+      // Network errors are acceptable - mark as warning
+      if (error.message.includes('ENOTFOUND') || error.message.includes('network') || error.message.includes('timeout')) {
+        console.log('  ⚠ scrapeContent returns content object with method/content/title (SKIPPED - network unavailable)');
+        console.log(`    Network error: ${error.message}`);
+      } else {
+        logTest('scrapeContent returns content object with method/content/title', false, error.message);
+      }
+    }
+
+    // Test 2: fetchWithRetry handles retries (using mock behavior check)
+    try {
+      // Test fetchWithRetry function exists and has correct signature
+      const passed = typeof fetchWithRetry === 'function';
+      logTest('fetchWithRetry function is exported', passed);
+    } catch (error) {
+      logTest('fetchWithRetry function is exported', false, error.message);
+    }
+
+    // Test 3: scrapeWithFallback function exists
+    try {
+      const passed = typeof scrapeWithFallback === 'function';
+      logTest('scrapeWithFallback function is exported', passed);
+    } catch (error) {
+      logTest('scrapeWithFallback function is exported', false, error.message);
+    }
+
+    // === SOURCE-VALIDATOR.JS TESTS (3 tests) ===
+
+    // Test 4: classifySourceAuthority returns HIGH for official docs
+    try {
+      const test1 = classifySourceAuthority('https://docs.react.dev/');
+      const test2 = classifySourceAuthority('https://react.dev/'); // .dev domain
+      const test3 = classifySourceAuthority('https://github.com/facebook/react/docs/guide.html');
+      const passed = test1 === 'HIGH' && test2 === 'HIGH' && test3 === 'HIGH';
+      logTest('classifySourceAuthority returns HIGH for official docs', passed);
+      if (passed) {
+        console.log(`      docs.react.dev: ${test1}, react.dev: ${test2}, github docs: ${test3}`);
+      } else {
+        console.log(`      docs.react.dev: ${test1}, react.dev: ${test2}, github docs: ${test3}`);
+      }
+    } catch (error) {
+      logTest('classifySourceAuthority returns HIGH for official docs', false, error.message);
+    }
+
+    // Test 5: classifySourceAuthority returns MEDIUM for MDN/StackOverflow
+    try {
+      const test1 = classifySourceAuthority('https://developer.mozilla.org/en-US/');
+      const test2 = classifySourceAuthority('https://stackoverflow.com/questions/');
+      const passed = test1 === 'MEDIUM' && test2 === 'MEDIUM';
+      logTest('classifySourceAuthority returns MEDIUM for MDN/StackOverflow', passed);
+      if (passed) {
+        console.log(`      MDN: ${test1}, StackOverflow: ${test2}`);
+      }
+    } catch (error) {
+      logTest('classifySourceAuthority returns MEDIUM for MDN/StackOverflow', false, error.message);
+    }
+
+    // Test 6: classifySourceAuthority returns UNVERIFIED for unknown domains
+    try {
+      const test1 = classifySourceAuthority('https://random-website.example.com/');
+      const test2 = classifySourceAuthority('https://unknown.xyz/');
+      const passed = test1 === 'UNVERIFIED' && test2 === 'UNVERIFIED';
+      logTest('classifySourceAuthority returns UNVERIFIED for unknown domains', passed);
+      if (passed) {
+        console.log(`      random-website: ${test1}, unknown.xyz: ${test2}`);
+      } else {
+        console.log(`      random-website: ${test1}, unknown.xyz: ${test2}`);
+      }
+    } catch (error) {
+      logTest('classifySourceAuthority returns UNVERIFIED for unknown domains', false, error.message);
+    }
+
+    // === DEDUPLICATOR.JS TESTS (3 tests) ===
+
+    // Test 7: hashContent normalizes whitespace and case
+    try {
+      const hash1 = hashContent('Hello  World');
+      const hash2 = hashContent('hello world');
+      const hash3 = hashContent('Test\n\n\nString');
+      const hash4 = hashContent('test string');
+      const passed = hash1 === hash2 && hash3 === hash4 && hash1 !== hash3;
+      logTest('hashContent normalizes whitespace and case', passed);
+      if (passed) {
+        console.log(`      "Hello  World" === "hello world": ${hash1 === hash2}`);
+        console.log(`      "Test\\n\\n\\nString" === "test string": ${hash3 === hash4}`);
+      }
+    } catch (error) {
+      logTest('hashContent normalizes whitespace and case', false, error.message);
+    }
+
+    // Test 8: deduplicateFindings removes exact duplicates
+    try {
+      const findings = [
+        { content: 'Content A', source: 'url1', title: 'Title 1' },
+        { content: 'Content A', source: 'url2', title: 'Title 2' },
+        { content: 'Content B', source: 'url3', title: 'Title 3' }
+      ];
+      const result = deduplicateFindings(findings);
+      const passed = result.length === 2; // A and B
+      logTest('deduplicateFindings removes exact duplicates', passed);
+      if (passed) {
+        console.log(`      Original: ${findings.length}, Deduplicated: ${result.length}`);
+      }
+    } catch (error) {
+      logTest('deduplicateFindings removes exact duplicates', false, error.message);
+    }
+
+    // Test 9: deduplicateFindings merges alternate sources
+    try {
+      const findings = [
+        { source: 'url1', content: 'Same content here', title: 'Title 1' },
+        { source: 'url2', content: 'Same content here', title: 'Title 2' }
+      ];
+      const result = deduplicateFindings(findings);
+      const passed = result.length === 1 &&
+                     result[0].alternateSources &&
+                     Array.isArray(result[0].alternateSources) &&
+                     result[0].alternateSources.length === 1;
+      logTest('deduplicateFindings merges alternate sources', passed);
+      if (passed) {
+        console.log(`      Merged: url1 + url2 into single finding with alternateSources`);
+      }
+    } catch (error) {
+      logTest('deduplicateFindings merges alternate sources', false, error.message);
+    }
+
+  } catch (error) {
+    logTest('Web scraping tests - ERROR', false, error.message);
+    // If import failed, mark remaining tests as failed
+    for (let i = 0; i < 9; i++) {
+      failedTests++;
+      totalTests++;
+    }
+  }
+}
+
+/**
  * Main test runner
  */
 async function runAllTests() {
   console.log('===========================================');
-  console.log('Phase 2, 3, 4, & 6 Integration Test Suite');
+  console.log('Phase 2, 3, 4, 6, & 7 Integration Test Suite');
   console.log('===========================================');
   console.log(`\nTest paths:`);
   console.log(`  GSD Root: ${GSD_ROOT}`);
@@ -1185,6 +1350,7 @@ async function runAllTests() {
     await testApprovalGatesAndResearch();
     await testAutomatedResearch();
     await testDiscussionContextSystem();
+    await testWebScraping();
 
     // Final report
     console.log('\n===========================================');

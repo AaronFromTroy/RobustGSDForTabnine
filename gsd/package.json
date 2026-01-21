@@ -3,9 +3,7 @@
   "version": "1.0.0",
   "description": "GSD workflow system for Tabnine agent mode",
   "type": "module",
-  "engines": {
-    "node": ">=24.0.0"
-  },
+  "main": "./scripts/index.js",
   "exports": {
     ".": "./scripts/index.js",
     "./state-manager": "./scripts/state-manager.js",
@@ -15,11 +13,42 @@
     "./researcher": "./scripts/researcher.js",
     "./research-synthesizer": "./scripts/research-synthesizer.js"
   },
+  "files": [
+    "scripts/",
+    "templates/",
+    "guidelines/",
+    "README.md",
+    "QUICKSTART.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "keywords": [
+    "workflow",
+    "tabnine",
+    "gsd",
+    "project-management",
+    "agent",
+    "automation",
+    "planning",
+    "get-shit-done"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/gsd-for-tabnine.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/gsd-for-tabnine/issues"
+  },
+  "homepage": "https://github.com/yourusername/gsd-for-tabnine#readme",
+  "engines": {
+    "node": ">=24.0.0"
+  },
   "scripts": {
     "test": "node scripts/integration-test.js",
     "test:watch": "nodemon --watch scripts scripts/integration-test.js",
     "prepublishOnly": "npm test",
-    "example": "cd ../examples/basic-usage && npm install && npm start"
+    "example": "cd ../examples/basic-usage && npm install && npm start",
+    "semantic-release": "semantic-release"
   },
   "dependencies": {
     "ajv": "^8.12.0",
@@ -27,7 +56,6 @@
     "markdownlint": "^0.36.1",
     "write-file-atomic": "^5.0.1"
   },
-  "private": true,
   "author": "GSD Project",
   "license": "MIT"
 }

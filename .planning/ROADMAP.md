@@ -154,7 +154,7 @@ Plans:
 
 **Dependencies:** Phase 4 (needs complete functionality)
 
-**Requirements:** DIST-01 through DIST-10 (licensing, packaging, CI/CD, examples, cross-platform testing)
+**Requirements:** Distribution infrastructure not tracked as formal v1 requirements (licensing, packaging, CI/CD, examples, cross-platform testing)
 
 **Success Criteria:**
 1. Package has MIT license and distribution-ready package.json
@@ -196,9 +196,9 @@ Plans:
 | 2 - Core Infrastructure | Complete | 17 | 6 |
 | 3 - Workflow Orchestration | Complete | 14 | 7 |
 | 4 - Advanced Features | Complete | 10 | 6 |
-| 5 - Polish and Distribution Readiness | Pending | 10 | 8 |
+| 5 - Polish and Distribution Readiness | Pending | (not tracked) | 8 |
 
-**Total:** 5 phases, 65 requirements, 32 success criteria
+**Total:** 5 phases, 55 v1 requirements, 32 success criteria
 
 ---
 

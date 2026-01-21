@@ -7,7 +7,10 @@
     "node": ">=24.0.0"
   },
   "scripts": {
-    "test": "echo \"Tests in Phase 3\" && exit 0"
+    "test": "node scripts/integration-test.js",
+    "test:watch": "nodemon --watch scripts scripts/integration-test.js",
+    "prepublishOnly": "npm test",
+    "example": "cd ../examples/basic-usage && npm install && npm start"
   },
   "dependencies": {
     "ajv": "^8.12.0",

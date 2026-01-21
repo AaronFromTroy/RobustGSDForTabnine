@@ -8,6 +8,7 @@
  * - Phase 4: Approval gates, research synthesis, automated research
  * - Phase 6: Discussion & context system (CONTEXT template, question taxonomy, context parsing)
  * - Phase 7: Web scraping (scraper, source-validator, deduplicator), multi-domain coordination
+ * - Phase 8: Verification system (goal-validator, quality-checker, verifier)
  */
 
 import { readFile, writeFileAtomic, fileExists, ensureDir } from './file-ops.js';
@@ -22,6 +23,9 @@ import { classifySourceAuthority, assignConfidenceLevel } from './source-validat
 import { deduplicateFindings, hashContent } from './deduplicator.js';
 import { coordinateMultiDomainResearch, performDomainResearch } from './domain-coordinator.js';
 import { performResearch } from './researcher.js';
+import { validateAcceptanceCriteria, extractSuccessCriteria, createValidator } from './goal-validator.js';
+import { checkCoverageThreshold, runLinting, checkQualityGates } from './quality-checker.js';
+import { verifyPhase, runSmokeTests, runUnitTests } from './verifier.js';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { unlink, rmdir } from 'node:fs/promises';
@@ -1445,6 +1449,92 @@ async function testMultiDomainCoordination() {
 }
 
 /**
+ * Test Suite 15: Verification Modules (Phase 8)
+ */
+async function testVerificationModules() {
+  console.log('\n=== Test Suite 15: Verification Modules (Phase 8) ===');
+
+  // Test 1: goal-validator exports expected functions
+  try {
+    const hasValidate = typeof validateAcceptanceCriteria === 'function';
+    const hasExtract = typeof extractSuccessCriteria === 'function';
+    const hasCreate = typeof createValidator === 'function';
+    logTest('goal-validator exports 3 functions', hasValidate && hasExtract && hasCreate);
+  } catch (error) {
+    logTest('goal-validator exports 3 functions', false, error.message);
+  }
+
+  // Test 2: extractSuccessCriteria parses ROADMAP.md
+  try {
+    const roadmapPath = projectPath('.planning', 'ROADMAP.md');
+    const roadmapContent = await readFile(roadmapPath);
+    const criteria = extractSuccessCriteria(roadmapContent, 1);
+    const passed = Array.isArray(criteria) && criteria.length > 0;
+    logTest('extractSuccessCriteria parses Phase 1 criteria', passed);
+  } catch (error) {
+    logTest('extractSuccessCriteria parses Phase 1 criteria', false, error.message);
+  }
+
+  // Test 3: validateAcceptanceCriteria returns results array
+  try {
+    const results = await validateAcceptanceCriteria(1);
+    const passed = Array.isArray(results) && results.every(r => 'criterion' in r && 'passed' in r);
+    logTest('validateAcceptanceCriteria returns structured results', passed);
+  } catch (error) {
+    logTest('validateAcceptanceCriteria returns structured results', false, error.message);
+  }
+
+  // Test 4: quality-checker exports expected functions
+  try {
+    const hasCheck = typeof checkCoverageThreshold === 'function';
+    const hasLint = typeof runLinting === 'function';
+    const hasGates = typeof checkQualityGates === 'function';
+    logTest('quality-checker exports 3 functions', hasCheck && hasLint && hasGates);
+  } catch (error) {
+    logTest('quality-checker exports 3 functions', false, error.message);
+  }
+
+  // Test 5: checkCoverageThreshold validates coverage data
+  try {
+    const result = checkCoverageThreshold({ lines: 85, branches: 80, functions: 90 }, 80);
+    const passed = typeof result.passed === 'boolean' && Array.isArray(result.failures);
+    logTest('checkCoverageThreshold validates coverage', passed);
+  } catch (error) {
+    logTest('checkCoverageThreshold validates coverage', false, error.message);
+  }
+
+  // Test 6: verifier exports expected functions
+  try {
+    const hasVerify = typeof verifyPhase === 'function';
+    const hasSmoke = typeof runSmokeTests === 'function';
+    const hasUnit = typeof runUnitTests === 'function';
+    logTest('verifier exports verification functions', hasVerify && hasSmoke && hasUnit);
+  } catch (error) {
+    logTest('verifier exports verification functions', false, error.message);
+  }
+
+  // Test 7: runSmokeTests checks critical files
+  try {
+    const result = await runSmokeTests(1);
+    const passed = typeof result.passed === 'boolean' && typeof result.duration === 'string';
+    logTest('runSmokeTests validates critical files', passed);
+  } catch (error) {
+    logTest('runSmokeTests validates critical files', false, error.message);
+  }
+
+  // Test 8: verifyPhase orchestrates all layers
+  try {
+    const result = await verifyPhase(1, { coverageThreshold: 80 });
+    const passed = typeof result.passed === 'boolean' &&
+                  typeof result.layers === 'object' &&
+                  Array.isArray(result.failures);
+    logTest('verifyPhase orchestrates multi-layer verification', passed);
+  } catch (error) {
+    logTest('verifyPhase orchestrates multi-layer verification', false, error.message);
+  }
+}
+
+/**
  * Main test runner
  */
 async function runAllTests() {
@@ -1473,6 +1563,7 @@ async function runAllTests() {
     await testDiscussionContextSystem();
     await testWebScraping();
     await testMultiDomainCoordination();
+    await testVerificationModules();
 
     // Final report
     console.log('\n===========================================');

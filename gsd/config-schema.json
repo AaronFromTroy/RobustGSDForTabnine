@@ -61,7 +61,7 @@
         "newProject": {
           "type": "string",
           "default": "new-project.md",
-          "description": "Guideline file for new project initialization"
+          "description": "Guideline file for initializing GSD in current project (works for new or existing codebases, first-time GSD setup)"
         },
         "planPhase": {
           "type": "string",

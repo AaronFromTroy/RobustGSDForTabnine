@@ -301,11 +301,11 @@ Plans:
 
 ### Phase 9: Improve Initialization Terminology
 
-**Goal:** Clarify that "starting GSD" means initializing GSD in the current project (new or existing), not creating a brand-new project from scratch.
+**Goal:** Clarify that "starting GSD" means initializing GSD in the current project (new or existing), not creating a brand-new project from scratch. Add goal-oriented workflow, existing project detection, and codebase research capabilities.
 
 **Dependencies:** Phase 8 (Verification & Quality System)
 
-**Requirements:** Documentation clarity, UX improvement (not tracked as formal v1 requirements)
+**Requirements:** Documentation clarity, UX improvement, workflow enhancement (not tracked as formal v1 requirements)
 
 **Success Criteria:**
 1. Error messages explicitly state "initialize GSD in this project" and mention existing codebases
@@ -314,12 +314,18 @@ Plans:
 4. Config schema descriptions use "initialize" terminology consistently
 5. No confusing "begin a new project" phrasing remains in user-facing content
 6. Integration tests still pass (only strings changed, no logic)
+7. Workflow asks "what you want to accomplish" instead of "project name and value"
+8. Workflow detects existing codebases and branches accordingly
+9. For existing projects, codebase research happens before requirements generation
+10. Codebase detection and research scripts exist and integrate with new-project.md workflow
 
-**Plans:** 2 plans
+**Plans:** 4 plans
 
 Plans:
 - [ ] 09-01-PLAN.md — Update script error messages (trigger-detector.js, resume-manager.js, workflow-orchestrator.js)
 - [ ] 09-02-PLAN.md — Update documentation and config (README.md, QUICKSTART.md, config-schema.json)
+- [ ] 09-03-PLAN.md — Update new-project.md workflow (goal-oriented questions, existing project detection, workflow branching)
+- [ ] 09-04-PLAN.md — Create detection and research scripts (codebase-detector.js, codebase-researcher.js, CODEBASE.md template)
 
 **Deliverables:**
 - Updated gsd/scripts/trigger-detector.js (clear error messages)
@@ -328,6 +334,10 @@ Plans:
 - Updated gsd/README.md (prominent callouts, prerequisite clarifications)
 - Updated gsd/QUICKSTART.md (clear initialization language)
 - Updated gsd/config-schema.json (clear descriptions)
+- Updated gsd/guidelines/new-project.md (goal-oriented, existing project detection, research integration)
+- gsd/scripts/codebase-detector.js (existing project detection)
+- gsd/scripts/codebase-researcher.js (tech stack and architecture analysis)
+- gsd/templates/CODEBASE.md (codebase research template)
 
 ---
 
@@ -343,9 +353,9 @@ Plans:
 | 6 - Discussion & Context System | Complete | (context gathering) | 7 |
 | 7 - Enhanced Research Infrastructure | Complete | (enhanced research) | 10 |
 | 8 - Verification & Quality System | Complete | (verification infra) | 8 |
-| 9 - Improve Initialization Terminology | Not Started | (not tracked) | 6 |
+| 9 - Improve Initialization Terminology | Not Started | (not tracked) | 10 |
 
-**Total:** 9 phases, 55 v1 requirements, 63 success criteria
+**Total:** 9 phases, 55 v1 requirements, 67 success criteria
 
 ---
 
@@ -396,4 +406,4 @@ Phase 9 (Improve Initialization Terminology)
 ---
 
 *Roadmap created: 2026-01-18*
-*Last updated: 2026-01-22 - Phase 9 planned (Improve Initialization Terminology)*
+*Last updated: 2026-01-22 - Phase 9 expanded to 4 plans (terminology + workflow + detection/research)*

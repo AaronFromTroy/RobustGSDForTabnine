@@ -25,7 +25,7 @@ node gsd/scripts/verification-report.js --phase=${PHASE_NUM} --results="${RESULT
 node gsd/scripts/state-manager.js --update verification="${RESULT}" verifiedDate="${DATE}"
 
 # Create git commit (if verification passed)
-git add .planning/STATE.md .planning/phases/${PHASE_DIR}/VERIFICATION.md
+git add .planning/STATE.md ".planning/phases/${PHASE_DIR}/VERIFICATION.md"
 git commit -m "docs(phase-${PHASE_NUM}): verification ${RESULT}
 
 - Smoke tests: ${SMOKE_RESULT}

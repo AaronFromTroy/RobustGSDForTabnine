@@ -639,7 +639,7 @@ node -e "import('./gsd/scripts/verifier.js').then(m => console.log(Object.keys(m
 
 ### Trigger Phrases (Customizable in .gsd-config.json)
 
-**Start new project:**
+**Initialize GSD:**
 - "start GSD"
 - "begin GSD"
 - "initialize GSD"

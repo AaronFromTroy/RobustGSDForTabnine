@@ -428,7 +428,7 @@ your-project/
 
 | Say to Tabnine | What It Does |
 |----------------|--------------|
-| `start GSD` | Initialize new project |
+| `start GSD` | Initialize GSD in current project |
 | `continue GSD workflow` | Resume from STATE.md |
 | `plan phase 1` | Create execution plans for phase 1 |
 | `execute phase 1` | Run all plans in phase 1 |

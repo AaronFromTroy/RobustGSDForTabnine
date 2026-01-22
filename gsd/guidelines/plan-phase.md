@@ -38,10 +38,10 @@ node gsd/scripts/context-loader.js \
 ### Plan Creation
 ```bash
 # Create phase directory
-mkdir .planning/phases/${PHASE_DIR}
+mkdir -p ".planning/phases/${PHASE_DIR}"
 
 # Generate PLAN.md file(s) - informed by discussion responses
-node gsd/scripts/template-renderer.js --template=PLAN --output=.planning/phases/${PHASE_DIR}/${PHASE}-${PLAN}-PLAN.md --phaseName="${PHASE_NAME}" --planNumber="${PLAN_NUM}"
+node gsd/scripts/template-renderer.js --template=PLAN --output=".planning/phases/${PHASE_DIR}/${PHASE}-${PLAN}-PLAN.md" --phaseName="${PHASE_NAME}" --planNumber="${PLAN_NUM}"
 ```
 
 ### Plan Presentation & Approval
@@ -68,7 +68,7 @@ node gsd/scripts/approval-gate.js \
 node gsd/scripts/state-manager.js --update currentPhase="${PHASE_NUM}" currentPlan="${PLAN_NUM}" status="planned-approved"
 
 # Create git commit with approval note
-git add .planning/phases/${PHASE_DIR}/
+git add ".planning/phases/${PHASE_DIR}/"
 git add .planning/STATE.md
 git commit -m "docs(phase-${PHASE_NUM}): create and approve execution plans
 
@@ -341,7 +341,7 @@ Co-Authored-By: Tabnine Agent <noreply@tabnine.com>
    - Identify any checkpoint tasks (human verification needed)
 
 6. **Create phase directory:**
-   - Execute: `mkdir .planning/phases/${PHASE_DIR}`
+   - Execute: `mkdir -p ".planning/phases/${PHASE_DIR}"`
    - Use naming pattern: `01-foundation-templates`
 
 7. **Generate PLAN.md file(s):**

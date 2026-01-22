@@ -37,16 +37,16 @@ node gsd/scripts/codebase-detector.js > .planning/.codebase-detection.json
 # Conditional: Research existing codebase (only if detected as existing)
 # Check .codebase-detection.json for isExisting flag
 # If true, execute:
-#   node gsd/scripts/codebase-researcher.js --output=.planning/CODEBASE.md
+#   node gsd/scripts/codebase-researcher.js --output=".planning/CODEBASE.md"
 
 # Create planning directory (if doesn't exist)
-mkdir -p .planning
+mkdir -p ".planning"
 
 # Generate PROJECT.md (pass CODEBASE.md if exists)
-node gsd/scripts/template-renderer.js --template=PROJECT --output=.planning/PROJECT.md --projectName="${PROJECT_NAME}" --createdDate="${DATE}" --coreValue="${CORE_VALUE}" --existingCodebase=".planning/CODEBASE.md"
+node gsd/scripts/template-renderer.js --template=PROJECT --output=".planning/PROJECT.md" --projectName="${PROJECT_NAME}" --createdDate="${DATE}" --coreValue="${CORE_VALUE}" --existingCodebase=".planning/CODEBASE.md"
 
 # Generate REQUIREMENTS.md from template
-node gsd/scripts/template-renderer.js --template=REQUIREMENTS --output=.planning/REQUIREMENTS.md --projectName="${PROJECT_NAME}"
+node gsd/scripts/template-renderer.js --template=REQUIREMENTS --output=".planning/REQUIREMENTS.md" --projectName="${PROJECT_NAME}"
 
 # Initialize STATE.md
 node gsd/scripts/state-manager.js --init --projectName="${PROJECT_NAME}"
@@ -174,7 +174,7 @@ Co-Authored-By: Tabnine Agent <noreply@tabnine.com>
 
 3. **Perform codebase research (if existing project):**
    - **ONLY execute if step 2 detected isExisting: true**
-   - Execute: `node gsd/scripts/codebase-researcher.js --output=.planning/CODEBASE.md`
+   - Execute: `node gsd/scripts/codebase-researcher.js --output=".planning/CODEBASE.md"`
    - Script analyzes:
      * Tech stack (languages, frameworks, libraries from package files)
      * Directory structure and architecture patterns
@@ -187,7 +187,7 @@ Co-Authored-By: Tabnine Agent <noreply@tabnine.com>
    **If new project (isExisting: false), skip this step entirely.**
 
 4. **Create planning directory:**
-   - Execute: `mkdir .planning`
+   - Execute: `mkdir -p ".planning"`
    - Verify directory exists
 
 5. **Generate PROJECT.md:**

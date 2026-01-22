@@ -341,6 +341,34 @@ Plans:
 
 ---
 
+### Phase 10: Fix Path Handling Bugs In All Guidelines
+
+**Goal:** Fix critical path handling bugs in workflow guidelines that cause directory creation failures when adding phases dynamically. Ensure all bash commands use proper quoting, `-p` flags, and error handling to prevent path construction issues.
+
+**Dependencies:** Phase 9 (Improve Initialization Terminology)
+
+**Requirements:** Bug fixes not tracked as formal requirements (critical correctness issue discovered during real-world usage)
+
+**Success Criteria:**
+1. All `mkdir` commands use `-p` flag for parent directory creation
+2. All path variables wrapped in double quotes to prevent word splitting
+3. All file operation commands use quoted paths (git add, node script calls)
+4. Path construction validated with test cases (missing slashes, special characters)
+5. Guidelines tested with dynamic phase addition workflow
+6. No `.planningphases` or similar malformed directories created during testing
+
+**Plans:** 1 plan
+
+Plans:
+- [ ] 10-01-PLAN.md — Fix bash path handling in all guideline commands
+
+**Deliverables:**
+- Updated gsd/guidelines/plan-phase.md (quoted paths, mkdir -p)
+- Updated gsd/guidelines/execute-phase.md (quoted paths)
+- Updated gsd/guidelines/verify-work.md (quoted paths)
+
+---
+
 ## Progress
 
 | Phase | Status | Requirements | Success Criteria |
@@ -354,8 +382,9 @@ Plans:
 | 7 - Enhanced Research Infrastructure | Complete | (enhanced research) | 10 |
 | 8 - Verification & Quality System | Complete | (verification infra) | 8 |
 | 9 - Improve Initialization Terminology | Complete | (not tracked) | 10 |
+| 10 - Fix Path Handling Bugs In All Guidelines | Not Started | (not tracked) | 6 |
 
-**Total:** 9 phases, 55 v1 requirements, 67 success criteria
+**Total:** 10 phases, 55 v1 requirements, 73 success criteria
 
 ---
 
@@ -379,6 +408,8 @@ Phase 7 (Enhanced Research Infrastructure)
 Phase 8 (Verification & Quality System)
     ↓
 Phase 9 (Improve Initialization Terminology)
+    ↓
+Phase 10 (Fix Path Handling Bugs In All Guidelines)
 ```
 
 **Linear dependency chain:** Each phase builds on the previous. No parallel execution needed.

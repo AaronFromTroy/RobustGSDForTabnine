@@ -15,6 +15,8 @@ A lightweight workflow orchestration system for Tabnine agent that:
 - Resumes workflows from last checkpoint
 - Validates artifacts before phase transitions
 
+**Works for any project:** Add GSD to new projects OR existing applications. You're adding workflow infrastructure to your current directory, not creating a new project from scratch.
+
 **Key difference from Claude Code GSD:** Tabnine can't spawn sub-agents, so workflows execute sequentially inline. Guidelines are optimized for Tabnine's context window constraints.
 
 ## Architecture
@@ -53,6 +55,13 @@ Unlike Claude Code's parallel execution, Tabnine runs everything sequentially:
 ```
 
 ## Installation
+
+**Prerequisites:**
+- Git repository initialized (`git status` works)
+- Node.js 18+ installed
+- Project directory exists (can contain existing code)
+
+**Important:** This adds GSD to your *current* project. Works for both brand-new directories and existing applications with code, dependencies, and structure already in place.
 
 ### For Tabnine Projects
 
@@ -144,7 +153,7 @@ Configured in `gsd/.gsd-config.json`:
 
 | Workflow | Triggers | Action |
 |----------|----------|--------|
-| New Project | "start GSD", "begin GSD", "initialize GSD" | Initialize `.planning/` and create PROJECT.md |
+| Initialize GSD | "start GSD", "begin GSD", "initialize GSD" | Add GSD to current project (creates `.planning/` directory) |
 | Resume | "continue GSD workflow", "resume GSD" | Read STATE.md and continue from checkpoint |
 
 ## Directory Structure
@@ -281,11 +290,11 @@ When you trigger a workflow, here's what happens:
 
 **Key insight:** Guidelines are instruction sets, not code. They tell Tabnine *what to do*, and Tabnine executes bash commands that call Node.js scripts.
 
-### 1. New Project (new-project.md)
+### 1. Initialize GSD (new-project.md)
 
 **Trigger:** "start GSD"
 
-**What it does:**
+**What it does:** Adds GSD workflow system to your current project (new or existing)
 1. Creates `.planning/` directory
 2. Renders `PROJECT.md` from template (asks user for project name, core value)
 3. Renders `REQUIREMENTS.md` from template

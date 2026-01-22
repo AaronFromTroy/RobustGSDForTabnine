@@ -126,7 +126,7 @@ export async function resumeWorkflow(projectRoot) {
 
     // Validate state has an active workflow
     if (!state.phase || state.phase === 0 || state.status === 'pending' && state.step === 'Initialization') {
-      throw new Error("No active workflow found. Use 'start GSD' to begin a new project.");
+      throw new Error("No active workflow found. Use 'start GSD' to initialize GSD in this project.\nNote: This works for both new and existing codebases.");
     }
 
     // Determine which workflow guideline to load
@@ -168,7 +168,7 @@ export async function resumeWorkflow(projectRoot) {
   } catch (error) {
     // Handle STATE.md not found
     if (error.message.includes('STATE.md not found')) {
-      throw new Error("No active workflow found. Use 'start GSD' to begin a new project.");
+      throw new Error("No active workflow found. Use 'start GSD' to initialize GSD in this project.\nNote: This works for both new and existing codebases.");
     }
 
     // Handle STATE.md corruption

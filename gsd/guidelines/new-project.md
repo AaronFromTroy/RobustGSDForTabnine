@@ -31,11 +31,19 @@ This workflow adapts based on whether the current directory contains existing co
 Execute these exact commands in sequence:
 
 ```bash
-# Create planning directory
-mkdir .planning
+# Detect existing codebase
+node gsd/scripts/codebase-detector.js > .planning/.codebase-detection.json
 
-# Generate PROJECT.md from template
-node gsd/scripts/template-renderer.js --template=PROJECT --output=.planning/PROJECT.md --projectName="${PROJECT_NAME}" --createdDate="${DATE}" --coreValue="${CORE_VALUE}"
+# Conditional: Research existing codebase (only if detected as existing)
+# Check .codebase-detection.json for isExisting flag
+# If true, execute:
+#   node gsd/scripts/codebase-researcher.js --output=.planning/CODEBASE.md
+
+# Create planning directory (if doesn't exist)
+mkdir -p .planning
+
+# Generate PROJECT.md (pass CODEBASE.md if exists)
+node gsd/scripts/template-renderer.js --template=PROJECT --output=.planning/PROJECT.md --projectName="${PROJECT_NAME}" --createdDate="${DATE}" --coreValue="${CORE_VALUE}" --existingCodebase=".planning/CODEBASE.md"
 
 # Generate REQUIREMENTS.md from template
 node gsd/scripts/template-renderer.js --template=REQUIREMENTS --output=.planning/REQUIREMENTS.md --projectName="${PROJECT_NAME}"
@@ -75,6 +83,11 @@ Validate workflow completion by checking:
    - Session Continuity section
 
 4. Git commit created with conventional format
+
+5. (If existing project) `.planning/CODEBASE.md` exists and contains:
+   - Tech Stack section
+   - Architecture Patterns section
+   - Conventions section
 
 ## Project Structure
 
@@ -159,29 +172,43 @@ Co-Authored-By: Tabnine Agent <noreply@tabnine.com>
    - Output: { isExisting: true/false, indicators: [...] }
    - Store detection result in workflow context for branching logic
 
-3. **Create planning directory:**
+3. **Perform codebase research (if existing project):**
+   - **ONLY execute if step 2 detected isExisting: true**
+   - Execute: `node gsd/scripts/codebase-researcher.js --output=.planning/CODEBASE.md`
+   - Script analyzes:
+     * Tech stack (languages, frameworks, libraries from package files)
+     * Directory structure and architecture patterns
+     * Coding conventions (linting configs, formatting)
+     * Existing tests and quality infrastructure
+   - Output: `.planning/CODEBASE.md` with structured findings
+   - Pass CODEBASE.md context to template-renderer.js when generating PROJECT.md
+   - Use findings to inform REQUIREMENTS.md generation (respect existing patterns)
+
+   **If new project (isExisting: false), skip this step entirely.**
+
+4. **Create planning directory:**
    - Execute: `mkdir .planning`
    - Verify directory exists
 
-4. **Generate PROJECT.md:**
+5. **Generate PROJECT.md:**
    - Execute template-renderer.js with PROJECT template
    - Substitute variables: projectName, createdDate, coreValue, description, context, constraints
    - Write to `.planning/PROJECT.md`
    - Verify file contains all required sections
 
-5. **Generate REQUIREMENTS.md:**
+6. **Generate REQUIREMENTS.md:**
    - Execute template-renderer.js with REQUIREMENTS template
    - Substitute variables: projectName, createdDate, coreValue
    - Write to `.planning/REQUIREMENTS.md`
    - Verify file contains v1, v2, and Out of Scope sections
 
-6. **Initialize STATE.md:**
+7. **Initialize STATE.md:**
    - Execute state-manager.js with --init flag
    - Populate: projectName, coreValue, currentPhase (Not started), status (pending)
    - Write to `.planning/STATE.md`
    - Verify Current Position section shows "Phase: Not started"
 
-7. **Create git commit:**
+8. **Create git commit:**
    - Stage `.planning/` directory
    - Commit with conventional format (docs: initialize GSD project structure)
    - Include co-authorship line

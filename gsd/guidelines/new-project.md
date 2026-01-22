@@ -10,6 +10,22 @@ schema: "gsd-guideline-v1"
 
 This guideline enables Tabnine to initialize a new project with GSD workflow infrastructure.
 
+## Workflow Branching
+
+This workflow adapts based on whether the current directory contains existing code:
+
+**New Project (empty or only .git/):**
+- Simple initialization flow
+- User provides goals → generate PROJECT.md and REQUIREMENTS.md
+- Proceed to next workflow
+
+**Existing Project (contains code, dependencies, structure):**
+- Research-first initialization flow
+- Detect existing codebase → analyze tech stack, architecture, patterns
+- Generate codebase research summary (CODEBASE.md in .planning/)
+- User provides goals → generate context-aware PROJECT.md and REQUIREMENTS.md
+- Requirements consider existing patterns and constraints
+
 ## Commands
 
 Execute these exact commands in sequence:
@@ -134,29 +150,38 @@ Co-Authored-By: Tabnine Agent <noreply@tabnine.com>
    - Extract project name from directory name or ask if ambiguous
    - Derive core value from user's stated goals
 
-2. **Create planning directory:**
+2. **Detect existing codebase:**
+   - Execute: `node gsd/scripts/codebase-detector.js`
+   - Script checks for indicators of existing project:
+     * package.json, requirements.txt, Cargo.toml (dependency files)
+     * src/, app/, lib/ directories (common code directories)
+     * More than just .git/ and gsd/ in current directory
+   - Output: { isExisting: true/false, indicators: [...] }
+   - Store detection result in workflow context for branching logic
+
+3. **Create planning directory:**
    - Execute: `mkdir .planning`
    - Verify directory exists
 
-3. **Generate PROJECT.md:**
+4. **Generate PROJECT.md:**
    - Execute template-renderer.js with PROJECT template
    - Substitute variables: projectName, createdDate, coreValue, description, context, constraints
    - Write to `.planning/PROJECT.md`
    - Verify file contains all required sections
 
-4. **Generate REQUIREMENTS.md:**
+5. **Generate REQUIREMENTS.md:**
    - Execute template-renderer.js with REQUIREMENTS template
    - Substitute variables: projectName, createdDate, coreValue
    - Write to `.planning/REQUIREMENTS.md`
    - Verify file contains v1, v2, and Out of Scope sections
 
-5. **Initialize STATE.md:**
+6. **Initialize STATE.md:**
    - Execute state-manager.js with --init flag
    - Populate: projectName, coreValue, currentPhase (Not started), status (pending)
    - Write to `.planning/STATE.md`
    - Verify Current Position section shows "Phase: Not started"
 
-6. **Create git commit:**
+7. **Create git commit:**
    - Stage `.planning/` directory
    - Commit with conventional format (docs: initialize GSD project structure)
    - Include co-authorship line

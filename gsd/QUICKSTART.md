@@ -4,6 +4,12 @@ Get up and running with GSD workflow system in Tabnine in under 5 minutes.
 
 ## Prerequisites
 
+**Important:** GSD adds workflow infrastructure to your *current* project. This works for:
+- Brand new projects (just created the directory)
+- Existing applications (adding GSD for the first time)
+- Projects with existing code, dependencies, and structure
+
+Before you begin, ensure:
 - Node.js 18+ installed (`node --version`)
 - Git repository initialized (`git status` works)
 - Tabnine agent mode enabled
@@ -115,7 +121,9 @@ Open Tabnine chat and say:
 start GSD
 ```
 
-**What happens:**
+**"start GSD"**
+
+This initializes GSD in your current project by:
 - Tabnine loads `.tabnine/guidelines/new-project.md`
 - Creates `.planning/` directory
 - Asks for project name and core value

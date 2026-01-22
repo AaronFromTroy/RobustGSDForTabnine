@@ -19,16 +19,16 @@ Execute these exact commands in sequence:
 node gsd/scripts/guideline-loader.js --workflow=execute-phase --phase=${PHASE_NUM} --plan=${PLAN_NUM}
 
 # Execute tasks sequentially (automated by workflow orchestrator)
-node gsd/scripts/workflow-orchestrator.js --execute-plan=.planning/phases/${PHASE_DIR}/${PHASE}-${PLAN}-PLAN.md
+node gsd/scripts/workflow-orchestrator.js --execute-plan=".planning/phases/${PHASE_DIR}/${PHASE}-${PLAN}-PLAN.md"
 
 # After all tasks complete, generate SUMMARY.md
-node gsd/scripts/template-renderer.js --template=SUMMARY --output=.planning/phases/${PHASE_DIR}/${PHASE}-${PLAN}-SUMMARY.md
+node gsd/scripts/template-renderer.js --template=SUMMARY --output=".planning/phases/${PHASE_DIR}/${PHASE}-${PLAN}-SUMMARY.md"
 
 # Update STATE.md
 node gsd/scripts/state-manager.js --update status="completed" completedPlans="${COMPLETED_PLANS}"
 
 # Create git commit
-git add .planning/phases/${PHASE_DIR}/${PHASE}-${PLAN}-SUMMARY.md
+git add ".planning/phases/${PHASE_DIR}/${PHASE}-${PLAN}-SUMMARY.md"
 git add .planning/STATE.md
 git commit -m "docs(phase-${PHASE_NUM}): complete plan ${PLAN_NUM}
 

@@ -299,6 +299,38 @@ Plans:
 
 ---
 
+### Phase 9: Improve Initialization Terminology
+
+**Goal:** Clarify that "starting GSD" means initializing GSD in the current project (new or existing), not creating a brand-new project from scratch.
+
+**Dependencies:** Phase 8 (Verification & Quality System)
+
+**Requirements:** Documentation clarity, UX improvement (not tracked as formal v1 requirements)
+
+**Success Criteria:**
+1. Error messages explicitly state "initialize GSD in this project" and mention existing codebases
+2. Documentation (README.md, QUICKSTART.md) prominently clarifies GSD works for existing projects
+3. Prerequisites explicitly mention users can have existing code
+4. Config schema descriptions use "initialize" terminology consistently
+5. No confusing "begin a new project" phrasing remains in user-facing content
+6. Integration tests still pass (only strings changed, no logic)
+
+**Plans:** 2 plans
+
+Plans:
+- [ ] 09-01-PLAN.md — Update script error messages (trigger-detector.js, resume-manager.js, workflow-orchestrator.js)
+- [ ] 09-02-PLAN.md — Update documentation and config (README.md, QUICKSTART.md, config-schema.json)
+
+**Deliverables:**
+- Updated gsd/scripts/trigger-detector.js (clear error messages)
+- Updated gsd/scripts/resume-manager.js (clear error messages)
+- Updated gsd/scripts/workflow-orchestrator.js (clear workflow messages)
+- Updated gsd/README.md (prominent callouts, prerequisite clarifications)
+- Updated gsd/QUICKSTART.md (clear initialization language)
+- Updated gsd/config-schema.json (clear descriptions)
+
+---
+
 ## Progress
 
 | Phase | Status | Requirements | Success Criteria |
@@ -311,8 +343,9 @@ Plans:
 | 6 - Discussion & Context System | Complete | (context gathering) | 7 |
 | 7 - Enhanced Research Infrastructure | Complete | (enhanced research) | 10 |
 | 8 - Verification & Quality System | Complete | (verification infra) | 8 |
+| 9 - Improve Initialization Terminology | Not Started | (not tracked) | 6 |
 
-**Total:** 8 phases, 55 v1 requirements, 57 success criteria
+**Total:** 9 phases, 55 v1 requirements, 63 success criteria
 
 ---
 
@@ -334,6 +367,8 @@ Phase 6 (Discussion & Context System)
 Phase 7 (Enhanced Research Infrastructure)
     ↓
 Phase 8 (Verification & Quality System)
+    ↓
+Phase 9 (Improve Initialization Terminology)
 ```
 
 **Linear dependency chain:** Each phase builds on the previous. No parallel execution needed.
@@ -361,4 +396,4 @@ Phase 8 (Verification & Quality System)
 ---
 
 *Roadmap created: 2026-01-18*
-*Last updated: 2026-01-21 - Phase 8 planned (Verification & Quality System)*
+*Last updated: 2026-01-22 - Phase 9 planned (Improve Initialization Terminology)*

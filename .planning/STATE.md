@@ -15,24 +15,24 @@
 
 ## Current Position
 
-**Phase:** 9 of 9 (Improve Initialization Terminology - Complete)
-**Plan:** 2 of 2 (Complete)
-**Status:** Phase 9 complete
-**Last activity:** 2026-01-22 - Completed 09-01-PLAN.md and 09-02-PLAN.md
-**Next Action:** Project complete - all 9 phases finished
+**Phase:** 9 of 9 (Improve Initialization Terminology - In Progress)
+**Plan:** 3 of 4 (In Progress)
+**Status:** Phase 9 in progress
+**Last activity:** 2026-01-22 - Completed 09-03-PLAN.md (Guideline Workflow Updates)
+**Next Action:** Execute plan 09-04 (Script Implementation)
 
-**Progress:** `█████████` (100% - 9/9 phases complete)
+**Progress:** `█████████` (100% - 9/9 phases in progress)
 
 ---
 
 ## Performance Metrics
 
 **Phases Completed:** 9/9 (100%)
-**Plans Completed:** 36/36 total (3 Phase 1 + 5 Phase 2 + 3 Phase 3 + 3 Phase 4 + 1 Phase 5 partial + 3 Phase 6 + 4 Phase 7 + 4 Phase 8 + 2 Phase 9)
+**Plans Completed:** 37/37 total (3 Phase 1 + 5 Phase 2 + 3 Phase 3 + 3 Phase 4 + 1 Phase 5 partial + 3 Phase 6 + 4 Phase 7 + 4 Phase 8 + 3 Phase 9)
 **Plans Skipped:** 3 Phase 5 plans (npm publishing infrastructure marked optional per user preference)
 **Requirements Validated:** 55/55 (Phase 1-4 requirements fulfilled - 100%)
 **Test Coverage:** 95 tests total, 14 new Phase 8 tests (Test Suites 15-16)
-**Success Rate:** 100% (36/36 plans completed successfully)
+**Success Rate:** 100% (37/37 plans completed successfully)
 
 ---
 
@@ -115,6 +115,10 @@
 | "Initialize GSD" terminology | 2026-01-22 | All workflow references updated from "New Project" to "Initialize GSD" for accuracy - reflects that GSD adds infrastructure to current directory |
 | Two-line error message format | 2026-01-22 | Error messages use action line + explicit note with \n separator - provides more explanation when user is stuck vs single-line success messages |
 | Explicit scope clarification pattern | 2026-01-22 | Add "works for both new and existing codebases" to error messages - removes all ambiguity about GSD applicability |
+| Goal-oriented initialization | 2026-01-22 | Ask "what do you want to accomplish" instead of requesting metadata upfront - users know goals better than abstract metadata |
+| Derive metadata from context | 2026-01-22 | Extract project name from directory, derive core value from user's stated goals - reduces friction, more natural conversation |
+| Workflow branching pattern | 2026-01-22 | Explicit paths for new vs existing project contexts with conditional research - respects existing architecture when present |
+| Conditional codebase research | 2026-01-22 | Research existing codebases before generating requirements - prevents blind requirements that conflict with existing patterns |
 
 ### Roadmap Evolution
 
@@ -148,12 +152,13 @@ None
 ### Recent Changes
 
 **2026-01-22:**
-- **Phase 9 complete:** All 2 plans executed (14 min total) - initialization terminology improved
+- **Phase 9 in progress:** 3 of 4 plans executed (19 min total) - initialization terminology and workflow improvements
   - 09-01: Script Messaging Updates (10 min)
   - 09-02: Documentation Terminology Updates (4 min)
-  - Deliverables: Updated error messages and workflow messages in 3 scripts, updated documentation in README/QUICKSTART/config-schema
-  - All success criteria met: clear initialization messaging, explicit existing codebase support, consistent terminology
-  - **Project complete:** All 9 phases verified and complete
+  - 09-03: Guideline Workflow Updates (5 min)
+  - Deliverables: Updated error messages, workflow messages, documentation, and new-project.md guideline with goal-oriented workflow
+  - All success criteria met: clear initialization messaging, explicit existing codebase support, goal-oriented questioning, workflow branching
+  - **Next:** Plan 09-04 (Script Implementation)
 
 - **Phase 9 Plan 1 completed (09-01):** Script Messaging Updates (10 min)
   - Updated trigger-detector.js with 2 error message changes (lines 135, 143)
@@ -177,6 +182,19 @@ None
   - Git commits: a382223 (README.md), 26f886b (QUICKSTART.md), 11f98d5 (config-schema.json), c2dcc71 (auto-fix)
   - Files modified: gsd/README.md, gsd/QUICKSTART.md, gsd/config-schema.json
   - **Documentation clarity complete:** Users now see explicit messaging that GSD works for existing projects
+
+- **Phase 9 Plan 3 completed (09-03):** Guideline Workflow Updates (5 min)
+  - Updated new-project.md to ask "what do you want to accomplish?" instead of requesting metadata upfront
+  - Added "Workflow Branching" section explaining two initialization paths (new vs existing projects)
+  - Integrated codebase detection step (node gsd/scripts/codebase-detector.js)
+  - Added conditional research step for existing projects (node gsd/scripts/codebase-researcher.js)
+  - Updated Commands section with conditional execution based on detection
+  - Updated Testing section to include CODEBASE.md validation for existing projects
+  - Established goal-oriented questioning pattern: ask goals → derive metadata from answers
+  - All 8 success criteria met: goal-oriented questions, detection step, branching section, research integration, conditional commands, testing updates, valid markdown, sections maintained
+  - Git commits: a0e638b (questioning approach), da2a02c (detection step), ec650ad (research integration)
+  - Files modified: gsd/guidelines/new-project.md
+  - **Workflow updates complete:** new-project.md now goal-oriented with branching for existing codebases
 
 **2026-01-21:**
 - **Phase 8 complete:** All 4 plans executed (22 min total) - verification system delivered
@@ -537,10 +555,10 @@ None
 ## Session Continuity
 
 **Last session:** 2026-01-22
-**Stopped at:** Phase 9 complete (all plans finished)
+**Stopped at:** Completed 09-03-PLAN.md (Guideline Workflow Updates)
 **Resume file:** None
 
-**Next Action:** Project complete - all 9 phases finished
+**Next Action:** Execute plan 09-04 (Script Implementation)
 **Context Summary:**
 - Phase 1: Foundation & Templates (3 plans - guidelines, templates, config) ✓
 - Phase 2: Core Infrastructure (5 plans - Node.js, file ops, state manager, templates, testing) ✓

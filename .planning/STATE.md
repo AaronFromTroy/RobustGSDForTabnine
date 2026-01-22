@@ -1,6 +1,6 @@
 # State: GSD for Tabnine
 
-**Last Updated:** 2026-01-21
+**Last Updated:** 2026-01-22
 **Version:** 1.0.0
 
 ---
@@ -9,26 +9,26 @@
 
 **Core Value:** Enable the complete GSD methodology within Tabnine's agent mode through context-aware modular guidelines that work within its constraints (no sub-agent spawning, smaller context window, no slash commands).
 
-**Current Focus:** Phases 6-8 added - Discussion, Enhanced Research, Verification systems
+**Current Focus:** Phase 9 - Improve Initialization Terminology (in progress)
 
 ---
 
 ## Current Position
 
-**Phase:** 8 of 8 (Verification & Quality System)
-**Plan:** 4 of 4 (Complete)
-**Status:** Milestone complete
-**Last activity:** 2026-01-21 - Phase 8 verified and complete
-**Next Action:** Audit milestone
+**Phase:** 9 of 9 (Improve Initialization Terminology - In Progress)
+**Plan:** 2 of 2 (Complete)
+**Status:** Phase 9 execution in progress
+**Last activity:** 2026-01-22 - Completed 09-02-PLAN.md (Documentation Terminology Updates)
+**Next Action:** Verify Phase 9 complete
 
-**Progress:** `████████` (100% - 8/8 phases complete, all verified)
+**Progress:** `█████████` (100% - 9/9 phases in progress, Plan 09-02 complete)
 
 ---
 
 ## Performance Metrics
 
-**Phases Completed:** 8/8 (100%)
-**Plans Completed:** 33/34 total (3 Phase 1 + 5 Phase 2 + 3 Phase 3 + 3 Phase 4 + 1 Phase 5 partial + 3 Phase 6 complete + 4 Phase 7 complete + 4 Phase 8 complete)
+**Phases Completed:** 8/9 (89%)
+**Plans Completed:** 35/36 total (3 Phase 1 + 5 Phase 2 + 3 Phase 3 + 3 Phase 4 + 1 Phase 5 partial + 3 Phase 6 complete + 4 Phase 7 complete + 4 Phase 8 complete + 2 Phase 9 complete)
 **Plans Skipped:** 3 Phase 5 plans (npm publishing infrastructure marked optional per user preference)
 **Requirements Validated:** 55/55 (Phase 1-4 requirements fulfilled - 100%)
 **Test Coverage:** 95 tests total, 14 new Phase 8 tests (Test Suites 15-16)
@@ -110,6 +110,13 @@
 | Real scraping vs WebSearch | 2026-01-21 | scraper.js provides production-ready alternative - WebSearch availability in Tabnine unclear per research |
 | Content-based deduplication | 2026-01-21 | Applied in extractFindings and mergeManualFindings - catches duplicate content from different URLs (versioned, localized, canonical) |
 | Enhanced confidence scoring | 2026-01-21 | source-validator.js authority classification - multi-tier (HIGH/MEDIUM/LOW/UNVERIFIED) more nuanced than Phase 4 simple logic |
+| Phase 9 added to roadmap | 2026-01-22 | Ensure starting a new project is better worded even when work withing an existing application that is simply intializing gsd for the first - improves clarity for existing project adoption |
+| "New or existing" phrasing | 2026-01-22 | Documentation uses "new or existing" consistently to prevent false impression GSD is only for greenfield projects - added to README.md, QUICKSTART.md, config-schema.json |
+| "Initialize GSD" terminology | 2026-01-22 | All workflow references updated from "New Project" to "Initialize GSD" for accuracy - reflects that GSD adds infrastructure to current directory |
+
+### Roadmap Evolution
+
+- Phase 9 added: Ensure starting a new project is better worded even when work withing an existing application that is simply intializing gsd for the first
 
 ### Active TODOs
 
@@ -137,6 +144,18 @@
 None
 
 ### Recent Changes
+
+**2026-01-22:**
+- **Phase 9 Plan 2 completed (09-02):** Documentation Terminology Updates (4 min)
+  - Updated README.md with 4 strategic updates: "Works for any project" callout, prerequisites clarification, "Initialize GSD" section title, trigger table update
+  - Updated QUICKSTART.md with prerequisite callout and "current project" initialization language
+  - Updated config-schema.json newProject description to clarify "works for new or existing codebases"
+  - Auto-fixed 2 remaining confusing "new project" references (Rule 1 - Bug)
+  - All documentation now uses consistent "Initialize GSD" terminology
+  - All 7 success criteria met: strategic updates, prerequisite clarity, schema update, markdown/JSON valid, consistent messaging, no confusing phrasing
+  - Git commits: a382223 (README.md), 26f886b (QUICKSTART.md), 11f98d5 (config-schema.json), c2dcc71 (auto-fix)
+  - Files modified: gsd/README.md, gsd/QUICKSTART.md, gsd/config-schema.json
+  - **Documentation clarity complete:** Users now see explicit messaging that GSD works for existing projects
 
 **2026-01-21:**
 - **Phase 8 complete:** All 4 plans executed (22 min total) - verification system delivered
@@ -496,11 +515,11 @@ None
 
 ## Session Continuity
 
-**Last session:** 2026-01-21
-**Stopped at:** Phase 8 verified and complete - milestone complete
+**Last session:** 2026-01-22
+**Stopped at:** Phase 9 Plan 2 complete (Documentation Terminology Updates)
 **Resume file:** None
 
-**Next Action:** Audit milestone
+**Next Action:** Verify Phase 9 complete or continue to additional Phase 9 work
 **Context Summary:**
 - Phase 1: Foundation & Templates (3 plans - guidelines, templates, config) ✓
 - Phase 2: Core Infrastructure (5 plans - Node.js, file ops, state manager, templates, testing) ✓

@@ -132,7 +132,7 @@ export async function checkWorkflowConflict(projectRoot, triggerType) {
 
     // CONTINUE trigger conflict: no workflow exists
     if (triggerType === 'CONTINUE' && (state.phase === 0 || !state.phase)) {
-      return `No active workflow found. Use 'start GSD' to begin a new project.`;
+      return `No active workflow found. Use 'start GSD' to initialize GSD in this project.\nNote: This works for both new and existing codebases.`;
     }
 
     return null; // No conflict
@@ -140,7 +140,7 @@ export async function checkWorkflowConflict(projectRoot, triggerType) {
     // If STATE.md doesn't exist, treat as no workflow
     if (error.message.includes('STATE.md not found') || error.message.includes('File not found')) {
       if (triggerType === 'CONTINUE') {
-        return `No active workflow found. Use 'start GSD' to begin a new project.`;
+        return `No active workflow found. Use 'start GSD' to initialize GSD in this project.\nNote: This works for both new and existing codebases.`;
       }
       return null; // OK to start new workflow
     }

@@ -127,9 +127,12 @@ Co-Authored-By: Tabnine Agent <noreply@tabnine.com>
 
 ## Workflow Steps
 
-1. **Detect trigger phrase:**
+1. **Detect trigger phrase and gather context:**
    - User says "start GSD" or equivalent trigger from `.gsd-config.json`
-   - Confirm project name and core value with user
+   - Ask: "What do you want to accomplish with this project?"
+   - Listen for goals, features, problems to solve (not metadata like project name)
+   - Extract project name from directory name or ask if ambiguous
+   - Derive core value from user's stated goals
 
 2. **Create planning directory:**
    - Execute: `mkdir .planning`
@@ -171,5 +174,5 @@ Workflow is complete when:
 ## Next Action
 
 After successful completion:
-- Inform user: "GSD project initialized. Next step: Define requirements and create roadmap."
-- Recommended workflow: User populates REQUIREMENTS.md, then triggers "plan roadmap" workflow
+- Inform user: "GSD initialized for [PROJECT_NAME]. Your goal: [USER_STATED_GOAL]. Next: I'll help define requirements based on this goal."
+- Recommended workflow: System generates initial REQUIREMENTS.md based on user's stated goals, then user reviews/refines

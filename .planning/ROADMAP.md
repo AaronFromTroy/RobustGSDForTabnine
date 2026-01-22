@@ -322,10 +322,10 @@ Plans:
 **Plans:** 4 plans
 
 Plans:
-- [ ] 09-01-PLAN.md — Update script error messages (trigger-detector.js, resume-manager.js, workflow-orchestrator.js)
-- [ ] 09-02-PLAN.md — Update documentation and config (README.md, QUICKSTART.md, config-schema.json)
-- [ ] 09-03-PLAN.md — Update new-project.md workflow (goal-oriented questions, existing project detection, workflow branching)
-- [ ] 09-04-PLAN.md — Create detection and research scripts (codebase-detector.js, codebase-researcher.js, CODEBASE.md template)
+- [x] 09-01-PLAN.md — Update script error messages (trigger-detector.js, resume-manager.js, workflow-orchestrator.js)
+- [x] 09-02-PLAN.md — Update documentation and config (README.md, QUICKSTART.md, config-schema.json)
+- [x] 09-03-PLAN.md — Update new-project.md workflow (goal-oriented questions, existing project detection, workflow branching)
+- [x] 09-04-PLAN.md — Create detection and research scripts (codebase-detector.js, codebase-researcher.js, CODEBASE.md template)
 
 **Deliverables:**
 - Updated gsd/scripts/trigger-detector.js (clear error messages)
@@ -353,7 +353,7 @@ Plans:
 | 6 - Discussion & Context System | Complete | (context gathering) | 7 |
 | 7 - Enhanced Research Infrastructure | Complete | (enhanced research) | 10 |
 | 8 - Verification & Quality System | Complete | (verification infra) | 8 |
-| 9 - Improve Initialization Terminology | Not Started | (not tracked) | 10 |
+| 9 - Improve Initialization Terminology | Complete | (not tracked) | 10 |
 
 **Total:** 9 phases, 55 v1 requirements, 67 success criteria
 
@@ -406,4 +406,4 @@ Phase 9 (Improve Initialization Terminology)
 ---
 
 *Roadmap created: 2026-01-18*
-*Last updated: 2026-01-22 - Phase 9 expanded to 4 plans (terminology + workflow + detection/research)*
+*Last updated: 2026-01-22 - Phase 9 complete (all 9 phases executed and verified)*

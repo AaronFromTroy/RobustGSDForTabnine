@@ -105,7 +105,7 @@ export async function startWorkflow(projectRoot, userConfirmation) {
     throw new Error('Workflow start requires confirmation');
   }
 
-  // Load newProject guideline
+  // Load initialization guideline (new-project.md)
   const guidelineContent = await loadGuideline('newProject');
 
   // Initialize STATE.md with phase 0
@@ -125,7 +125,7 @@ export async function startWorkflow(projectRoot, userConfirmation) {
 
   return {
     guideline: guidelineContent,
-    message: 'Workflow started. Begin with new-project workflow.'
+    message: 'Workflow started. Initializing GSD in this project (works for new or existing codebases).'
   };
 }
 

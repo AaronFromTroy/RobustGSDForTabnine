@@ -360,7 +360,7 @@ Plans:
 **Plans:** 1 plan
 
 Plans:
-- [ ] 10-01-PLAN.md — Fix bash path handling in all guideline commands
+- [x] 10-01-PLAN.md — Fix bash path handling in all guideline commands
 
 **Deliverables:**
 - Updated gsd/guidelines/plan-phase.md (quoted paths, mkdir -p)
@@ -382,7 +382,7 @@ Plans:
 | 7 - Enhanced Research Infrastructure | Complete | (enhanced research) | 10 |
 | 8 - Verification & Quality System | Complete | (verification infra) | 8 |
 | 9 - Improve Initialization Terminology | Complete | (not tracked) | 10 |
-| 10 - Fix Path Handling Bugs In All Guidelines | Not Started | (not tracked) | 6 |
+| 10 - Fix Path Handling Bugs In All Guidelines | Complete | (not tracked) | 6 |
 
 **Total:** 10 phases, 55 v1 requirements, 73 success criteria
 

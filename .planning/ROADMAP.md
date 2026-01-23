@@ -379,41 +379,44 @@ Plans:
 
 **Success Criteria:**
 1. System detects current GSD version and checks for updates via npm registry
-2. Upgrade preview shows files to update/preserve/merge and migrations to run
-3. Backup created before upgrade with validation before proceeding
-4. .gsd-config.json customizations preserved during upgrade (three-way merge)
-5. Templates, guidelines, scripts overwritten with new versions
-6. Version-specific migration scripts execute in order
-7. Failed upgrade rolls back to backup automatically
-8. User can trigger upgrade via "upgrade GSD" phrase
-9. Dry-run mode shows changes without applying
-10. All 107+ integration tests pass (95 existing + 12 new)
-11. CHANGELOG.md documents upgrade process
-12. README.md includes clear upgrade instructions
+2. System can detect version from local upgrade sources
+3. System auto-detects best upgrade source (npm or local)
+4. System falls back to local if npm unavailable
+5. Upgrade preview shows files to update/preserve/merge and migrations to run
+6. Backup created before upgrade with validation before proceeding
+7. .gsd-config.json customizations preserved during upgrade (three-way merge)
+8. Templates, guidelines, scripts overwritten with new versions
+9. Version-specific migration scripts execute in order
+10. Failed upgrade rolls back to backup automatically
+11. User can trigger upgrade via "upgrade GSD" phrase
+12. Dry-run mode shows changes without applying
+13. All 110+ integration tests pass (95 existing + 15 new)
+14. CHANGELOG.md documents both npm and local upgrade workflows
+15. README.md includes clear upgrade instructions for both modes
 
 **Plans:** 5 plans
 
 Plans:
-- [ ] 11-01-PLAN.md — Version detection and update notification (version-checker.js, semver, update-notifier)
+- [ ] 11-01-PLAN.md — Version detection and update notification (version-checker.js with dual-mode support, semver, update-notifier)
 - [ ] 11-02-PLAN.md — Backup and rollback system (backup-manager.js, fs-extra)
 - [ ] 11-03-PLAN.md — File merge and migration infrastructure (file-merger.js, migration-runner.js, migrations.json)
-- [ ] 11-04-PLAN.md — Upgrade orchestrator and CLI (upgrade-manager.js, trigger integration)
-- [ ] 11-05-PLAN.md — Testing and documentation (Test Suite 17, CHANGELOG.md, README.md)
+- [ ] 11-04-PLAN.md — Upgrade orchestrator with auto-detection (upgrade-manager.js with npm/local fallback, trigger integration)
+- [ ] 11-05-PLAN.md — Testing and documentation (Test Suite 17 with 15 tests, CHANGELOG.md, README.md)
 
 **Deliverables:**
-- gsd/scripts/version-checker.js (version detection and npm registry queries)
+- gsd/scripts/version-checker.js (dual-mode version detection: npm registry + local sources)
 - gsd/scripts/backup-manager.js (backup creation, validation, restoration)
 - gsd/scripts/file-merger.js (file merge strategies, config preservation)
 - gsd/scripts/migration-runner.js (migration execution)
 - gsd/scripts/migrations/migrations.json (migration registry)
-- gsd/scripts/upgrade-manager.js (upgrade orchestration)
+- gsd/scripts/upgrade-manager.js (upgrade orchestration with auto-detection and fallback)
 - Updated gsd/scripts/trigger-detector.js ("upgrade GSD" trigger)
 - Updated gsd/scripts/workflow-orchestrator.js (upgrade workflow)
 - Updated gsd/.gsd-config.json (upgrade trigger phrases)
 - Updated gsd/package.json (semver, update-notifier, json-merge-patch, fs-extra dependencies)
-- Test Suite 17 (12 tests for upgrade system)
-- gsd/CHANGELOG.md (upgrade documentation and version history)
-- Updated gsd/README.md (upgrade instructions)
+- Test Suite 17 (15 tests for dual-mode upgrade system)
+- gsd/CHANGELOG.md (upgrade documentation for both npm and local workflows)
+- Updated gsd/README.md (upgrade instructions for both modes)
 
 ---
 
@@ -431,9 +434,9 @@ Plans:
 | 8 - Verification & Quality System | Complete | (verification infra) | 8 |
 | 9 - Improve Initialization Terminology | Complete | (not tracked) | 10 |
 | 10 - Fix Path Handling Bugs In All Guidelines | Complete | (not tracked) | 6 |
-| 11 - Upgrade System | Not started | (not tracked) | 12 |
+| 11 - Upgrade System | Not started | (not tracked) | 15 |
 
-**Total:** 11 phases, 55 v1 requirements, 85 success criteria
+**Total:** 11 phases, 55 v1 requirements, 88 success criteria
 
 ---
 

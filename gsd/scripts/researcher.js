@@ -7,12 +7,15 @@
  * - Extracts findings from search results with source URLs
  * - Merges automated and manual findings (manual takes precedence)
  * - All operations async (Phase 2 convention)
+ * - Real web scraping using scraper.js (Phase 7 enhancement)
  *
- * TODO: Integrate with WebSearch tool when available in Tabnine
- * Current implementation uses mock data for development and testing
+ * TODO: Integrate with WebSearch tool when available in Tabnine for URL discovery
+ * Current implementation uses heuristic documentation URL building
  */
 
-import { assignConfidenceLevel } from './research-synthesizer.js';
+import { scrapeContent } from './scraper.js';
+import { assignConfidenceLevel } from './source-validator.js';
+import { deduplicateFindings } from './deduplicator.js';
 
 /**
  * Generate search queries based on research topic and type
@@ -71,8 +74,71 @@ function generateSearchQueries(topic, type) {
 }
 
 /**
- * Generate mock search results for development and testing
- * TODO: Replace with actual WebSearch integration when available
+ * Build candidate documentation URLs for common topics
+ * Heuristic-based URL generation for popular libraries and frameworks
+ *
+ * This is an MVP approach for URL discovery. In production with WebSearch,
+ * the WebSearch API would return URLs and this function would not be needed.
+ *
+ * @param {string} topic - Research topic (e.g., "React", "Node.js", "Express")
+ * @param {string} type - Research type (STACK, FEATURES, etc.)
+ * @returns {Array<string>} Array of candidate documentation URLs
+ */
+function buildDocumentationUrls(topic, type) {
+  const normalized = topic.toLowerCase().replace(/\s+/g, '');
+  const urls = [];
+
+  // Common documentation URL patterns
+  // Pattern 1: docs.{topic}.{tld}
+  urls.push(`https://docs.${normalized}.com/`);
+  urls.push(`https://docs.${normalized}.dev/`);
+  urls.push(`https://docs.${normalized}.org/`);
+
+  // Pattern 2: {topic}.{tld}
+  urls.push(`https://${normalized}.dev/`);
+  urls.push(`https://${normalized}.com/`);
+  urls.push(`https://${normalized}.org/`);
+
+  // Pattern 3: Special cases for popular technologies
+  const specialCases = {
+    'react': ['https://react.dev/', 'https://react.dev/learn'],
+    'nodejs': ['https://nodejs.org/en/docs/', 'https://nodejs.org/api/'],
+    'node.js': ['https://nodejs.org/en/docs/', 'https://nodejs.org/api/'],
+    'express': ['https://expressjs.com/', 'https://expressjs.com/en/guide/routing.html'],
+    'vue': ['https://vuejs.org/', 'https://vuejs.org/guide/introduction.html'],
+    'angular': ['https://angular.dev/', 'https://angular.dev/overview'],
+    'svelte': ['https://svelte.dev/', 'https://svelte.dev/docs/introduction'],
+    'nextjs': ['https://nextjs.org/', 'https://nextjs.org/docs'],
+    'next.js': ['https://nextjs.org/', 'https://nextjs.org/docs'],
+    'typescript': ['https://www.typescriptlang.org/', 'https://www.typescriptlang.org/docs/'],
+    'python': ['https://docs.python.org/', 'https://docs.python.org/3/'],
+    'django': ['https://docs.djangoproject.com/', 'https://www.djangoproject.com/start/'],
+    'flask': ['https://flask.palletsprojects.com/', 'https://flask.palletsprojects.com/en/stable/'],
+    'fastapi': ['https://fastapi.tiangolo.com/', 'https://fastapi.tiangolo.com/tutorial/']
+  };
+
+  if (specialCases[normalized]) {
+    urls.unshift(...specialCases[normalized]);
+  }
+
+  // Pattern 4: MDN for web technologies
+  if (topic.toLowerCase().includes('javascript') ||
+      topic.toLowerCase().includes('html') ||
+      topic.toLowerCase().includes('css') ||
+      topic.toLowerCase().includes('web')) {
+    urls.push(`https://developer.mozilla.org/en-US/docs/Web/${topic.replace(/\s+/g, '_')}`);
+  }
+
+  // Limit to top 3 URLs to avoid excessive scraping
+  return urls.slice(0, 3);
+}
+
+/**
+ * DEPRECATED: Generate mock search results for development and testing
+ * Replaced with real scraping via scraper.js
+ *
+ * Kept for backward compatibility with existing tests.
+ * TODO: Update tests to use real scraping, then remove this function.
  *
  * @param {string} query - Search query string
  * @param {string} topic - Research topic
@@ -170,22 +236,38 @@ export async function performResearch(topic, type, options = {}) {
 
   console.log(`[researcher] Performing ${searchQueries.length} searches for "${topic}" (${type})`);
 
-  // TODO: Replace with actual WebSearch integration when available in Tabnine
-  // For now, use mock data for development and testing
-  const allSearchResults = [];
+  // Build candidate documentation URLs (MVP approach)
+  // TODO: In production with WebSearch, use WebSearch API to discover URLs
+  const docUrls = buildDocumentationUrls(topic, type);
+  console.log(`[researcher] Built ${docUrls.length} documentation URLs to scrape`);
 
-  for (const query of searchQueries) {
-    console.log(`[researcher] Query: ${query}`);
+  // Scrape each URL with real web scraping
+  const scrapedFindings = [];
+  for (const url of docUrls) {
+    try {
+      console.log(`[researcher] Scraping: ${url}`);
+      const result = await scrapeContent(url);
 
-    // Simulate web search
-    const mockResults = generateMockSearchResults(query, topic, type);
-    allSearchResults.push(...mockResults);
+      scrapedFindings.push({
+        title: result.title || topic,
+        url: result.url,
+        content: result.content.substring(0, 500), // First 500 chars for content
+        snippet: result.content.substring(0, 200),  // First 200 chars for snippet
+        method: result.method,
+        source: result.url
+      });
+
+      console.log(`[researcher] Successfully scraped ${url} (${result.method} method, ${result.content.length} chars)`);
+    } catch (error) {
+      console.warn(`[researcher] Failed to scrape ${url}: ${error.message}`);
+      // Continue with other URLs even if one fails
+    }
   }
 
-  // Extract findings from search results
-  const findings = extractFindings(allSearchResults);
+  // Extract findings (applies filtering and deduplication)
+  const findings = extractFindings(scrapedFindings);
 
-  console.log(`[researcher] Extracted ${findings.length} findings from ${allSearchResults.length} search results`);
+  console.log(`[researcher] Extracted ${findings.length} findings from ${scrapedFindings.length} scraped sources`);
 
   return findings;
 }
@@ -194,7 +276,11 @@ export async function performResearch(topic, type, options = {}) {
  * Extract findings from search results
  * Parses search results and creates structured findings with source attribution
  *
- * @param {Array<Object>} searchResults - Search results with {title, snippet, url}
+ * Enhanced in Phase 7 with:
+ * - Content-based deduplication (not just URL)
+ * - Authority classification for confidence scoring
+ *
+ * @param {Array<Object>} searchResults - Search results with {title, snippet, url, source, content}
  * @returns {Array<Object>} Structured findings with {title, content, source}
  */
 export function extractFindings(searchResults) {
@@ -211,40 +297,60 @@ export function extractFindings(searchResults) {
       continue;
     }
 
-    const { title, snippet, url } = result;
+    const { title, snippet, url, source, content } = result;
 
-    // Require all fields
-    if (!title || !snippet || !url) {
+    // Support both old (url) and new (source) field names
+    const sourceUrl = source || url;
+
+    // Require essential fields
+    if (!title || !sourceUrl) {
+      continue;
+    }
+
+    // Use content if available, fallback to snippet
+    const findingContent = content || snippet || '';
+
+    // Skip if no content
+    if (!findingContent) {
       continue;
     }
 
     // Filter out low-quality sources
     // Exclude HTTP (require HTTPS)
-    if (url.startsWith('http://')) {
+    if (sourceUrl.startsWith('http://')) {
       continue;
     }
 
     // Exclude forums (low signal-to-noise)
-    if (url.includes('forum.') || url.includes('reddit.com') || url.includes('discord.')) {
+    if (sourceUrl.includes('forum.') || sourceUrl.includes('reddit.com') || sourceUrl.includes('discord.')) {
       continue;
     }
 
-    // Deduplicate by URL
-    if (seenUrls.has(url)) {
+    // Deduplicate by URL (content-based deduplication happens later)
+    if (seenUrls.has(sourceUrl)) {
       continue;
     }
 
-    seenUrls.add(url);
+    seenUrls.add(sourceUrl);
 
     // Create structured finding
     findings.push({
       title,
-      content: snippet,
-      source: url
+      content: findingContent,
+      source: sourceUrl
     });
   }
 
-  return findings;
+  // Apply content-based deduplication (catches same content from different URLs)
+  const deduplicated = deduplicateFindings(findings);
+
+  // Assign confidence levels using enhanced source validator
+  const withConfidence = deduplicated.map(finding => ({
+    ...finding,
+    confidence: assignConfidenceLevel(finding)
+  }));
+
+  return withConfidence;
 }
 
 /**
@@ -284,19 +390,22 @@ export function mergeManualFindings(automatedFindings, manualFindings) {
   // Convert Map back to array
   const combined = Array.from(findingsMap.values());
 
+  // Apply content-based deduplication
+  const deduplicated = deduplicateFindings(combined);
+
   // Sort by confidence level (HIGH -> MEDIUM -> LOW)
-  // Assign confidence to each finding for sorting
-  const withConfidence = combined.map(f => ({
+  // Assign confidence to each finding for sorting using enhanced source validator
+  const withConfidence = deduplicated.map(f => ({
     ...f,
     confidence: assignConfidenceLevel(f)
   }));
 
-  // Sort by confidence (HIGH=3, MEDIUM=2, LOW=1)
-  const confidenceWeight = { HIGH: 3, MEDIUM: 2, LOW: 1 };
+  // Sort by confidence (HIGH=3, MEDIUM=2, LOW=1, UNVERIFIED=0)
+  const confidenceWeight = { HIGH: 3, MEDIUM: 2, LOW: 1, UNVERIFIED: 0 };
   withConfidence.sort((a, b) => {
     return confidenceWeight[b.confidence] - confidenceWeight[a.confidence];
   });
 
-  // Return sorted findings (remove confidence field as it will be reassigned by synthesizer)
-  return withConfidence.map(({ confidence, ...finding }) => finding);
+  // Return sorted findings (keep confidence field for downstream use)
+  return withConfidence;
 }

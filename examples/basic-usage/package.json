@@ -1,0 +1,13 @@
+{
+  "name": "gsd-basic-example",
+  "version": "1.0.0",
+  "description": "Basic usage example for gsd-for-tabnine",
+  "type": "module",
+  "main": "demo-project.js",
+  "scripts": {
+    "start": "node demo-project.js"
+  },
+  "dependencies": {
+    "gsd-for-tabnine": "file:../../gsd"
+  }
+}

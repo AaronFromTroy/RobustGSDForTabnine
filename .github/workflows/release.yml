@@ -1,0 +1,41 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write      # semantic-release pushes commits and tags
+  issues: write        # semantic-release comments on issues
+  pull-requests: write # semantic-release comments on PRs
+  id-token: write      # CRITICAL: OIDC trusted publishing to npm
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for semantic-release
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install dependencies
+        run: |
+          cd gsd
+          npm ci
+
+      - name: Run tests
+        run: |
+          cd gsd
+          npm test
+
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx semantic-release

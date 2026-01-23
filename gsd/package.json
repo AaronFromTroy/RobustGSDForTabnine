@@ -11,7 +11,8 @@
     "./guideline-loader": "./scripts/guideline-loader.js",
     "./validator": "./scripts/validator.js",
     "./researcher": "./scripts/researcher.js",
-    "./research-synthesizer": "./scripts/research-synthesizer.js"
+    "./research-synthesizer": "./scripts/research-synthesizer.js",
+    "./version-checker": "./scripts/version-checker.js"
   },
   "files": [
     "scripts/",

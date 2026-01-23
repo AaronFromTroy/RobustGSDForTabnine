@@ -45,3 +45,10 @@ export {
   synthesizeResearch,
   assignConfidenceLevel
 } from './research-synthesizer.js';
+
+// Version management
+export {
+  checkForUpdates,
+  getCurrentVersion,
+  getLatestVersion
+} from './version-checker.js';

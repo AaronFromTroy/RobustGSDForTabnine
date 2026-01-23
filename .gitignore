@@ -21,3 +21,6 @@ Thumbs.db
 *.swp
 *.swo
 *~
+
+# Upgrade backups (local only)
+.gsd-backups/

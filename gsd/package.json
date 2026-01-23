@@ -12,7 +12,8 @@
     "./validator": "./scripts/validator.js",
     "./researcher": "./scripts/researcher.js",
     "./research-synthesizer": "./scripts/research-synthesizer.js",
-    "./version-checker": "./scripts/version-checker.js"
+    "./version-checker": "./scripts/version-checker.js",
+    "./backup-manager": "./scripts/backup-manager.js"
   },
   "files": [
     "scripts/",

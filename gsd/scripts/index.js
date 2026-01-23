@@ -52,3 +52,11 @@ export {
   getCurrentVersion,
   getLatestVersion
 } from './version-checker.js';
+
+// Backup and restore
+export {
+  createBackup,
+  restoreBackup,
+  listBackups,
+  validateBackup
+} from './backup-manager.js';

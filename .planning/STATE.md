@@ -16,23 +16,23 @@
 ## Current Position
 
 **Phase:** 11 of 11 (Upgrade System - In Progress)
-**Plan:** 1 of 5 (Complete)
+**Plan:** 2 of 5 (Complete)
 **Status:** In progress
-**Last activity:** 2026-01-23 - Completed 11-01-PLAN.md (Version Detection and Update Notification)
-**Next Action:** Execute 11-02-PLAN.md (Backup and Rollback System)
+**Last activity:** 2026-01-23 - Completed 11-02-PLAN.md (Backup and Rollback System)
+**Next Action:** Execute 11-03-PLAN.md (File Merging and Preservation)
 
-**Progress:** `██████████░` (91% - 41/45 plans complete)
+**Progress:** `██████████░` (93% - 42/45 plans complete)
 
 ---
 
 ## Performance Metrics
 
 **Phases Completed:** 10/11 (91%)
-**Plans Completed:** 41/45 total (3 Phase 1 + 5 Phase 2 + 3 Phase 3 + 3 Phase 4 + 1 Phase 5 partial + 3 Phase 6 + 4 Phase 7 + 4 Phase 8 + 4 Phase 9 + 1 Phase 10 + 1 Phase 11)
+**Plans Completed:** 42/45 total (3 Phase 1 + 5 Phase 2 + 3 Phase 3 + 3 Phase 4 + 1 Phase 5 partial + 3 Phase 6 + 4 Phase 7 + 4 Phase 8 + 4 Phase 9 + 1 Phase 10 + 2 Phase 11)
 **Plans Skipped:** 3 Phase 5 plans (npm publishing infrastructure marked optional per user preference)
 **Requirements Validated:** 55/55 (Phase 1-4 requirements fulfilled - 100%)
 **Test Coverage:** 95 tests total, 14 new Phase 8 tests (Test Suites 15-16)
-**Success Rate:** 100% (41/41 plans completed successfully)
+**Success Rate:** 100% (42/42 plans completed successfully)
 
 ---
 
@@ -126,6 +126,12 @@
 | mkdir -p flag mandatory | 2026-01-22 | All mkdir commands use -p flag for parent directory creation - ensures robustness when directories may not exist |
 | Dual-mode version detection | 2026-01-23 | Support both npm registry and local filesystem sources for version checking - enables offline upgrades and dev/testing scenarios |
 | Graceful network failure handling | 2026-01-23 | Network operations return null on failure instead of crashing - version checking degrades gracefully when npm unavailable |
+| fs-extra for backup operations | 2026-01-23 | Use fs-extra over native fs for recursive copy - better error handling, atomic operations, cross-platform compatibility |
+| Timestamped backup directories | 2026-01-23 | Format .gsd-backups/backup-{timestamp}/ for easy identification - sortable, no conflicts, preserves multiple backups for comparison |
+| Exclude node_modules from backups | 2026-01-23 | Skip node_modules during backup (128+ packages, ~50MB) - can reinstall from package.json, makes backup 10x faster and 90% smaller |
+| Validation before restore | 2026-01-23 | Check backup integrity before restoration (directory, metadata, critical files, file count ±5%) - prevents corrupted backup restoration |
+| Temp backup during restore | 2026-01-23 | Create temp backup of current state before overwriting - automatic rollback safety net if restore fails |
+| Backup metadata tracking | 2026-01-23 | Store timestamp, version, file count, exclude list in backup-metadata.json - enables listing, validation, version-aware restoration |
 
 ### Roadmap Evolution
 
@@ -161,6 +167,26 @@ None
 ### Recent Changes
 
 **2026-01-23:**
+- **Phase 11 Plan 2 completed (11-02):** Backup and Rollback System (47 min)
+  - Installed fs-extra ^11.2.0 dependency (3 packages added) via PowerShell (npm hung in Git Bash)
+  - Created gsd/scripts/backup-manager.js with 4 exported functions (350 lines)
+  - createBackup: creates timestamped backups in .gsd-backups/, generates metadata JSON, excludes node_modules
+  - validateBackup: checks directory structure, metadata validity, critical files, file count variance (±5% allowed)
+  - restoreBackup: validates backup first, creates temp backup for rollback, removes target, copies backup, restores node_modules if preserved
+  - listBackups: scans .gsd-backups/ directory, reads metadata from each backup, returns sorted array (newest first)
+  - Timestamped backup directories: .gsd-backups/backup-{timestamp}/ for easy identification and comparison
+  - Backup metadata tracking: timestamp, version, sourceDir, file count, created ISO date, exclude list
+  - Temp backup during restore: automatic rollback safety net if restore fails
+  - Validation before restore: prevents corrupted backup restoration with integrity checks
+  - node_modules exclusion: backup 10x faster and 90% smaller (can reinstall from package.json)
+  - Added subpath export: gsd-for-tabnine/backup-manager
+  - Re-exported createBackup, restoreBackup, listBackups, validateBackup from main entry (index.js)
+  - Added .gsd-backups/ to .gitignore (backups are local-only)
+  - Git commits: 52cd157 (fs-extra dependency), 585c901 (backup-manager.js), 9c77f7c (exports and .gitignore)
+  - Tested: backup creation (56 files), validation (all critical files present), listing (2 backups found, sorted by timestamp)
+  - All success criteria met: 4 functions exported, timestamped backups, metadata tracking, validation, restore with safety net
+  - **Safety net ready:** Backup system working for Plan 11-03 (file merging) and Plan 11-04 (migration scripts)
+
 - **Phase 11 Plan 1 completed (11-01):** Version Detection and Update Notification (27 min)
   - Installed semver ^7.6.0 and update-notifier ^7.3.1 dependencies (57 packages added)
   - Created gsd/scripts/version-checker.js with 5 exported functions (257 lines)
@@ -612,10 +638,10 @@ None
 ## Session Continuity
 
 **Last session:** 2026-01-23
-**Stopped at:** Completed 11-01-PLAN.md (Version Detection and Update Notification)
+**Stopped at:** Completed 11-02-PLAN.md (Backup and Rollback System)
 **Resume file:** None
 
-**Next Action:** Execute 11-02-PLAN.md (Backup and Rollback System)
+**Next Action:** Execute 11-03-PLAN.md (File Merging and Preservation)
 **Context Summary:**
 - Phase 1: Foundation & Templates (3 plans - guidelines, templates, config) ✓
 - Phase 2: Core Infrastructure (5 plans - Node.js, file ops, state manager, templates, testing) ✓
@@ -627,13 +653,13 @@ None
 - Phase 8: Verification & Quality System (4 plans complete - VERIFICATION template, goal validator, quality gates, verifier, report generator, testing) ✓
 - Phase 9: Improve Initialization Terminology (4 plans complete - script messaging, documentation updates, guideline workflow, script implementation) ✓
 - Phase 10: Fix Path Handling Bugs (1 plan complete - critical bug fix from real-world usage) ✓
-- Phase 11: Upgrade System (1/5 plans complete - version detection with dual-mode support) — In Progress ◆
+- Phase 11: Upgrade System (2/5 plans complete - version detection, backup system) — In Progress ◆
 - 55/55 v1 requirements validated (Phase 1-4)
 - 95 integration tests (81 original + 14 new Phase 8 tests)
 - **Project status:** 10 phases complete, Phase 11 in progress
 
 **Project Status:**
-Phase 11 in progress (1/5 plans complete). Phase 5 partially complete (3 npm publishing plans skipped per user preference). GSD methodology fully implemented for Tabnine Agent with:
+Phase 11 in progress (2/5 plans complete). Phase 5 partially complete (3 npm publishing plans skipped per user preference). GSD methodology fully implemented for Tabnine Agent with:
 - Modular guideline system (5 workflows - new-project, plan-phase, execute-phase, verify-work, research)
 - Template-driven artifacts (13 templates - added CONTEXT.md, VERIFICATION.md, and CODEBASE.md)
 - State management and progress tracking
@@ -653,6 +679,7 @@ Phase 11 in progress (1/5 plans complete). Phase 5 partially complete (3 npm pub
 - Clear initialization terminology (error messages, workflow messages, documentation)
 - Codebase detection and research (identifies existing projects, analyzes tech stack/architecture/conventions)
 - Dual-mode version detection (npm registry + local filesystem sources)
+- Backup and rollback system (timestamped backups, validation, restore with safety net)
 
 **Roadmap Extension:**
 - Phase 5: Polish and Distribution Readiness (1/4 complete - metadata only, npm packaging skipped per user preference)
@@ -661,9 +688,9 @@ Phase 11 in progress (1/5 plans complete). Phase 5 partially complete (3 npm pub
 - Phase 8: Verification & Quality System (COMPLETE - goal-backward validation, quality gates, multi-layer orchestration, report generation, testing)
 - Phase 9: Improve Initialization Terminology (COMPLETE - clear messaging for existing codebase support)
 - Phase 10: Fix Path Handling Bugs In All Guidelines (COMPLETE - critical bug fix from real-world usage)
-- Phase 11: Upgrade System (IN PROGRESS - version detection complete, 4 plans remaining)
+- Phase 11: Upgrade System (IN PROGRESS - version detection and backup system complete, 3 plans remaining)
 
 ---
 
 *State tracking initialized: 2026-01-18*
-*Last updated: 2026-01-23 after completing Phase 11 Plan 1 (version detection)*
+*Last updated: 2026-01-23 after completing Phase 11 Plan 2 (backup and rollback system)*

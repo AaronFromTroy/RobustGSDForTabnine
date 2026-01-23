@@ -420,6 +420,45 @@ Plans:
 
 ---
 
+### Phase 12: Multi-User Collaboration
+
+**Goal:** Enable multiple developers to work on the same GSD project simultaneously using Git-based workflows without conflicts. Implement workspace isolation via Git worktrees, branch-per-developer workflow, conflict detection, and merge strategies.
+
+**Dependencies:** Phase 11 (Upgrade System)
+
+**Requirements:** COLLAB-01 (Git-based collaboration with branch-per-user workflow), COLLAB-02 (Conflict detection when multiple users modify same phase), COLLAB-03 (Shared guideline library - centralized), COLLAB-04 (Workspace isolation - separate .planning/ directories)
+
+**Success Criteria:**
+1. STATE.md excluded from Git (no multi-user conflicts on local working state)
+2. Developers can create isolated worktrees via setup-worktree.js
+3. Each worktree has independent .planning/STATE.md (local working state)
+4. Developers can detect merge conflicts before pushing via conflict-checker.js
+5. Pre-commit hooks template exists for validating commits (Conventional Commits, merge conflict detection)
+6. Branch-per-developer workflow documented with examples
+7. Conflict detection uses Git's native three-way merge dry-run
+8. Merge strategies and conflict resolution documented in COLLABORATION.md
+9. Integration tests validate worktree and conflict detection functionality
+10. All 118+ integration tests pass (110 existing + 8 new = 100% pass rate)
+
+**Plans:** 3 plans
+
+Plans:
+- [ ] 12-01-PLAN.md — Workspace isolation foundation (.gitignore STATE.md exclusion, setup-worktree.js)
+- [ ] 12-02-PLAN.md — Conflict detection and commit validation (conflict-checker.js, .pre-commit-config.yaml template)
+- [ ] 12-03-PLAN.md — Documentation and testing (COLLABORATION.md guideline, Test Suite 18, README.md update)
+
+**Deliverables:**
+- Updated .gitignore (STATE.md exclusion)
+- gsd/scripts/setup-worktree.js (worktree creation, listing, cleanup)
+- gsd/scripts/conflict-checker.js (pre-merge conflict detection using git merge dry-run)
+- gsd/templates/.pre-commit-config.yaml (pre-commit hooks configuration)
+- gsd/guidelines/COLLABORATION.md (multi-user workflow guide)
+- Updated gsd/README.md (multi-user collaboration section)
+- Updated gsd/package.json (setup-worktree, conflict-checker subpath exports)
+- Test Suite 18 (8 tests for Phase 12 modules)
+
+---
+
 ## Progress
 
 | Phase | Status | Requirements | Success Criteria |
@@ -434,9 +473,10 @@ Plans:
 | 8 - Verification & Quality System | Complete | (verification infra) | 8 |
 | 9 - Improve Initialization Terminology | Complete | (not tracked) | 10 |
 | 10 - Fix Path Handling Bugs In All Guidelines | Complete | (not tracked) | 6 |
-| 11 - Upgrade System | Not started | (not tracked) | 15 |
+| 11 - Upgrade System | Complete | (not tracked) | 15 |
+| 12 - Multi-User Collaboration | Not started | 4 | 10 |
 
-**Total:** 11 phases, 55 v1 requirements, 88 success criteria
+**Total:** 12 phases, 59 requirements (55 v1 + 4 collaboration), 98 success criteria
 
 ---
 
@@ -464,6 +504,8 @@ Phase 9 (Improve Initialization Terminology)
 Phase 10 (Fix Path Handling Bugs In All Guidelines)
     ↓
 Phase 11 (Upgrade System)
+    ↓
+Phase 12 (Multi-User Collaboration)
 ```
 
 **Linear dependency chain:** Each phase builds on the previous. No parallel execution needed.
@@ -491,4 +533,4 @@ Phase 11 (Upgrade System)
 ---
 
 *Roadmap created: 2026-01-18*
-*Last updated: 2026-01-22 - Phase 11 planned (upgrade system with 5 plans)*
+*Last updated: 2026-01-23 - Phase 12 planned (multi-user collaboration with 3 plans)*

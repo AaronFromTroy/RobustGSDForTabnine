@@ -493,7 +493,7 @@ await runCommand('npm', ['test']);
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Provenance](https://img.shields.io/badge/provenance-attested-green)](https://docs.npmjs.com/generating-provenance-statements)
 
-**Get Shit Done** workflow system for Tabnine agent mode.
+**Get Stuff Done** workflow system for Tabnine agent mode.
 
 [Quick Start](#installation) | [Documentation](#usage) | [Examples](examples/) | [Contributing](CONTRIBUTING.md)
 ```

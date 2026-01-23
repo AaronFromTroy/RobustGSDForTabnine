@@ -2,7 +2,7 @@
 
 ## What This Is
 
-A GSD (Get Shit Done) library adapted for Tabnine's agent mode, consisting of guideline markdown files, templates, and Node.js scripts that enable Tabnine to execute the full GSD workflow. Users copy the library into their project and trigger workflows using explicit phrases. The system reads STATE.md to resume work across fresh windows, adapting the complete GSD methodology to work within Tabnine's constraints.
+A GSD (Get Stuff Done) library adapted for Tabnine's agent mode, consisting of guideline markdown files, templates, and Node.js scripts that enable Tabnine to execute the full GSD workflow. Users copy the library into their project and trigger workflows using explicit phrases. The system reads STATE.md to resume work across fresh windows, adapting the complete GSD methodology to work within Tabnine's constraints.
 
 ## Core Value
 

@@ -58,13 +58,13 @@ gsd/
 - "start GSD"
 - "begin GSD"
 - "initialize GSD"
-- "start getting shit done"
+- "start getting stuff done"
 
 *Continue workflows:*
 - "continue GSD workflow"
 - "resume GSD"
 - "continue workflow"
-- "resume getting shit done"
+- "resume getting stuff done"
 
 **Paths Configured:**
 - planning: `.planning`

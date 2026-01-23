@@ -12,7 +12,9 @@
       "Bash(\"/c/Program Files/nodejs/node.exe\" -e \"import\\(''./scripts/domain-coordinator.js''\\).then\\(m => console.log\\(''domain-coordinator exports:'', Object.keys\\(m\\)\\)\\).catch\\(e => console.error\\(e.message\\)\\)\")",
       "Bash(\"/c/Program Files/nodejs/node.exe\" -e \"\nimport { scrapeContent } from ''./gsd/scripts/scraper.js'';\nconsole.log\\(''Testing progressive enhancement pattern...''\\);\nconsole.log\\(''scrapeContent function signature:'', scrapeContent.toString\\(\\).substring\\(0, 200\\)\\);\n\")",
       "Bash(ls:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(node -e:*)",
+      "Bash(node scripts/integration-test.js:*)"
     ]
   }
 }

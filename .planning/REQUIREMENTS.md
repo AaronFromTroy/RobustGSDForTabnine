@@ -127,12 +127,12 @@ Deferred to future release. Tracked but not in current roadmap.
 - **ROLL-03**: System maintains checkpoint history in .planning/backups/
 - **ROLL-04**: System auto-rollbacks on validation failure
 
-### Multi-User Collaboration
+### Multi-User Collaboration (Milestone 2 - Phase 12)
 
-- **COLLAB-01**: Git-based collaboration with branch-per-user workflow
-- **COLLAB-02**: Conflict detection when multiple users modify same phase
-- **COLLAB-03**: Shared guideline library (centralized)
-- **COLLAB-04**: Workspace isolation (separate .planning/ directories)
+- **COLLAB-01**: Git-based collaboration with branch-per-story workflow (supports feature/bugfix/hotfix patterns, Bitbucket integration)
+- **COLLAB-02**: Conflict detection when multiple users modify same phase (pre-merge checking, phase-to-story mapping guidance)
+- **COLLAB-03**: Shared guideline library (centralized gsd/ directory accessible from all worktrees)
+- **COLLAB-04**: Workspace isolation (separate .planning/ directories per worktree, STATE.md gitignored)
 
 ### Milestone Audit & Cross-Phase Verification
 
@@ -230,18 +230,34 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SETUP-02 | Phase 1 | Complete |
 | SETUP-03 | Phase 1 | Complete |
 | SETUP-04 | Phase 1 | Complete |
+| COLLAB-01 | Phase 12 (M2) | Planned |
+| COLLAB-02 | Phase 12 (M2) | Planned |
+| COLLAB-03 | Phase 12 (M2) | Planned |
+| COLLAB-04 | Phase 12 (M2) | Planned |
 
-**Coverage:**
+**Milestone 1 (v1.0) Coverage:**
 - v1 requirements: 55 total
 - Mapped to phases: 55 ✓
 - Unmapped: 0 ✓
+- Status: Complete ✓
+
+**Milestone 2 (v2.0) Coverage:**
+- v2 collaboration requirements: 4 total
+- Mapped to Phase 12: 4 ✓
+- Unmapped: 0 ✓
+- Status: Planned
 
 **Phase Distribution:**
-- Phase 1 (Foundation & Templates): 19 requirements
-- Phase 2 (Core Infrastructure): 17 requirements
-- Phase 3 (Workflow Orchestration): 14 requirements
-- Phase 4 (Advanced Features): 10 requirements
+- Milestone 1 (Phases 1-11):
+  - Phase 1 (Foundation & Templates): 19 requirements
+  - Phase 2 (Core Infrastructure): 17 requirements
+  - Phase 3 (Workflow Orchestration): 14 requirements
+  - Phase 4 (Advanced Features): 10 requirements
+  - Phases 5-11: Infrastructure expansion (not tracked as formal requirements)
+- Milestone 2 (Phase 12+):
+  - Phase 12 (Multi-User Collaboration): 4 requirements
 
 ---
 *Requirements defined: 2026-01-18*
-*Last updated: 2026-01-19 - All 55 v1 requirements complete*
+*Milestone 1 completed: 2026-01-23 - All 55 v1 requirements complete*
+*Last updated: 2026-01-23 - Phase 12 collaboration requirements mapped to Milestone 2*

@@ -2,7 +2,7 @@
 
 **Version:** 1.0.0
 
-Get Shit Done workflow system adapted for Tabnine's agent mode. Provides modular guidelines, templates, and scripts for sequential multi-phase project execution with automatic state persistence and resume capabilities.
+Get Stuff Done workflow system adapted for Tabnine's agent mode. Provides modular guidelines, templates, and scripts for sequential multi-phase project execution with automatic state persistence and resume capabilities.
 
 **🚀 New to GSD?** → See [QUICKSTART.md](QUICKSTART.md) for 5-minute setup guide
 
@@ -718,13 +718,13 @@ node -e "import('./gsd/scripts/verifier.js').then(m => console.log(Object.keys(m
 - "start GSD"
 - "begin GSD"
 - "initialize GSD"
-- "start getting shit done"
+- "start getting stuff done"
 
 **Resume existing workflow:**
 - "continue GSD workflow"
 - "resume GSD"
 - "continue workflow"
-- "resume getting shit done"
+- "resume getting stuff done"
 
 ### Scripts (Manual Invocation)
 

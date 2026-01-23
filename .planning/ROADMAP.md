@@ -420,67 +420,28 @@ Plans:
 
 ---
 
-### Phase 12: Multi-User Collaboration
-
-**Goal:** Enable multiple developers to work on the same GSD project simultaneously using Git-based workflows without conflicts. Implement workspace isolation via Git worktrees, branch-per-developer workflow, conflict detection, and merge strategies.
-
-**Dependencies:** Phase 11 (Upgrade System)
-
-**Requirements:** COLLAB-01 (Git-based collaboration with branch-per-user workflow), COLLAB-02 (Conflict detection when multiple users modify same phase), COLLAB-03 (Shared guideline library - centralized), COLLAB-04 (Workspace isolation - separate .planning/ directories)
-
-**Success Criteria:**
-1. STATE.md excluded from Git (no multi-user conflicts on local working state)
-2. Developers can create isolated worktrees via setup-worktree.js
-3. Each worktree has independent .planning/STATE.md (local working state)
-4. Developers can detect merge conflicts before pushing via conflict-checker.js
-5. Pre-commit hooks template exists for validating commits (Conventional Commits, merge conflict detection)
-6. Branch-per-developer workflow documented with examples
-7. Conflict detection uses Git's native three-way merge dry-run
-8. Merge strategies and conflict resolution documented in COLLABORATION.md
-9. Integration tests validate worktree and conflict detection functionality
-10. All 118+ integration tests pass (110 existing + 8 new = 100% pass rate)
-
-**Plans:** 3 plans
-
-Plans:
-- [ ] 12-01-PLAN.md — Workspace isolation foundation (.gitignore STATE.md exclusion, setup-worktree.js)
-- [ ] 12-02-PLAN.md — Conflict detection and commit validation (conflict-checker.js, .pre-commit-config.yaml template)
-- [ ] 12-03-PLAN.md — Documentation and testing (COLLABORATION.md guideline, Test Suite 18, README.md update)
-
-**Deliverables:**
-- Updated .gitignore (STATE.md exclusion)
-- gsd/scripts/setup-worktree.js (worktree creation, listing, cleanup)
-- gsd/scripts/conflict-checker.js (pre-merge conflict detection using git merge dry-run)
-- gsd/templates/.pre-commit-config.yaml (pre-commit hooks configuration)
-- gsd/guidelines/COLLABORATION.md (multi-user workflow guide)
-- Updated gsd/README.md (multi-user collaboration section)
-- Updated gsd/package.json (setup-worktree, conflict-checker subpath exports)
-- Test Suite 18 (8 tests for Phase 12 modules)
-
----
-
-## Progress
+## Milestone 1 (v1.0) Progress
 
 | Phase | Status | Requirements | Success Criteria |
 |-------|--------|--------------|------------------|
-| 1 - Foundation & Templates | Complete | 19 | 5 |
-| 2 - Core Infrastructure | Complete | 17 | 6 |
-| 3 - Workflow Orchestration | Complete | 14 | 7 |
-| 4 - Advanced Features | Complete | 10 | 6 |
-| 5 - Polish and Distribution Readiness | Incomplete (1/4 plans) | (not tracked) | 8 |
-| 6 - Discussion & Context System | Complete | (context gathering) | 7 |
-| 7 - Enhanced Research Infrastructure | Complete | (enhanced research) | 10 |
-| 8 - Verification & Quality System | Complete | (verification infra) | 8 |
-| 9 - Improve Initialization Terminology | Complete | (not tracked) | 10 |
-| 10 - Fix Path Handling Bugs In All Guidelines | Complete | (not tracked) | 6 |
-| 11 - Upgrade System | Complete | (not tracked) | 15 |
-| 12 - Multi-User Collaboration | Not started | 4 | 10 |
+| 1 - Foundation & Templates | Complete ✓ | 19 | 5 |
+| 2 - Core Infrastructure | Complete ✓ | 17 | 6 |
+| 3 - Workflow Orchestration | Complete ✓ | 14 | 7 |
+| 4 - Advanced Features | Complete ✓ | 10 | 6 |
+| 5 - Polish and Distribution Readiness | Incomplete (1/4 plans) ◆ | (not tracked) | 8 |
+| 6 - Discussion & Context System | Complete ✓ | (context gathering) | 7 |
+| 7 - Enhanced Research Infrastructure | Complete ✓ | (enhanced research) | 10 |
+| 8 - Verification & Quality System | Complete ✓ | (verification infra) | 8 |
+| 9 - Improve Initialization Terminology | Complete ✓ | (not tracked) | 10 |
+| 10 - Fix Path Handling Bugs In All Guidelines | Complete ✓ | (not tracked) | 6 |
+| 11 - Upgrade System | Complete ✓ | (not tracked) | 15 |
 
-**Total:** 12 phases, 59 requirements (55 v1 + 4 collaboration), 98 success criteria
+**Milestone 1 Total:** 11 phases, 55 v1 requirements, 88 success criteria
+**Status:** Complete (Phase 5 npm publishing plans deferred to future work)
 
 ---
 
-## Dependencies
+## Milestone 1 Dependencies
 
 ```
 Phase 1 (Foundation)
@@ -504,11 +465,9 @@ Phase 9 (Improve Initialization Terminology)
 Phase 10 (Fix Path Handling Bugs In All Guidelines)
     ↓
 Phase 11 (Upgrade System)
-    ↓
-Phase 12 (Multi-User Collaboration)
 ```
 
-**Linear dependency chain:** Each phase builds on the previous. No parallel execution needed.
+**Milestone 1 Status:** Complete (v1.0.0 released 2026-01-23)
 
 ---
 
@@ -532,5 +491,76 @@ Phase 12 (Multi-User Collaboration)
 
 ---
 
+# Milestone 2 (v2.0) - Collaboration & Scale
+
+## Overview
+
+Milestone 2 extends GSD for Tabnine with multi-user collaboration capabilities and enterprise workflow patterns. Focus: Enable teams to work on the same GSD project simultaneously using Git-based workflows.
+
+## Phases
+
+### Phase 12: Multi-User Collaboration
+
+**Goal:** Enable multiple developers to work on the same GSD project simultaneously using Git-based workflows without conflicts. Implement workspace isolation via Git worktrees, branch-per-story workflow, conflict detection, and merge strategies.
+
+**Dependencies:** Milestone 1 complete (Phase 11 - Upgrade System)
+
+**Requirements:** COLLAB-01 (Git-based collaboration with branch-per-story workflow), COLLAB-02 (Conflict detection when multiple users modify same phase), COLLAB-03 (Shared guideline library - centralized), COLLAB-04 (Workspace isolation - separate .planning/ directories)
+
+**Success Criteria:**
+1. STATE.md excluded from Git (no multi-user conflicts on local working state)
+2. Developers can create isolated worktrees via setup-worktree.js
+3. Each worktree has independent .planning/STATE.md (local working state)
+4. Developers can detect merge conflicts before pushing via conflict-checker.js
+5. Pre-commit hooks template exists for validating commits (Conventional Commits, merge conflict detection)
+6. Branch-per-story workflow documented with examples (feature/bugfix/hotfix patterns)
+7. Phase-to-story mapping guidance prevents conflicts (decimal sub-phases)
+8. Bitbucket-specific guidance documented (branch permissions, merge checks, Pipelines)
+9. Conflict detection uses Git's native three-way merge dry-run
+10. Merge strategies and conflict resolution documented in COLLABORATION.md
+11. Integration tests validate worktree and conflict detection functionality
+12. All 118+ integration tests pass (110 existing + 8 new)
+
+**Plans:** 3 plans
+
+Plans:
+- [ ] 12-01-PLAN.md — Workspace isolation foundation (.gitignore STATE.md exclusion, setup-worktree.js)
+- [ ] 12-02-PLAN.md — Conflict detection and commit validation (conflict-checker.js, .pre-commit-config.yaml template)
+- [ ] 12-03-PLAN.md — Documentation and testing (COLLABORATION.md guideline with branch-per-story patterns, Bitbucket guidance, Test Suite 18, README.md update)
+
+**Deliverables:**
+- Updated .gitignore (STATE.md exclusion)
+- gsd/scripts/setup-worktree.js (worktree creation, listing, cleanup)
+- gsd/scripts/conflict-checker.js (pre-merge conflict detection using git merge dry-run)
+- gsd/templates/.pre-commit-config.yaml (pre-commit hooks configuration)
+- gsd/guidelines/COLLABORATION.md (multi-user workflow guide with 9 sections: Overview, When to Use GSD Phases, Branch Patterns, Getting Started, Branch-Per-Story, Conflict Detection, Merge Strategies, Bitbucket-Specific, Best Practices)
+- Updated gsd/README.md (multi-user collaboration section)
+- Updated gsd/package.json (setup-worktree, conflict-checker subpath exports)
+- Test Suite 18 (8 tests for Phase 12 modules)
+
+---
+
+## Milestone 2 Progress
+
+| Phase | Status | Requirements | Success Criteria |
+|-------|--------|--------------|------------------|
+| 12 - Multi-User Collaboration | Planned | 4 (COLLAB-01 to COLLAB-04) | 12 |
+
+**Milestone 2 Total:** 1 phase (planned), 4 requirements, 12 success criteria
+**Status:** Not started (deferred from Milestone 1)
+
+---
+
+## Milestone 2 Dependencies
+
+```
+Milestone 1 (Phases 1-11) Complete
+    ↓
+Phase 12 (Multi-User Collaboration)
+```
+
+---
+
 *Roadmap created: 2026-01-18*
-*Last updated: 2026-01-23 - Phase 12 planned (multi-user collaboration with 3 plans)*
+*Milestone 1 completed: 2026-01-23 (v1.0.0)*
+*Last updated: 2026-01-23 - Phase 12 moved to Milestone 2 (v2.0)*

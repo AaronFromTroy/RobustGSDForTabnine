@@ -58,6 +58,7 @@
     "cheerio": "^1.0.0",
     "front-matter": "^4.0.2",
     "fs-extra": "^11.2.0",
+    "json-merge-patch": "^1.0.2",
     "markdownlint": "^0.36.1",
     "p-limit": "^6.1.0",
     "playwright": "^1.48.2",

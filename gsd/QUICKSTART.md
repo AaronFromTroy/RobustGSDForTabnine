@@ -433,7 +433,52 @@ your-project/
 | `plan phase 1` | Create execution plans for phase 1 |
 | `execute phase 1` | Run all plans in phase 1 |
 | `verify phase 1` | Validate phase 1 goal achieved |
+| `upgrade GSD` | Check for and apply GSD updates |
 | `show GSD status` | Display current position |
+
+---
+
+## Upgrading GSD
+
+To keep GSD up-to-date with bug fixes and new features, use the built-in upgrade system:
+
+### Quick Upgrade (npm available)
+Say to Tabnine:
+```
+upgrade GSD
+```
+
+Or run manually:
+```bash
+cd gsd
+node scripts/upgrade-manager.js --dry-run  # preview changes
+node scripts/upgrade-manager.js             # apply upgrade
+```
+
+### Manual Upgrade (offline/firewall)
+If npm is unavailable:
+
+1. **Download new version:**
+   ```bash
+   wget https://github.com/yourusername/gsd-for-tabnine/archive/v1.2.0.tar.gz
+   tar -xzf v1.2.0.tar.gz
+   mv gsd-for-tabnine-1.2.0 ../gsd-upgrade
+   ```
+
+2. **Run upgrade script:**
+   ```bash
+   cd gsd
+   node scripts/upgrade-manager.js
+   ```
+   The script auto-detects the local source and upgrades safely.
+
+**Safety features:**
+- ✅ Automatic backup before upgrade
+- ✅ Preserves your `.gsd-config.json` customizations
+- ✅ Rollback on failure
+- ✅ Dry-run preview available
+
+See [CHANGELOG.md](CHANGELOG.md) for detailed upgrade instructions and version history.
 
 ---
 

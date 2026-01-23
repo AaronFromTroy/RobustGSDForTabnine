@@ -73,3 +73,9 @@ export {
   runMigrations,
   getApplicableMigrations
 } from './migration-runner.js';
+
+// Upgrade orchestration
+export {
+  upgrade,
+  previewUpgrade
+} from './upgrade-manager.js';

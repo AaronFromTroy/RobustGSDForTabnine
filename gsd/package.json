@@ -15,7 +15,8 @@
     "./version-checker": "./scripts/version-checker.js",
     "./backup-manager": "./scripts/backup-manager.js",
     "./file-merger": "./scripts/file-merger.js",
-    "./migration-runner": "./scripts/migration-runner.js"
+    "./migration-runner": "./scripts/migration-runner.js",
+    "./upgrade-manager": "./scripts/upgrade-manager.js"
   },
   "files": [
     "scripts/",

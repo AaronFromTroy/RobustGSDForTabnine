@@ -1636,6 +1636,195 @@ async function testReportGeneration() {
   }
 }
 
+// =============================================================================
+// TEST SUITE 17: Upgrade System (Phase 11)
+// =============================================================================
+
+async function testUpgradeSystem() {
+  console.log('\n=== Test Suite 17: Upgrade System (Phase 11) ===');
+
+  // Test 1: version-checker exports
+  try {
+    const { checkForUpdates, getCurrentVersion, getLatestVersion, checkNpmAvailability, isValidGsdSource } = await import('./version-checker.js');
+    const passed = typeof checkForUpdates === 'function' &&
+                   typeof getCurrentVersion === 'function' &&
+                   typeof getLatestVersion === 'function' &&
+                   typeof checkNpmAvailability === 'function' &&
+                   typeof isValidGsdSource === 'function';
+    logTest('version-checker exports all 5 functions', passed);
+  } catch (error) {
+    logTest('version-checker exports all 5 functions', false, error.message);
+  }
+
+  // Test 2: getCurrentVersion reads package.json
+  try {
+    const { getCurrentVersion } = await import('./version-checker.js');
+    const version = await getCurrentVersion();
+    const passed = typeof version === 'string' && /^\d+\.\d+\.\d+/.test(version);
+    logTest('getCurrentVersion returns valid semver', passed);
+  } catch (error) {
+    logTest('getCurrentVersion returns valid semver', false, error.message);
+  }
+
+  // Test 3: checkNpmAvailability structure
+  try {
+    const { checkNpmAvailability } = await import('./version-checker.js');
+    const result = await checkNpmAvailability();
+    const passed = typeof result === 'object' && typeof result.available === 'boolean';
+    logTest('checkNpmAvailability returns correct structure', passed);
+  } catch (error) {
+    logTest('checkNpmAvailability returns correct structure', false, error.message);
+  }
+
+  // Test 4: isValidGsdSource validates current directory
+  try {
+    const { isValidGsdSource } = await import('./version-checker.js');
+    const isValid = await isValidGsdSource(GSD_ROOT);
+    logTest('isValidGsdSource validates GSD installation', isValid === true);
+  } catch (error) {
+    logTest('isValidGsdSource validates GSD installation', false, error.message);
+  }
+
+  // Test 5: backup-manager exports
+  try {
+    const { createBackup, restoreBackup, listBackups, validateBackup } = await import('./backup-manager.js');
+    const passed = typeof createBackup === 'function' &&
+                   typeof restoreBackup === 'function' &&
+                   typeof listBackups === 'function' &&
+                   typeof validateBackup === 'function';
+    logTest('backup-manager exports all 4 functions', passed);
+  } catch (error) {
+    logTest('backup-manager exports all 4 functions', false, error.message);
+  }
+
+  // Test 6: createBackup creates valid backup
+  try {
+    const { createBackup, validateBackup } = await import('./backup-manager.js');
+    const fsExtra = await import('fs-extra');
+
+    const backup = await createBackup(GSD_ROOT, { testMode: true });
+    const backupValid = typeof backup.backupPath === 'string' && backup.backupPath.includes('.gsd-backups');
+
+    if (backupValid) {
+      const validation = await validateBackup(backup.backupPath);
+      const passed = validation.valid === true;
+
+      // Cleanup test backup
+      await fsExtra.remove(backup.backupPath);
+
+      logTest('createBackup creates and validates backup', passed);
+    } else {
+      logTest('createBackup creates and validates backup', false, 'Invalid backup path');
+    }
+  } catch (error) {
+    logTest('createBackup creates and validates backup', false, error.message);
+  }
+
+  // Test 7: file-merger exports
+  try {
+    const { mergeConfig, determineFileStrategy, applyUpgrade } = await import('./file-merger.js');
+    const passed = typeof mergeConfig === 'function' &&
+                   typeof determineFileStrategy === 'function' &&
+                   typeof applyUpgrade === 'function';
+    logTest('file-merger exports all 3 functions', passed);
+  } catch (error) {
+    logTest('file-merger exports all 3 functions', false, error.message);
+  }
+
+  // Test 8: determineFileStrategy returns correct strategies
+  try {
+    const { determineFileStrategy } = await import('./file-merger.js');
+    const preserveOk = determineFileStrategy('.gsd-config.json') === 'PRESERVE';
+    const overwriteOk = determineFileStrategy('templates/PROJECT.md') === 'OVERWRITE';
+    const scriptsOk = determineFileStrategy('scripts/state-manager.js') === 'OVERWRITE';
+    logTest('determineFileStrategy returns correct strategies', preserveOk && overwriteOk && scriptsOk);
+  } catch (error) {
+    logTest('determineFileStrategy returns correct strategies', false, error.message);
+  }
+
+  // Test 9: migration-runner exports
+  try {
+    const { runMigrations, getApplicableMigrations } = await import('./migration-runner.js');
+    const passed = typeof runMigrations === 'function' &&
+                   typeof getApplicableMigrations === 'function';
+    logTest('migration-runner exports all 2 functions', passed);
+  } catch (error) {
+    logTest('migration-runner exports all 2 functions', false, error.message);
+  }
+
+  // Test 10: getApplicableMigrations with empty registry
+  try {
+    const { getApplicableMigrations } = await import('./migration-runner.js');
+    const migrations = await getApplicableMigrations('1.0.0', '1.1.0');
+    const passed = Array.isArray(migrations) && migrations.length === 0;
+    logTest('getApplicableMigrations returns empty array for empty registry', passed);
+  } catch (error) {
+    logTest('getApplicableMigrations returns empty array for empty registry', false, error.message);
+  }
+
+  // Test 11: upgrade-manager exports
+  try {
+    const { upgrade, previewUpgrade, detectLocalSource, downloadFromNpm, validateLocalSource } = await import('./upgrade-manager.js');
+    const passed = typeof upgrade === 'function' &&
+                   typeof previewUpgrade === 'function' &&
+                   typeof detectLocalSource === 'function' &&
+                   typeof downloadFromNpm === 'function' &&
+                   typeof validateLocalSource === 'function';
+    logTest('upgrade-manager exports all 5 functions', passed);
+  } catch (error) {
+    logTest('upgrade-manager exports all 5 functions', false, error.message);
+  }
+
+  // Test 12: detectLocalSource detection
+  try {
+    const { detectLocalSource } = await import('./upgrade-manager.js');
+    const localSource = await detectLocalSource();
+    const passed = localSource === null || typeof localSource === 'string';
+    logTest('detectLocalSource returns string or null', passed);
+  } catch (error) {
+    logTest('detectLocalSource returns string or null', false, error.message);
+  }
+
+  // Test 13: previewUpgrade structure
+  try {
+    const { previewUpgrade } = await import('./upgrade-manager.js');
+    const preview = await previewUpgrade();
+    const passed = typeof preview === 'object' &&
+                   typeof preview.hasUpdate === 'boolean' &&
+                   typeof preview.current === 'string';
+    logTest('previewUpgrade returns correct structure', passed);
+  } catch (error) {
+    logTest('previewUpgrade returns correct structure', false, error.message);
+  }
+
+  // Test 14: trigger-detector upgrade trigger
+  try {
+    const { detectTrigger } = await import('./trigger-detector.js');
+    const config = {
+      triggerPhrases: {
+        start: ['start GSD'],
+        continue: ['continue GSD'],
+        upgrade: ['upgrade GSD']
+      }
+    };
+    const trigger = detectTrigger('upgrade GSD', config);
+    const passed = trigger && trigger.type === 'UPGRADE' && trigger.phrase === 'upgrade GSD';
+    logTest('trigger-detector detects upgrade trigger', passed);
+  } catch (error) {
+    logTest('trigger-detector detects upgrade trigger', false, error.message);
+  }
+
+  // Test 15: Main entry point exports upgrade functions
+  try {
+    const main = await import('./index.js');
+    const passed = typeof main.upgrade === 'function' &&
+                   typeof main.previewUpgrade === 'function';
+    logTest('Main entry exports upgrade and previewUpgrade', passed);
+  } catch (error) {
+    logTest('Main entry exports upgrade and previewUpgrade', false, error.message);
+  }
+}
+
 /**
  * Main test runner
  */
@@ -1667,6 +1856,7 @@ async function runAllTests() {
     await testMultiDomainCoordination();
     await testVerificationModules();
     await testReportGeneration();
+    await testUpgradeSystem();
 
     // Final report
     console.log('\n===========================================');
@@ -1682,6 +1872,7 @@ async function runAllTests() {
     console.log('  Suite 12: Phase 6 (Discussion & Context System)');
     console.log('  Suite 13-14: Phase 7 (Enhanced Research Infrastructure)');
     console.log('  Suite 15-16: Phase 8 (Verification & Quality System)');
+    console.log('  Suite 17: Phase 11 (Upgrade System)');
     console.log('===========================================');
 
     // Exit with appropriate code

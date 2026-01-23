@@ -57,6 +57,18 @@ export function detectTrigger(userInput, config) {
     }
   }
 
+  // Check for UPGRADE triggers (exact match only)
+  if (config.triggerPhrases.upgrade && Array.isArray(config.triggerPhrases.upgrade)) {
+    for (const phrase of config.triggerPhrases.upgrade) {
+      if (normalized === phrase.toLowerCase()) {
+        return {
+          type: 'UPGRADE',
+          phrase: phrase
+        };
+      }
+    }
+  }
+
   return null; // No trigger detected
 }
 
@@ -100,9 +112,27 @@ export function confirmTrigger(triggerResult) {
     throw new Error('Invalid trigger result');
   }
 
-  const action = triggerResult.type === 'START'
-    ? 'Start new workflow'
-    : 'Resume workflow from checkpoint';
+  let action;
+  if (triggerResult.type === 'START') {
+    action = 'Start new workflow';
+  } else if (triggerResult.type === 'CONTINUE') {
+    action = 'Resume workflow from checkpoint';
+  } else if (triggerResult.type === 'UPGRADE') {
+    return `╔═══════════════════════════════════════════╗
+║  🔵 UPGRADE DETECTED                      ║
+╠═══════════════════════════════════════════╣
+║  Trigger: "${triggerResult.phrase}"
+║
+║  This will:
+║  - Check for available GSD updates
+║  - Show preview of changes
+║  - Create backup before upgrade
+║  - Preserve your .gsd-config.json
+║  - Update templates, guidelines, scripts
+║
+║  Type "yes" to continue or "no" to cancel
+╚═══════════════════════════════════════════╝`;
+  }
 
   return `🔵 GSD Trigger Detected
 

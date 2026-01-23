@@ -130,6 +130,49 @@ export async function startWorkflow(projectRoot, userConfirmation) {
 }
 
 /**
+ * Execute upgrade workflow
+ * @param {string} projectRoot - Root directory of the project
+ * @param {boolean} userConfirmation - User confirmed upgrade
+ * @param {Object} options - Upgrade options (dryRun, force, source, localPath)
+ * @returns {Promise<Object>} Result: { success, from, to, backupPath }
+ * @throws {Error} If upgrade fails
+ */
+export async function startUpgradeWorkflow(projectRoot, userConfirmation, options = {}) {
+  // Require user confirmation
+  if (!userConfirmation) {
+    throw new Error('Upgrade workflow requires confirmation');
+  }
+
+  console.log('\n=== GSD Upgrade Workflow ===\n');
+
+  // Import upgrade-manager
+  const { upgrade, previewUpgrade } = await import('./upgrade-manager.js');
+
+  // Show preview
+  console.log('Checking for updates...\n');
+  const preview = await previewUpgrade(options);
+
+  if (!preview.hasUpdate) {
+    console.log(`✅ Already on latest version (${preview.current})`);
+    return { workflow: 'upgrade', status: 'up-to-date', current: preview.current };
+  }
+
+  // Display preview (already done by previewUpgrade)
+  console.log(`\nUpdate available: ${preview.current} → ${preview.latest} (${preview.updateType})\n`);
+
+  // Execute upgrade (with user confirmation already handled)
+  console.log('Starting upgrade...\n');
+  const result = await upgrade({ ...options, force: true });
+
+  if (result.success) {
+    console.log('\n✅ Upgrade complete!');
+    console.log('Verify everything works, then remove backup from .gsd-backups/\n');
+  }
+
+  return { workflow: 'upgrade', status: 'complete', ...result };
+}
+
+/**
  * Execute single phase
  * Returns guideline for Tabnine to follow (no sub-agent spawning)
  *

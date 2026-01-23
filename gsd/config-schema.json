@@ -26,6 +26,12 @@
           "items": { "type": "string" },
           "minItems": 1,
           "description": "Phrases that resume workflow from STATE.md"
+        },
+        "upgrade": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1,
+          "description": "Phrases that trigger upgrade workflow (works for new or existing codebases)"
         }
       }
     },

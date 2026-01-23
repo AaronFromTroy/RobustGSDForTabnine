@@ -155,6 +155,81 @@ Configured in `gsd/.gsd-config.json`:
 |----------|----------|--------|
 | Initialize GSD | "start GSD", "begin GSD", "initialize GSD" | Add GSD to current project (creates `.planning/` directory) |
 | Resume | "continue GSD workflow", "resume GSD" | Read STATE.md and continue from checkpoint |
+| Upgrade | "upgrade GSD", "update GSD" | Check for and apply GSD updates with safety features |
+
+## Upgrading
+
+GSD includes a built-in upgrade system to keep your installation current.
+
+### Check for Updates
+
+Say to Tabnine: **"upgrade GSD"**
+
+Or manually:
+```bash
+cd gsd
+node scripts/upgrade-manager.js --dry-run
+```
+
+### Upgrade Sources
+
+GSD automatically detects the best upgrade source:
+
+**Automatic (npm registry):**
+- Checks npm registry for latest version
+- Downloads and applies automatically
+- Requires internet connection
+
+**Fallback (local):**
+- If npm unavailable, looks for local upgrade in:
+  - `../gsd-upgrade/`
+  - `../gsd-latest/`
+  - `../gsd-for-tabnine/`
+- Download manually if needed:
+  ```bash
+  # Download from GitHub
+  wget https://github.com/yourusername/gsd-for-tabnine/archive/v1.2.0.tar.gz
+  tar -xzf v1.2.0.tar.gz
+  mv gsd-for-tabnine-1.2.0 ../gsd-upgrade
+  ```
+
+**Manual source:**
+```bash
+GSD_UPGRADE_PATH=/custom/path node scripts/upgrade-manager.js
+```
+
+### Preview Changes
+
+The dry-run shows:
+- Current and latest versions
+- Upgrade source (npm or local)
+- Files that will be updated
+- Your customizations that will be preserved
+- Migrations that will run
+
+### Apply Upgrade
+
+Confirm the upgrade via Tabnine prompt, or run:
+```bash
+node scripts/upgrade-manager.js
+```
+
+**Safety features:**
+- ✅ Auto-detects npm or local source
+- ✅ Automatic backup before upgrade
+- ✅ Preserves your `.gsd-config.json` customizations
+- ✅ Rollback on failure
+- ✅ Validation after upgrade
+- ✅ Works offline with local upgrades
+
+### Rollback
+
+If something goes wrong:
+```bash
+node scripts/backup-manager.js restore .gsd-backups/backup-<timestamp>/
+```
+
+See [CHANGELOG.md](CHANGELOG.md) for detailed upgrade notes and migration guides.
 
 ## Directory Structure
 

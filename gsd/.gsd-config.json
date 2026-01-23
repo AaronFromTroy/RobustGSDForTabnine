@@ -13,6 +13,11 @@
       "resume GSD",
       "continue workflow",
       "resume getting shit done"
+    ],
+    "upgrade": [
+      "upgrade GSD",
+      "update GSD",
+      "upgrade gsd-for-tabnine"
     ]
   },
   "paths": {

@@ -13,7 +13,9 @@
     "./researcher": "./scripts/researcher.js",
     "./research-synthesizer": "./scripts/research-synthesizer.js",
     "./version-checker": "./scripts/version-checker.js",
-    "./backup-manager": "./scripts/backup-manager.js"
+    "./backup-manager": "./scripts/backup-manager.js",
+    "./file-merger": "./scripts/file-merger.js",
+    "./migration-runner": "./scripts/migration-runner.js"
   },
   "files": [
     "scripts/",

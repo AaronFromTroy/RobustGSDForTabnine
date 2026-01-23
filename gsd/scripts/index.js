@@ -60,3 +60,16 @@ export {
   listBackups,
   validateBackup
 } from './backup-manager.js';
+
+// File merging and upgrade
+export {
+  mergeConfig,
+  determineFileStrategy,
+  applyUpgrade
+} from './file-merger.js';
+
+// Migration execution
+export {
+  runMigrations,
+  getApplicableMigrations
+} from './migration-runner.js';

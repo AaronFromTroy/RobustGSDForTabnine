@@ -1,6 +1,6 @@
 # State: GSD for Tabnine
 
-**Last Updated:** 2026-01-22
+**Last Updated:** 2026-01-23
 **Version:** 1.0.0
 
 ---
@@ -9,30 +9,30 @@
 
 **Core Value:** Enable the complete GSD methodology within Tabnine's agent mode through context-aware modular guidelines that work within its constraints (no sub-agent spawning, smaller context window, no slash commands).
 
-**Current Focus:** Phase 10 - Fix Path Handling Bugs (critical bug fix from real-world usage)
+**Current Focus:** Phase 11 - Upgrade System (enable seamless GSD version upgrades)
 
 ---
 
 ## Current Position
 
-**Phase:** 10 of 10 (Fix Path Handling Bugs In All Guidelines - Complete)
-**Plan:** 1 of 1 (Complete)
-**Status:** All phases complete
-**Last activity:** 2026-01-22 - Completed Phase 10 (critical bug fix)
-**Next Action:** None - all roadmap phases complete
+**Phase:** 11 of 11 (Upgrade System - In Progress)
+**Plan:** 1 of 5 (Complete)
+**Status:** In progress
+**Last activity:** 2026-01-23 - Completed 11-01-PLAN.md (Version Detection and Update Notification)
+**Next Action:** Execute 11-02-PLAN.md (Backup and Rollback System)
 
-**Progress:** `██████████` (100% - 10/10 phases complete)
+**Progress:** `██████████░` (91% - 41/45 plans complete)
 
 ---
 
 ## Performance Metrics
 
-**Phases Completed:** 10/10 (100%)
-**Plans Completed:** 40/40 total (3 Phase 1 + 5 Phase 2 + 3 Phase 3 + 3 Phase 4 + 1 Phase 5 partial + 3 Phase 6 + 4 Phase 7 + 4 Phase 8 + 4 Phase 9 + 1 Phase 10)
+**Phases Completed:** 10/11 (91%)
+**Plans Completed:** 41/45 total (3 Phase 1 + 5 Phase 2 + 3 Phase 3 + 3 Phase 4 + 1 Phase 5 partial + 3 Phase 6 + 4 Phase 7 + 4 Phase 8 + 4 Phase 9 + 1 Phase 10 + 1 Phase 11)
 **Plans Skipped:** 3 Phase 5 plans (npm publishing infrastructure marked optional per user preference)
 **Requirements Validated:** 55/55 (Phase 1-4 requirements fulfilled - 100%)
 **Test Coverage:** 95 tests total, 14 new Phase 8 tests (Test Suites 15-16)
-**Success Rate:** 100% (39/39 plans completed successfully)
+**Success Rate:** 100% (41/41 plans completed successfully)
 
 ---
 
@@ -124,11 +124,14 @@
 | Cross-platform CLI pattern | 2026-01-22 | Use import.meta.url.includes(path.basename()) for Windows compatibility - strict equality fails on backslashes and drive letters |
 | Quoted bash paths with variables | 2026-01-22 | All bash paths containing variables wrapped in double quotes - prevents word splitting (e.g., .planningphases bug) |
 | mkdir -p flag mandatory | 2026-01-22 | All mkdir commands use -p flag for parent directory creation - ensures robustness when directories may not exist |
+| Dual-mode version detection | 2026-01-23 | Support both npm registry and local filesystem sources for version checking - enables offline upgrades and dev/testing scenarios |
+| Graceful network failure handling | 2026-01-23 | Network operations return null on failure instead of crashing - version checking degrades gracefully when npm unavailable |
 
 ### Roadmap Evolution
 
 - Phase 9 added: Ensure starting a new project is better worded even when work withing an existing application that is simply intializing gsd for the first
 - Phase 10 added: Fix path handling bugs in all guidelines
+- Phase 11 added: Develop a plan to allow users to upgrade instead of deleting old gsd content and reinstalling
 
 ### Active TODOs
 
@@ -156,6 +159,23 @@
 None
 
 ### Recent Changes
+
+**2026-01-23:**
+- **Phase 11 Plan 1 completed (11-01):** Version Detection and Update Notification (27 min)
+  - Installed semver ^7.6.0 and update-notifier ^7.3.1 dependencies (57 packages added)
+  - Created gsd/scripts/version-checker.js with 5 exported functions (257 lines)
+  - getCurrentVersion: reads local package.json version
+  - getLatestVersion: supports both npm registry and local filesystem sources
+  - checkForUpdates: compares versions using semver.gt(), returns update type (major/minor/patch)
+  - checkNpmAvailability: detects npm registry connectivity with 3-second timeout
+  - isValidGsdSource: validates local upgrade sources (checks package.json name + required directories)
+  - Dual-mode support: npm registry (normal case) and local filesystem (offline/dev/testing)
+  - Graceful network failure handling: all network operations return null on failure instead of crashing
+  - Added subpath export: gsd-for-tabnine/version-checker
+  - Re-exported checkForUpdates, getCurrentVersion, getLatestVersion from main entry (index.js)
+  - Git commits: 86cb9ae (dependencies), ce91e54 (version-checker.js), 76c2aec (exports)
+  - All success criteria met: dual-mode support, network graceful degradation, 3-second timeout, 5 functions exported
+  - **Foundation ready:** Version detection working for Plan 11-02 (backup naming) and Plan 11-04 (upgrade orchestrator)
 
 **2026-01-22:**
 - **Phase 10 complete:** Critical bug fix for path handling in all workflow guidelines (5 min)
@@ -591,11 +611,11 @@ None
 
 ## Session Continuity
 
-**Last session:** 2026-01-22
-**Stopped at:** Completed 10-01-PLAN.md (Fix Path Handling Bugs In All Guidelines)
+**Last session:** 2026-01-23
+**Stopped at:** Completed 11-01-PLAN.md (Version Detection and Update Notification)
 **Resume file:** None
 
-**Next Action:** All roadmap phases complete - GSD for Tabnine is production-ready
+**Next Action:** Execute 11-02-PLAN.md (Backup and Rollback System)
 **Context Summary:**
 - Phase 1: Foundation & Templates (3 plans - guidelines, templates, config) ✓
 - Phase 2: Core Infrastructure (5 plans - Node.js, file ops, state manager, templates, testing) ✓
@@ -607,12 +627,13 @@ None
 - Phase 8: Verification & Quality System (4 plans complete - VERIFICATION template, goal validator, quality gates, verifier, report generator, testing) ✓
 - Phase 9: Improve Initialization Terminology (4 plans complete - script messaging, documentation updates, guideline workflow, script implementation) ✓
 - Phase 10: Fix Path Handling Bugs (1 plan complete - critical bug fix from real-world usage) ✓
+- Phase 11: Upgrade System (1/5 plans complete - version detection with dual-mode support) — In Progress ◆
 - 55/55 v1 requirements validated (Phase 1-4)
 - 95 integration tests (81 original + 14 new Phase 8 tests)
-- **Project complete:** All 9 phases verified and complete
+- **Project status:** 10 phases complete, Phase 11 in progress
 
 **Project Status:**
-All 9 phases complete. Phase 5 partially complete (3 npm publishing plans skipped per user preference). GSD methodology fully implemented for Tabnine Agent with:
+Phase 11 in progress (1/5 plans complete). Phase 5 partially complete (3 npm publishing plans skipped per user preference). GSD methodology fully implemented for Tabnine Agent with:
 - Modular guideline system (5 workflows - new-project, plan-phase, execute-phase, verify-work, research)
 - Template-driven artifacts (13 templates - added CONTEXT.md, VERIFICATION.md, and CODEBASE.md)
 - State management and progress tracking
@@ -631,6 +652,7 @@ All 9 phases complete. Phase 5 partially complete (3 npm publishing plans skippe
 
 - Clear initialization terminology (error messages, workflow messages, documentation)
 - Codebase detection and research (identifies existing projects, analyzes tech stack/architecture/conventions)
+- Dual-mode version detection (npm registry + local filesystem sources)
 
 **Roadmap Extension:**
 - Phase 5: Polish and Distribution Readiness (1/4 complete - metadata only, npm packaging skipped per user preference)
@@ -638,8 +660,10 @@ All 9 phases complete. Phase 5 partially complete (3 npm publishing plans skippe
 - Phase 7: Enhanced Research Infrastructure (COMPLETE - multi-domain research with real scraping)
 - Phase 8: Verification & Quality System (COMPLETE - goal-backward validation, quality gates, multi-layer orchestration, report generation, testing)
 - Phase 9: Improve Initialization Terminology (COMPLETE - clear messaging for existing codebase support)
+- Phase 10: Fix Path Handling Bugs In All Guidelines (COMPLETE - critical bug fix from real-world usage)
+- Phase 11: Upgrade System (IN PROGRESS - version detection complete, 4 plans remaining)
 
 ---
 
 *State tracking initialized: 2026-01-18*
-*Last updated: 2026-01-20 after adding Phases 6-8 for enhanced robustness (50% complete)*
+*Last updated: 2026-01-23 after completing Phase 11 Plan 1 (version detection)*

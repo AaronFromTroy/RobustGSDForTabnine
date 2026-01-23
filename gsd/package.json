@@ -55,9 +55,12 @@
     "axios": "^1.6.8",
     "cheerio": "^1.0.0",
     "front-matter": "^4.0.2",
+    "fs-extra": "^11.2.0",
     "markdownlint": "^0.36.1",
     "p-limit": "^6.1.0",
     "playwright": "^1.48.2",
+    "semver": "^7.6.0",
+    "update-notifier": "^7.3.1",
     "write-file-atomic": "^5.0.1"
   },
   "author": "GSD Project",

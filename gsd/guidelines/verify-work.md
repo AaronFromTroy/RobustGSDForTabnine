@@ -15,16 +15,19 @@ This guideline enables Tabnine to validate completed phases against success crit
 Execute these exact commands in sequence:
 
 ```bash
-# Run comprehensive verification (all 5 layers)
+# 1. Run comprehensive verification (all 5 layers)
 node gsd/scripts/verifier.js --phase=${PHASE_NUM}
 
-# If verification failed, generate report
+# 2. If verification failed, generate report
 node gsd/scripts/verification-report.js --phase=${PHASE_NUM} --results="${RESULTS_JSON}"
 
-# Update STATE.md
+# 3. Present results to user and WAIT for approval (see Approval Protocol section)
+#    DO NOT PROCEED TO STEP 4 until user reviews and approves
+
+# 4. Update STATE.md (ONLY after user approval)
 node gsd/scripts/state-manager.js --update verification="${RESULT}" verifiedDate="${DATE}"
 
-# Create git commit (if verification passed)
+# 5. Create git commit (if verification passed)
 git add .planning/STATE.md ".planning/phases/${PHASE_DIR}/VERIFICATION.md"
 git commit -m "docs(phase-${PHASE_NUM}): verification ${RESULT}
 
@@ -125,9 +128,12 @@ Co-Authored-By: Tabnine Agent <noreply@tabnine.com>
 ### Never Do
 
 - Mark phase verified without running all checks
+- **Update STATE.md before user reviews verification results (critical - user must see results first)**
+- **Suggest next phase before user approves verification (causes premature advancement)**
 - Ignore missing requirements coverage
 - Skip artifact structure validation
-- Proceed to next phase with failing verification
+- Proceed to next phase with failing verification (unless user explicitly approves)
+- Modify STATE.md manually (always use state-manager.js)
 
 ## Workflow Steps
 
@@ -141,6 +147,30 @@ Co-Authored-By: Tabnine Agent <noreply@tabnine.com>
      e. Acceptance criteria (goal-validator.js)
    - Returns comprehensive results object
 
+1.5. **Present results and wait for user approval:**
+
+   a. **Format results summary showing:**
+      - Each layer result (✓ PASSED or ✗ FAILED)
+      - Test counts and coverage percentages
+      - Criteria met/total
+      - Duration
+      - Any warnings or issues
+
+   b. **If verification PASSED:**
+      - Show summary with all green checkmarks
+      - Say: "All verification layers passed. Say 'approved' or 'looks good' to mark phase as verified."
+      - **WAIT** for user approval phrase (see Approval Protocol section)
+
+   c. **If verification FAILED:**
+      - Show summary with failure details
+      - Reference VERIFICATION.md for remediation
+      - Ask user: "Fix issues now, proceed anyway (not recommended), or review details?"
+      - **WAIT** for user decision
+      - Do NOT update STATE.md as "verified" if failed
+
+   d. **After user approves** (passed case) or decides (failed case):
+      - Proceed to step 3 (Update STATE.md)
+
 2. **Generate report if failed:**
    - If verification passed: skip report generation
    - If verification failed:
@@ -148,7 +178,9 @@ Co-Authored-By: Tabnine Agent <noreply@tabnine.com>
      b. Generates VERIFICATION.md using template
      c. Saves to phase directory
 
-3. **Update STATE.md:**
+3. **Update STATE.md (only after user approval):**
+
+   **CRITICAL:** This step only executes AFTER user approval from step 1.5
    - Execute state-manager.js with verification result
    - If passed: verification="passed", verifiedDate="${DATE}"
    - If failed: verification="failed", include issue summary
@@ -156,6 +188,99 @@ Co-Authored-By: Tabnine Agent <noreply@tabnine.com>
 4. **Report results:**
    - If passed: "Phase ${PHASE_NUM} verification passed. All ${LAYERS_COUNT} layers complete."
    - If failed: "Phase ${PHASE_NUM} verification failed. See VERIFICATION.md for ${ISSUE_COUNT} issue(s)."
+
+## Approval Protocol
+
+After verification completes, WAIT for user to review results before updating STATE.md.
+
+**Trigger Phrases (case-insensitive):**
+- "looks good" / "lgtm"
+- "approved" / "approve"
+- "continue" / "proceed"
+- "next phase"
+- "mark verified"
+- "ship it"
+
+**Verification States:**
+
+**1. Verification PASSED:**
+```
+Agent: ✓ Phase X verification complete
+
+Results:
+✓ Smoke tests: PASSED
+✓ Linting: PASSED (0 errors, 3 warnings)
+✓ Unit tests: PASSED (45/45 tests, 92% coverage)
+✓ Integration tests: PASSED (12/12 tests)
+✓ Acceptance criteria: PASSED (5/5 criteria met)
+
+Duration: 4m 23s
+
+All verification layers passed. Say "approved" or "looks good" to mark phase as verified.
+
+[WAITING FOR USER...]
+
+User: approved
+
+Agent: ✓ Approval detected
+
+node gsd/scripts/state-manager.js --update verification="passed" verifiedDate="2026-01-26"
+
+✓ Phase X marked as verified
+✓ Ready for next phase
+```
+
+**2. Verification FAILED:**
+```
+Agent: ✗ Phase X verification failed
+
+Results:
+✓ Smoke tests: PASSED
+✓ Linting: PASSED
+✗ Unit tests: FAILED (43/45 tests, 78% coverage - below 80% threshold)
+✓ Integration tests: PASSED
+✗ Acceptance criteria: FAILED (4/5 criteria met)
+
+Failures:
+1. Coverage below threshold (78% vs 80% required)
+2. Success criterion not met: "All guidelines have examples"
+
+See VERIFICATION.md for detailed remediation steps.
+
+Recommendation: Fix issues before proceeding to next phase.
+
+Do you want to:
+1. Fix issues now
+2. Proceed anyway (not recommended)
+3. Review VERIFICATION.md for details
+
+[WAITING FOR USER DECISION...]
+```
+
+**Critical Sequence:**
+```
+Run verification (automatic)
+      ↓
+Generate results
+      ↓
+Present results to user
+      ↓
+[WAIT] ← DO NOT UPDATE STATE YET
+      ↓
+User reviews and approves
+      ↓
+node gsd/scripts/state-manager.js --update verification="passed"
+      ↓
+Create git commit (only if passed)
+      ↓
+Announce next action
+```
+
+**NEVER:**
+- Update STATE.md before user reviews verification results
+- Mark phase verified without user approval
+- Suggest next phase before state update
+- Manually edit STATE.md (always use state-manager.js)
 
 ## Verification Layers
 
@@ -250,10 +375,18 @@ PRIORITY: High (blocks phase completion)
 
 ## Next Action
 
-After successful verification:
-- "Phase ${PHASE_NUM} verified. Ready to proceed to Phase ${NEXT_PHASE_NUM}."
+**IMPORTANT:** Only announce next action AFTER user approves and STATE.md is updated.
+
+**Sequence:**
+1. Wait for user approval (see Approval Protocol)
+2. Update STATE.md using state-manager.js
+3. Create git commit (if passed)
+4. **THEN** announce to user:
+
+After user approves verification results:
+
+- If passed: "Phase ${PHASE_NUM} verified and approved. Ready for Phase ${PHASE_NUM + 1}."
+- If failed: "Phase ${PHASE_NUM} verification failed (${ISSUE_COUNT} issues). See VERIFICATION.md for remediation."
 - If all phases complete: "All phases verified. Project milestone complete!"
 
-After failed verification:
-- "Phase ${PHASE_NUM} verification failed. ${ISSUE_COUNT} issue(s) found. See VERIFICATION.md for remediation steps."
-- Recommended: Fix issues before proceeding to next phase
+**Do not suggest next action until STATE.md is updated.**

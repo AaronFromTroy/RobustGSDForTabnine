@@ -405,9 +405,28 @@ Co-Authored-By: Tabnine Agent <noreply@tabnine.com>
 
 ### Phase 5: Approval Gate (NEW)
 
-9. **Request approval:**
+8.5. **Check for natural language approval first:**
 
-   Use approval-gate.js to present options:
+   Before presenting structured options, check if user already provided approval in natural language:
+
+   **Approval phrases (case-insensitive):**
+   - "looks good" / "lgtm"
+   - "approved" / "approve"
+   - "go ahead" / "proceed"
+   - "ship it"
+   - "continue" / "next"
+
+   **If user already typed approval phrase:**
+   - Skip approval-gate.js structured UI (step 9)
+   - Proceed directly to step 10 (log approval)
+   - Treat as equivalent to selecting "approve" option
+
+   **If no approval phrase detected:**
+   - Continue to step 9 (present structured options)
+
+9. **Request approval (if not already given):**
+
+   If user hasn't already provided approval in natural language, use approval-gate.js to present options:
 
    ```bash
    node gsd/scripts/approval-gate.js \
@@ -436,9 +455,14 @@ Co-Authored-By: Tabnine Agent <noreply@tabnine.com>
    ```
 
    **Wait for user decision:**
-   - **If "approve"**: Continue to step 10
+   - **If "approve"** OR **user types approval phrase** (from step 8.5): Continue to step 10
    - **If "changes"**: Ask "What would you like changed?" → Modify plans → Re-present → Request approval again
    - **If "reject"**: Ask "What approach should we take instead?" → Return to step 3 (discussion)
+
+   **Natural language handling:**
+   - If user types "looks good" instead of selecting option, treat as approval
+   - If user describes specific issues, treat as "changes" request
+   - If user asks questions, answer them then re-request approval
 
 10. **Log approval decision:**
    ```bash

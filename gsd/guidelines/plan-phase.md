@@ -170,12 +170,204 @@ Co-Authored-By: Tabnine Agent <noreply@tabnine.com>
 - Phase directories named: `01-foundation-templates`, `02-core-infrastructure`
 - Plan files named: `01-01-PLAN.md`, `01-02-PLAN.md`
 
+## Phase Discovery Examples
+
+### Example 1: Backend API Phase (Technical)
+
+**Phase Goal:** Build RESTful API with authentication and CRUD operations
+
+```
+Agent: "Before I create plans for Phase 2: Backend API, I have a few questions:
+
+1. Any technology preferences for the backend?
+2. Are there constraints I should know about?
+3. How should we handle authentication?"
+
+User: "Use what makes sense. No major constraints. Need user login."
+
+[VAGUE - dig deeper]
+
+Agent: "For the backend, I'm thinking Node.js with Express since it's popular and has good ecosystem support. Does that work for you?"
+
+User: "Yeah, Node.js is good. We know JavaScript."
+
+Agent: "Great. For authentication, are you thinking traditional email/password, OAuth (Google/GitHub), magic links, or a combination?"
+
+User: "Email and password for now"
+
+Agent: "Got it. Should we use sessions or JWT tokens?"
+
+User: "JWT is fine"
+
+Agent: "Perfect. One more thing - any database preference, or should I recommend PostgreSQL?"
+
+User: "PostgreSQL works"
+
+[CLEAR]
+
+Agent: "Based on our discussion:
+- Backend: Node.js with Express
+- Auth: Email/password with JWT tokens
+- Database: PostgreSQL
+
+I'll create plans for these components."
+```
+
+### Example 2: Dashboard UI Phase (Design + Technical)
+
+**Phase Goal:** Create admin dashboard for managing users and content
+
+```
+Agent: "Before I create plans for Phase 3: Admin Dashboard, I have a few questions:
+
+1. Do you have designs or mockups, or should I plan the UI structure?
+2. Any specific UI framework or component library preferences?
+3. Any accessibility or responsive design requirements?"
+
+User: "No mockups. React is good. Make it look professional."
+
+[VAGUE "professional" - clarify]
+
+Agent: "Got it. By 'professional', are you thinking clean and minimal (like Stripe), data-dense (like AWS Console), or something else?"
+
+User: "Clean and minimal, like Stripe or Linear"
+
+Agent: "Perfect. For that aesthetic, Tailwind CSS works well. Should I use a pre-built component library like shadcn/ui, or custom Tailwind components?"
+
+User: "shadcn/ui sounds good, faster to build"
+
+Agent: "Agreed. For the dashboard layout - sidebar navigation or top navigation?"
+
+User: "Sidebar, easier to add more sections later"
+
+Agent: "Makes sense. Should the dashboard be responsive for mobile/tablet, or desktop-only since it's an admin tool?"
+
+User: "Desktop-only is fine for v1"
+
+Agent: "One last thing - dark mode support, or light mode only?"
+
+User: "Light mode only for now"
+
+[CLEAR]
+
+Agent: "Based on our discussion:
+- UI: React with Tailwind CSS and shadcn/ui components
+- Style: Clean, minimal (Stripe/Linear aesthetic)
+- Layout: Sidebar navigation
+- Platform: Desktop-only (v1)
+- Theme: Light mode only
+
+I'll create plans for this dashboard structure."
+```
+
+### Example 3: Real-Time Feature Phase (User Experience + Technical)
+
+**Phase Goal:** Add real-time chat feature to application
+
+```
+Agent: "Before I create plans for Phase 4: Real-Time Chat, I have a few questions:
+
+1. How should users interact with chat? (workflow/UX)
+2. Any technical approach preferences?
+3. What's most important - speed to ship or polish?"
+
+User: "Like Slack - channels and DMs. Need it working in 2 weeks."
+
+[CLEAR PRIORITY: SPEED]
+
+Agent: "Got it, Slack-style UX with a 2-week timeline. To ship fast, should we use an existing chat SDK like Stream or SendBird, or build custom with WebSockets?"
+
+User: "What's faster?"
+
+Agent: "Stream Chat SDK would be fastest - they handle infrastructure, UI components, and real-time sync. Custom with Socket.io gives more control but takes longer. Given your 2-week timeline, I'd recommend Stream."
+
+User: "Yeah, let's use Stream then"
+
+Agent: "Smart. For the UI, should we use Stream's pre-built React components (fastest) or build custom UI that matches your design system?"
+
+User: "Pre-built is fine, we can customize later"
+
+Agent: "Perfect approach for speed. One more thing - do you need message search, file uploads, or just text messages for v1?"
+
+User: "Just text for now"
+
+[CLEAR WITH CONSTRAINTS]
+
+Agent: "Based on our discussion:
+- UX: Slack-style (channels + DMs)
+- Tech: Stream Chat SDK with React components
+- Approach: Use pre-built components (optimize for speed)
+- Features: Text messages only (v1)
+- Timeline: 2 weeks
+
+I'll create plans focused on rapid integration of Stream Chat."
+```
+
+### Example 4: User Says "Just Do What's Best"
+
+**Phase Goal:** Add payment processing to e-commerce app
+
+```
+Agent: "Before I create plans for Phase 5: Payment Processing, I have a few questions:
+
+1. Any payment provider preferences?
+2. Are there constraints I should know about?
+3. How should we handle payment flow?"
+
+User: "I don't know much about payments. Just do what's best."
+
+[USER UNCERTAIN - offer recommendation]
+
+Agent: "No problem! For payment processing, I'd recommend Stripe because:
+- Industry standard (trusted by millions)
+- Excellent documentation and SDKs
+- Handles security/compliance (PCI)
+- Works in most countries
+- Good developer experience
+
+Does Stripe work for you?"
+
+User: "Sure, Stripe is fine"
+
+Agent: "Great. For the payment flow, we have two options:
+
+**Option A - Stripe Checkout (faster):**
+- Pre-built payment page hosted by Stripe
+- Less customization, but ships in days
+- Stripe handles all UI and validation
+
+**Option B - Stripe Elements (more control):**
+- Embedded payment form in your site
+- Full design control, matches your brand
+- Takes longer to build and test
+
+Given you want to ship quickly, which appeals more?"
+
+User: "Option A sounds better for now"
+
+Agent: "Smart choice for v1. Last question - what should happen after successful payment? Email confirmation, redirect to success page, or both?"
+
+User: "Both - email and success page"
+
+[CLEAR WITH RECOMMENDATIONS ACCEPTED]
+
+Agent: "Based on our discussion:
+- Payment provider: Stripe
+- Integration: Stripe Checkout (hosted, pre-built)
+- Post-payment: Email confirmation + success page redirect
+
+I'll create plans for Stripe Checkout integration."
+```
+
 ## Boundaries
 
 ### Always Do
 
-- **Discuss before planning**: Ask clarifying questions before creating plans
-- **Save discussion responses to CONTEXT.md before creating plans**
+- **Have conversational discovery before planning** (not rigid questionnaire)
+- **Start with 3 essential questions** (don't overwhelm with long lists)
+- **Dig deeper only if user's answer is vague or raises new questions**
+- **Summarize understanding briefly** before creating plans
+- **Save discussion to CONTEXT.md** before creating plans
 - **Present plans**: Show structured summary of what will be built
 - **Wait for approval**: Do not proceed to execution without explicit user approval
 - Read ROADMAP.md before creating plans
@@ -194,7 +386,9 @@ Co-Authored-By: Tabnine Agent <noreply@tabnine.com>
 
 ### Never Do
 
-- **Skip discussion phase** (must ask clarifying questions)
+- **Skip conversational discovery** (must ask questions before planning)
+- **Ask all questions at once** (use conversational flow, 1-3 at a time)
+- **Accept vague answers without clarification** (dig deeper when needed)
 - **Skip approval gate** (must wait for explicit approval)
 - **Proceed to execution without approval** (critical - causes rework)
 - Skip reading ROADMAP.md (plans must align with phase goals)
@@ -215,97 +409,176 @@ Co-Authored-By: Tabnine Agent <noreply@tabnine.com>
    - Look for `.planning/phases/XX-name/XX-RESEARCH.md`
    - Load if exists to understand implementation decisions
 
-### Phase 2: Pre-Planning Discussion (NEW)
+### Phase 2: Pre-Planning Discussion (Conversational Discovery)
 
-3. **Ask clarifying questions:**
+3. **Conversational phase discovery (adaptive questioning):**
 
-   Present questions to gather context before creating plans. Tailor questions to the phase type:
+   Read ROADMAP.md phase goal, then engage in brief conversation to clarify approach.
 
-   **For foundation/infrastructure phases:**
-   - "What technology stack do you prefer for [specific component]?"
-   - "Any existing libraries or frameworks you want to use?"
-   - "Code organization preference (flat, modular, domain-driven)?"
-   - "Testing strategy (unit, integration, e2e)?"
+   **Pattern: Ask 3 essentials → Listen → Dig deeper if needed**
 
-   **For UI/frontend phases (NEW - Design Focus):**
-   - "Do you have a design system or style guide to follow?"
-   - "Preferred UI framework/library (React, Vue, vanilla, etc.)?"
-   - "Responsive design requirements (mobile-first, desktop-first, specific breakpoints)?"
-   - "Accessibility requirements (WCAG level, screen reader support)?"
-   - "Design patterns preference (Material, iOS, custom)?"
-   - "Color palette or brand guidelines?"
-   - "Typography preferences (font families, scale)?"
-   - "Component library to use (MUI, Ant Design, Tailwind, custom)?"
-   - "Animation/interaction preferences (minimal, smooth transitions, rich interactions)?"
-   - "Layout system (grid, flexbox, CSS Grid, specific framework)?"
+   **The 3 Essential Questions (adapt based on phase type):**
 
-   **For feature implementation phases:**
-   - "Any UI/UX constraints or design mockups to follow?"
-   - "User flow preferences (multi-step wizard, single page, modal-based)?"
-   - "Form design approach (inline validation, submit-only, progressive disclosure)?"
-   - "Error/success feedback patterns (toasts, inline messages, modal alerts)?"
-   - "Performance requirements (response time, load capacity)?"
-   - "Error handling approach (fail fast, graceful degradation)?"
-   - "Third-party services or APIs to integrate?"
+   Identify phase type from goal keywords:
+   - **Technical** (keywords: "infrastructure", "backend", "API", "database", "system"): tech choices
+   - **UI/Design** (keywords: "frontend", "UI", "dashboard", "interface", "design"): design + tech
+   - **Feature** (keywords: "add", "implement", "build feature"): user experience + tech
 
-   **For user-facing feature phases (NEW - UX Focus):**
-   - "Target user personas or use cases?"
-   - "Critical user journeys to support?"
-   - "Onboarding/empty state handling?"
-   - "Loading states and skeleton screens needed?"
-   - "Confirmation patterns for destructive actions?"
-   - "Help/documentation approach (tooltips, guided tours, help center)?"
-   - "Search/filter/sort requirements?"
-   - "Pagination or infinite scroll preference?"
-
-   **For all phases:**
-   - "Are there any constraints I should know about?"
-   - "What's your risk tolerance? (move fast vs be cautious)"
-   - "Preferred commit granularity? (atomic vs feature branches)"
-
-   **Format:**
+   **For Technical/Infrastructure phases:**
    ```
-   Before I create execution plans for Phase X: [Name], I'd like to clarify a few things:
+   Before I create plans for Phase X: [Name], I have a few questions:
 
-   ## Technical Approach
-   1. [Question 1]
-   2. [Question 2]
-
-   ## Design & UX (if applicable)
-   3. [Design question 1]
-   4. [Design question 2]
-
-   ## Workflow Preferences
-   5. [Question about risk/commits]
-
-   Please answer what's relevant - I'll use defaults for anything skipped.
+   1. Any technology preferences for [key component]?
+   2. Are there constraints I should know about? (performance, existing systems, etc.)
+   3. How should we handle [key technical decision]?
    ```
 
-   **Example for UI phase:**
+   **For UI/Design phases:**
    ```
-   Before I create execution plans for Phase 2: Dashboard UI, I'd like to clarify:
+   Before I create plans for Phase X: [Name], I have a few questions:
 
-   ## Technical Approach
-   1. Preferred UI framework? (React, Vue, vanilla JS, or existing choice)
-   2. State management approach? (Context API, Redux, Zustand, MobX)
-
-   ## Design & UX
-   3. Do you have design mockups or a style guide to follow?
-   4. Responsive design priority? (mobile-first, desktop-first, or equal)
-   5. Accessibility requirements? (WCAG 2.1 AA, screen reader support)
-   6. Component library preference? (MUI, Ant Design, Tailwind, custom)
-   7. Animation/interaction style? (minimal, smooth transitions, rich)
-
-   ## Workflow Preferences
-   8. Risk tolerance for this phase? (move fast, be cautious, balanced)
-
-   Please answer what's relevant - I'll use defaults for anything skipped.
+   1. Do you have designs or mockups, or should I plan the UI structure?
+   2. Any specific UI framework or component library preferences?
+   3. Any accessibility or responsive design requirements?
    ```
 
-   **Wait for user responses.** Store responses in memory for plan creation.
+   **For Feature Implementation phases:**
+   ```
+   Before I create plans for Phase X: [Name], I have a few questions:
+
+   1. How should users interact with [feature]? (workflow/UX)
+   2. Any technical approach preferences? (architecture, libraries)
+   3. What's most important - speed to ship or polish?
+   ```
+
+   **Follow-Up Question Rules:**
+
+   If user's answer reveals ambiguity or new questions, dig deeper:
+
+   1. **If user gives vague answer:**
+      - "What do you mean by [term]?"
+      - "Can you give an example?"
+
+   2. **If user mentions existing system:**
+      - "How should [new feature] integrate with [existing system]?"
+      - "Should we follow the same patterns as [existing feature]?"
+
+   3. **If user says "I don't know" or "you decide":**
+      - Offer 2-3 options with trade-offs
+      - "I'm thinking [option A] because [reason]. Does that work?"
+
+   4. **If user's answer introduces new complexity:**
+      - "That sounds more involved. Should we break this into multiple phases?"
+      - "What's the priority - [aspect A] or [aspect B]?"
+
+   **Keep it conversational:**
+   - Ask 1-3 questions initially (not overwhelming)
+   - If user gives detailed first answer, ask fewer follow-ups
+   - If user gives brief answers, dig deeper
+   - Stop when you understand the approach clearly
+
+   **Stopping Condition:**
+
+   Stop asking when you have clarity on:
+   - ✓ Key technical/design decisions for this phase
+   - ✓ Constraints or requirements specific to this phase
+   - ✓ Integration points with existing work
+
+   **Conversation Examples:**
+
+   **Example 1: Infrastructure Phase (Brief)**
+   ```
+   Phase 3: Core Infrastructure
+
+   Agent: "Before I create plans for Phase 3: Core Infrastructure, I have a few questions:
+
+   1. Any technology preferences for the backend API?
+   2. Are there constraints I should know about?
+   3. How should we handle authentication?"
+
+   User: "Node.js with Express is fine. No constraints. Use JWT for auth."
+
+   [USER CLEAR - minimal follow-up needed]
+
+   Agent: "Perfect, that's clear. I'll create plans using Express and JWT authentication."
+   ```
+
+   **Example 2: UI Phase (Needs Depth)**
+   ```
+   Phase 4: Dashboard UI
+
+   Agent: "Before I create plans for Phase 4: Dashboard UI, I have a few questions:
+
+   1. Do you have designs or mockups, or should I plan the UI structure?
+   2. Any specific UI framework or component library preferences?
+   3. Any accessibility or responsive design requirements?"
+
+   User: "No mockups yet. Use React."
+
+   [VAGUE - dig deeper]
+
+   Agent: "Got it. For the component library, are you thinking Material-UI, Ant Design, Tailwind, or build custom?"
+
+   User: "Tailwind for styling"
+
+   Agent: "Good choice. For the dashboard layout, are you envisioning a sidebar navigation, top nav, or something else?"
+
+   User: "Sidebar navigation like most admin dashboards"
+
+   Agent: "Makes sense. One more thing - any accessibility requirements? WCAG 2.1 AA compliance, screen reader support?"
+
+   User: "Basic accessibility is fine, don't need full WCAG compliance yet"
+
+   [ENOUGH CONTEXT]
+
+   Agent: "Perfect. I'll create plans for a React dashboard with Tailwind styling, sidebar navigation, and basic accessibility practices."
+   ```
+
+   **Example 3: Feature Phase (Needs Clarification)**
+   ```
+   Phase 5: User Notifications
+
+   Agent: "Before I create plans for Phase 5: User Notifications, I have a few questions:
+
+   1. How should users interact with notifications? (in-app popup, email, push, etc.)
+   2. Any technical approach preferences?
+   3. What's most important - speed to ship or polish?"
+
+   User: "In-app notifications, real-time updates"
+
+   Agent: "Got it. For real-time, are you thinking WebSockets, Server-Sent Events, or polling?"
+
+   User: "WebSockets"
+
+   Agent: "Good. Socket.io or native WebSockets?"
+
+   User: "Socket.io is fine"
+
+   Agent: "Perfect. Should notifications persist in database, or just live updates?"
+
+   User: "Persist them, users should see notification history"
+
+   Agent: "Makes sense. Last thing - notification preferences? Should users be able to mute certain types?"
+
+   User: "Not for MVP, we can add that later"
+
+   [CLEAR]
+
+   Agent: "Understood. I'll create plans for Socket.io-based real-time notifications with database persistence, notification preferences deferred to Phase 2."
+   ```
+
+   **Wait for conversation to complete, then summarize understanding briefly:**
+   ```
+   Based on our discussion:
+   - [Key decision 1]
+   - [Key decision 2]
+   - [Key decision 3]
+
+   I'll use this to create your execution plans.
+   ```
 
 4. **Save discussion context:**
-   After user provides responses, persist to CONTEXT.md:
+   After conversational discovery completes, persist to CONTEXT.md:
 
    ```javascript
    import { saveDiscussionContext } from './gsd/scripts/context-loader.js';
@@ -498,17 +771,19 @@ Co-Authored-By: Tabnine Agent <noreply@tabnine.com>
 
 Workflow is complete when:
 
-1. **Discussion phase completed and saved to CONTEXT.md**: User answered clarifying questions (or explicitly skipped)
-2. At least one PLAN.md exists for phase
-3. Each PLAN.md has all required sections (objective, tasks, verification, success_criteria)
-4. Tasks include `<name>`, `<files>`, `<action>`, `<verify>`, `<done>` elements
-5. **Plans presented to user**: Structured summary shown with key decisions
-6. **User approval obtained**: User explicitly approved plans (logged in STATE.md)
-7. STATE.md shows currentPhase, currentPlan, and status="planned-approved"
-8. Git commit created successfully with approval timestamp
-9. Total tasks across all plans cover all phase deliverables from ROADMAP.md
+1. **Conversational discovery completed**: Agent asked ~3 questions, dug deeper on vague answers, summarized understanding
+2. **Discussion saved to CONTEXT.md**: Key decisions and preferences documented
+3. At least one PLAN.md exists for phase
+4. Each PLAN.md has all required sections (objective, tasks, verification, success_criteria)
+5. Tasks include `<name>`, `<files>`, `<action>`, `<verify>`, `<done>` elements
+6. **Plans presented to user**: Structured summary shown with key decisions from conversation
+7. **User approval obtained**: User explicitly approved plans (logged in STATE.md)
+8. STATE.md shows currentPhase, currentPlan, and status="planned-approved"
+9. Git commit created successfully with approval timestamp
+10. Total tasks across all plans cover all phase deliverables from ROADMAP.md
+11. **Plans reflect conversation context**: Technical decisions from discussion are incorporated into plans
 
-**Critical:** Steps 1, 5, and 6 are new and mandatory. Skipping them defeats the purpose of this enhancement.
+**Critical:** Conversational discovery (steps 1-2) must happen before plan creation. Plans without discovery context are generic and miss user preferences.
 
 ## Next Action
 
